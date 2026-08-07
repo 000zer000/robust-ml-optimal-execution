@@ -32,7 +32,6 @@ jobs:
           test -f /tmp/robust-execution-release/LICENSE
           test -f /tmp/robust-execution-release/CITATION.cff
           test -f /tmp/robust-execution-release/paper/main.tex
-          test -f /tmp/robust-execution-release/.github/workflows/ci.yml
 
       - name: Build publication assets
         shell: bash
@@ -58,6 +57,7 @@ jobs:
           pdflatex -interaction=nonstopmode -halt-on-error main.tex
           mv main.pdf Robust_ML_Optimal_Execution_Research_Paper.pdf
           test -s Robust_ML_Optimal_Execution_Research_Paper.pdf
+          rm -f main.aux main.bbl main.blg main.log main.out
 
       - name: Validate professor-facing surface
         shell: bash
@@ -74,16 +74,19 @@ jobs:
           ! find "$ROOT" -type f \( -iname '*CV*' -o -iname '*OUTREACH*' -o -iname '*INTERVIEW*' -o -iname '*RED_TEAM*' -o -iname '*CLAIMS_LEDGER*' \) | grep .
           ! grep -Ei 'public-release candidate|portfolio artifact|What the project does not claim|zero-budget limitation' "$ROOT/README.md" "$ROOT/paper/main.tex"
           python -m compileall -q "$ROOT/python" "$ROOT/scripts"
+          find "$ROOT" -type d -name '__pycache__' -prune -exec rm -rf {} +
+          find "$ROOT" -type f -name '*.pyc' -delete
 
-      - name: Publish clean repository and tag
+      - name: Publish clean repository
         shell: bash
         run: |
           set -euo pipefail
-          rsync -a --delete --exclude='.git/' /tmp/robust-execution-release/ ./
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/' \
+            /tmp/robust-execution-release/ ./
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git commit -m 'Publish v0.14.0 academic research release'
           git push origin HEAD:main
-          git tag -f v0.14.0
-          git push -f origin v0.14.0
