@@ -11,7 +11,7 @@ jobs:
   asan-ubsan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: cmake --preset asan-ubsan
       - run: cmake --build --preset asan-ubsan
       - run: ctest --preset asan-ubsan
@@ -19,7 +19,7 @@ jobs:
   thread-sanitizer:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install standard Clang toolchain
         run: sudo apt-get update && sudo apt-get install --yes clang ninja-build
       - run: cmake --preset tsan
