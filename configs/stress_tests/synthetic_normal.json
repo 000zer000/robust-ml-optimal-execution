@@ -1,0 +1,24 @@
+{
+  "schema_id": "synthetic-market-config-v1",
+  "scenario_id": "normal-designed-v1",
+  "scenario_class": "designed_synthetic",
+  "run_id": "normal-designed-run",
+  "seed": 20260806,
+  "grid_step_ns": 100000,
+  "initial_reference_ticks": 10000,
+  "instrument": {"venue_id": "synthetic", "instrument_id": "DEMO-USD", "minimum_order_lots": 1, "maximum_order_lots": 1000},
+  "fees": {"fee_schedule_id": "synthetic-fees-v1", "maker_atoms_per_lot": -1, "taker_atoms_per_lot": 3},
+  "regimes": [{
+    "regime_id": "normal", "scenario_class": "designed_synthetic", "steps": 120,
+    "limit_add_probability_ppm": 420000, "market_order_probability_ppm": 210000,
+    "cancel_probability_ppm": 160000, "reference_move_probability_ppm": 90000,
+    "buy_probability_ppm": 500000, "excitation_increment_ppm": 80000,
+    "excitation_decay_ppm": 750000, "excitation_cap_ppm": 300000,
+    "resilience_boost_cap_ppm": 450000, "half_spread_ticks": 2,
+    "visible_levels_per_side": 5, "target_lots_per_level": 12,
+    "minimum_order_lots": 1, "maximum_order_lots": 5,
+    "maximum_reference_jump_ticks": 2, "impact_microticks_per_lot": 90000,
+    "impact_decay_ppm": 850000
+  }],
+  "shocks": []
+}

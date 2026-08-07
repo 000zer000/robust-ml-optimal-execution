@@ -1,0 +1,28 @@
+{
+  "schema_version": "queue-model-contract-v1",
+  "contract_id": "step16-aggregate-l2-queue-v1",
+  "models": [
+    {
+      "model_id": "optimistic-v1",
+      "assumption": "optimistic",
+      "additional_initial_ahead_bps": 0,
+      "fill_on_trade_through": true
+    },
+    {
+      "model_id": "central-v1",
+      "assumption": "central",
+      "additional_initial_ahead_bps": 0,
+      "fill_on_trade_through": true
+    },
+    {
+      "model_id": "pessimistic-v1",
+      "assumption": "pessimistic",
+      "additional_initial_ahead_bps": 0,
+      "fill_on_trade_through": true
+    }
+  ],
+  "sensitivity_additional_ahead_bps": [0, 2500, 5000],
+  "require_exact_synthetic_comparison": true,
+  "exact_fifo_reconstructed_historically": false,
+  "ghost_small_agent_assumption": true
+}

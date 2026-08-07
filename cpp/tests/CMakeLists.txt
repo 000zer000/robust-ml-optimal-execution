@@ -1,0 +1,75 @@
+function(re_add_cpp_test name source)
+  add_executable(${name} ${source})
+  target_link_libraries(${name} PRIVATE robust_execution::core)
+  target_compile_features(${name} PRIVATE cxx_std_20)
+  re_set_project_warnings(${name} ${RE_WARNINGS_AS_ERRORS})
+  re_enable_sanitizers(${name})
+  add_test(NAME ${name} COMMAND ${name})
+endfunction()
+
+re_add_cpp_test(re_test_build_info test_build_info.cpp)
+re_add_cpp_test(re_test_diagnostic_sequence test_diagnostic_sequence.cpp)
+re_add_cpp_test(re_test_fixed_point test_fixed_point.cpp)
+re_add_cpp_test(re_test_time_and_ordering test_time_and_ordering.cpp)
+re_add_cpp_test(re_test_order_states test_order_states.cpp)
+re_add_cpp_test(re_test_event_validation test_event_validation.cpp)
+re_add_cpp_test(re_test_audit_model test_audit_model.cpp)
+re_add_cpp_test(re_test_event_kinds test_event_kinds.cpp)
+
+re_add_cpp_test(re_test_matching_price_time test_matching_price_time.cpp)
+re_add_cpp_test(re_test_matching_order_semantics test_matching_order_semantics.cpp)
+re_add_cpp_test(re_test_matching_cancel_replace test_matching_cancel_replace.cpp)
+re_add_cpp_test(re_test_matching_book_queries test_matching_book_queries.cpp)
+re_add_cpp_test(re_test_matching_determinism test_matching_determinism.cpp)
+re_add_cpp_test(re_test_matching_validation test_matching_validation.cpp)
+
+re_add_cpp_test(re_test_sha256 test_sha256.cpp)
+re_add_cpp_test(re_test_logical_rng test_logical_rng.cpp)
+re_add_cpp_test(re_test_latency_model test_latency_model.cpp)
+re_add_cpp_test(re_test_scheduler test_scheduler.cpp)
+re_add_cpp_test(re_test_simulation_kernel test_simulation_kernel.cpp)
+re_add_cpp_test(re_test_kernel_failures test_kernel_failures.cpp)
+re_add_cpp_test(re_test_kernel_zero_latency test_kernel_zero_latency.cpp)
+
+re_add_cpp_test(re_test_policy_accounting test_policy_accounting.cpp)
+re_add_cpp_test(re_test_policy_state test_policy_state.cpp)
+re_add_cpp_test(re_test_policy_observation test_policy_observation.cpp)
+re_add_cpp_test(re_test_policy_action test_policy_action.cpp)
+re_add_cpp_test(re_test_policy_terminal test_policy_terminal.cpp)
+re_add_cpp_test(re_test_policy_dispatch test_policy_dispatch.cpp)
+re_add_cpp_test(re_test_execution_policy_interface test_execution_policy_interface.cpp)
+re_add_cpp_test(re_test_policy_contract_failures test_policy_contract_failures.cpp)
+re_add_cpp_test(re_test_terminal_completion_integration test_terminal_completion_integration.cpp)
+
+re_add_cpp_test(re_test_synthetic_config test_synthetic_config.cpp)
+re_add_cpp_test(re_test_synthetic_determinism test_synthetic_determinism.cpp)
+re_add_cpp_test(re_test_synthetic_market_dynamics test_synthetic_market_dynamics.cpp)
+re_add_cpp_test(re_test_synthetic_regimes_and_shocks test_synthetic_regimes_and_shocks.cpp)
+re_add_cpp_test(re_test_synthetic_excitation test_synthetic_excitation.cpp)
+
+re_add_cpp_test(re_test_simulator_validation_gate test_simulator_validation_gate.cpp)
+
+re_add_cpp_test(re_test_historical_replay test_historical_replay.cpp)
+re_add_cpp_test(re_test_historical_causal_observations test_historical_causal_observations.cpp)
+re_add_cpp_test(re_test_historical_replay_failures test_historical_replay_failures.cpp)
+re_add_cpp_test(re_test_kernel_explicit_market_timing test_kernel_explicit_market_timing.cpp)
+re_add_cpp_test(re_test_historical_reconnect test_historical_reconnect.cpp)
+
+re_add_cpp_test(re_test_queue_models test_queue_models.cpp)
+re_add_cpp_test(re_test_queue_model_failures test_queue_model_failures.cpp)
+re_add_cpp_test(re_test_queue_exact_fifo_comparison test_queue_exact_fifo_comparison.cpp)
+
+re_add_cpp_test(re_test_metrics_episode test_metrics_episode.cpp)
+re_add_cpp_test(re_test_metrics_aggregate test_metrics_aggregate.cpp)
+re_add_cpp_test(re_test_metrics_audit test_metrics_audit.cpp)
+re_add_cpp_test(re_test_metrics_failures test_metrics_failures.cpp)
+
+re_add_cpp_test(re_test_basic_baselines test_basic_baselines.cpp)
+
+re_add_cpp_test(re_test_almgren_chriss test_almgren_chriss.cpp)
+
+re_add_cpp_test(re_test_adaptive_strategies test_adaptive_strategies.cpp)
+
+re_add_cpp_test(re_test_ml_assisted_mpc test_ml_assisted_mpc.cpp)
+
+re_add_cpp_test(re_test_matching_capacity_hint test_matching_capacity_hint.cpp)

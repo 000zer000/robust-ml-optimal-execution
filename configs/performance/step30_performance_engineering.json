@@ -1,0 +1,31 @@
+{
+  "batch_sizes": [
+    1,
+    32,
+    256
+  ],
+  "cpp_pairs": 30000,
+  "cpp_threads": [
+    1,
+    2,
+    4
+  ],
+  "cpu_threads": [
+    1,
+    2,
+    4
+  ],
+  "iterations_per_repetition": 50,
+  "latency_injection_intervals_us": [
+    25.0,
+    50.0,
+    100.0,
+    250.0,
+    500.0
+  ],
+  "research_status": "engineering_machine_specific_non_research",
+  "schema_version": "performance-engineering-config-v1",
+  "step": 30,
+  "timing_repetitions": 10,
+  "warmup_repetitions": 10
+}

@@ -1,0 +1,95 @@
+[build-system]
+requires = [
+  "scikit-build-core==1.0.3",
+  "pybind11==3.0.4",
+]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "robust-execution"
+version = "0.14.0"
+description = "Reproducible C++/Python research platform for robust execution policies"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "Othmane Hassani"}]
+license = {text = "MIT"}
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
+]
+dependencies = []
+
+
+[project.optional-dependencies]
+canonical = ["pyarrow==25.0.0"]
+models = ["numpy==2.3.5", "scikit-learn==1.8.0"]
+deep-models = ["numpy==2.3.5", "scikit-learn==1.8.0", "torch==2.10.0"]
+imitation = ["numpy==2.3.5", "scikit-learn==1.8.0"]
+rl = ["numpy==2.3.5", "torch==2.10.0"]
+statistics = ["numpy==2.3.5"]
+performance = [
+  "numpy==2.3.5",
+  "scikit-learn==1.8.0",
+  "torch==2.10.0",
+  "psutil==7.2.2",
+  "threadpoolctl==3.6.0",
+]
+
+[project.scripts]
+robust-execution = "robust_execution.cli:main"
+
+[tool.scikit-build]
+cmake.version = ">=3.24"
+cmake.build-type = "Release"
+wheel.packages = ["python/robust_execution"]
+build-dir = "build/wheel/{wheel_tag}"
+
+[tool.scikit-build.cmake.define]
+RE_BUILD_PYTHON_BINDINGS = "ON"
+RE_BUILD_TESTING = "OFF"
+RE_WARNINGS_AS_ERRORS = "ON"
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers -ra"
+pythonpath = ["python"]
+testpaths = ["tests/python"]
+
+[tool.coverage.run]
+branch = true
+source = ["python/robust_execution"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+fail_under = 90
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["python", "tests/python", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C4", "RUF"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "python"
+packages = ["robust_execution"]
+warn_unreachable = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["torch", "torch.*"]
+ignore_missing_imports = true

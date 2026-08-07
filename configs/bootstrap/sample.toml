@@ -1,0 +1,12 @@
+schema_version = 1
+project = "robust-execution"
+
+[logging]
+level = "INFO"
+json = true
+
+[bootstrap]
+seed = 20260806
+scenario = "repository-bootstrap"
+steps = 5
+output_directory = "results/sample"
