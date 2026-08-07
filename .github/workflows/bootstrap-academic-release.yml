@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'release.tar.xz'
+      - '.github/workflows/bootstrap-academic-release.yml'
 
 permissions:
   contents: write
@@ -65,10 +66,10 @@ jobs:
           ROOT=/tmp/robust-execution-release
           test -s "$ROOT/paper/Robust_ML_Optimal_Execution_Research_Paper.pdf"
           test -d "$ROOT/cpp"
+          test -d "$ROOT/cpp/tests"
           test -d "$ROOT/python"
           test -d "$ROOT/tests"
           test -d "$ROOT/configs"
-          test -d "$ROOT/schemas"
           test -f "$ROOT/Dockerfile"
           ! find "$ROOT" -type f \( -iname '*CV*' -o -iname '*OUTREACH*' -o -iname '*INTERVIEW*' -o -iname '*RED_TEAM*' -o -iname '*CLAIMS_LEDGER*' \) | grep .
           ! grep -Ei 'public-release candidate|portfolio artifact|What the project does not claim|zero-budget limitation' "$ROOT/README.md" "$ROOT/paper/main.tex"
