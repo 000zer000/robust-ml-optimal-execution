@@ -21,8 +21,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .bootstrap/min.b64.* | base64 --decode > /tmp/release.tar.xz
-          echo 'dd3368c9163c2e93cbe8f263ad34ae0b4c046f686213083311acba6a19faed1b  /tmp/release.tar.xz' | sha256sum -c -
+          cat .bootstrap/final.b64.* | base64 --decode > /tmp/release.tar.xz
+          echo '5ce3262950775fd77aa3104bd2d59db5b64df9ef72448261a822eb7d93e6e7dc  /tmp/release.tar.xz' | sha256sum -c -
           rm -rf /tmp/release
           mkdir -p /tmp/release
           tar -xJf /tmp/release.tar.xz -C /tmp/release
