@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'release-full.tar.xz'
+      - '.github/workflows/publish-full-release.yml'
 
 permissions:
   contents: write
@@ -35,6 +36,32 @@ jobs:
           test -d /tmp/full-release/governance
           test -d /tmp/full-release/data/sample
 
+      - name: Regenerate deterministic sample outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/full-release
+          cmake --preset gcc-debug
+          cmake --build build/gcc-debug --target \
+            robust_execution_kernel_demo \
+            robust_execution_policy_demo \
+            robust_execution_historical_demo \
+            robust_execution_queue_demo \
+            --parallel 2
+          mkdir -p \
+            results/sample/step7 \
+            results/sample/step8 \
+            results/sample/step15 \
+            results/sample/step16
+          ./build/gcc-debug/robust_execution_kernel_demo > results/sample/step7/kernel_demo.txt
+          ./build/gcc-debug/robust_execution_policy_demo > results/sample/step8/policy_demo.txt
+          ./build/gcc-debug/robust_execution_historical_demo > results/sample/step15/historical_demo.txt
+          ./build/gcc-debug/robust_execution_queue_demo > results/sample/step16/queue_demo.json
+          python scripts/check_kernel_demo.py
+          python scripts/check_policy_demo.py
+          python scripts/check_historical_demo.py
+          python scripts/check_queue_demo.py
+
       - name: Validate frozen specification and repository contract
         shell: bash
         run: |
@@ -52,6 +79,7 @@ jobs:
           rsync -a --delete \
             --exclude='.git/' \
             --exclude='.github/workflows/' \
+            --exclude='build/' \
             /tmp/full-release/ ./
           rm -f release-full.tar.xz
           git config user.name 'github-actions[bot]'
