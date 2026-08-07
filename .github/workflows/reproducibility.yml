@@ -49,7 +49,7 @@ jobs:
           python scripts/validate_step13_data.py
           python scripts/validate_step14_data.py
       - name: Store sample artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: deterministic-bootstrap-sample
           path: |
