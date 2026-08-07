@@ -1,0 +1,61 @@
+name: Publish full reproducible release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'release-full.tar.xz'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify full release archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f release-full.tar.xz
+          echo 'd0515f44d91abea76600273bc958df8e4ebed78ad41f8e7ae8765eb0df2274ed  release-full.tar.xz' | sha256sum -c -
+          rm -rf /tmp/full-release
+          mkdir -p /tmp/full-release
+          tar -xJf release-full.tar.xz -C /tmp/full-release
+          test -f /tmp/full-release/CMakeLists.txt
+          test -f /tmp/full-release/CMakePresets.json
+          test -f /tmp/full-release/pyproject.toml
+          test -f /tmp/full-release/paper/Robust_ML_Optimal_Execution_Research_Paper.pdf
+          test -d /tmp/full-release/schemas
+          test -d /tmp/full-release/governance
+          test -d /tmp/full-release/data/sample
+
+      - name: Validate frozen specification and repository contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/full-release
+          python scripts/verify_specification_lock.py
+          python scripts/validate_repository.py
+          ! find . -type f \( -iname '*CV*' -o -iname '*OUTREACH*' -o -iname '*INTERVIEW*' -o -iname '*RED_TEAM*' -o -iname '*CLAIMS_LEDGER*' \) | grep .
+          ! grep -Ei 'public-release candidate|portfolio artifact|What the project does not claim|zero-budget limitation' README.md paper/main.tex
+
+      - name: Publish exact full research snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/' \
+            /tmp/full-release/ ./
+          rm -f release-full.tar.xz
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Publish full v0.14.0 reproducible research release'
+          git push origin HEAD:main
