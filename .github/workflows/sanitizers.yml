@@ -1,0 +1,30 @@
+name: Sanitizers
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  asan-ubsan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake --preset asan-ubsan
+      - run: cmake --build --preset asan-ubsan
+      - run: ctest --preset asan-ubsan
+
+  thread-sanitizer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install standard Clang toolchain
+        run: sudo apt-get update && sudo apt-get install --yes clang ninja-build
+      - run: cmake --preset tsan
+      - run: cmake --build --preset tsan
+      - name: Run ThreadSanitizer tests
+        env:
+          TSAN_OPTIONS: halt_on_error=1:second_deadlock_stack=1
+        run: ctest --preset tsan
