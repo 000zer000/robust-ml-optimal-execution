@@ -1,0 +1,64 @@
+name: Reproducibility contract
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sample-rerun:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python scripts/verify_specification_lock.py
+      - run: python -m pip install jsonschema==4.26.0 websockets==16.0
+      - run: python scripts/validate_policy_contracts.py
+      - name: Generate twice
+        env:
+          PYTHONPATH: python
+        run: |
+          python -m robust_execution bootstrap-sample configs/bootstrap/sample.toml --output /tmp/first.json
+          python -m robust_execution bootstrap-sample configs/bootstrap/sample.toml --output /tmp/second.json
+          cmp /tmp/first.json /tmp/second.json
+      - name: Build and verify policy and synthetic demos
+        run: |
+          cmake --preset gcc-debug
+          cmake --build --preset gcc-debug
+          python scripts/check_policy_demo.py
+          python scripts/validate_synthetic_market.py
+          PYTHONPATH=python python scripts/validate_step16_queue_models.py
+          python scripts/check_queue_demo.py
+          PYTHONPATH=python python scripts/validate_step17_metrics.py
+          python scripts/check_metrics_demo.py
+      - name: Reproduce Step 12 offline capture fixture
+        env:
+          PYTHONPATH: python
+        run: |
+          python scripts/validate_step12_capture.py
+          python scripts/generate_step12_fixture.py --output-root /tmp/step12-capture
+          diff -qr data/sample/capture/step12-offline-fixture /tmp/step12-capture/step12-offline-fixture
+      - name: Reproduce Step 13 validation and Step 14 canonical dataset
+        env:
+          PYTHONPATH: python
+        run: |
+          python scripts/validate_step13_data.py
+          python scripts/validate_step14_data.py
+      - name: Store sample artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deterministic-bootstrap-sample
+          path: |
+            /tmp/first.json
+            data/sample/synthetic/manifest.json
+            data/sample/synthetic/tape.txt
+            data/sample/capture/step12-offline-fixture/manifest.json
+            data/sample/canonical/step14-canonical-fixture/dataset-manifest.json
+            data/sample/queue_models/step16-queue-model-validation/manifest.json
+            data/sample/queue_models/step16-queue-model-validation/report.json
+            data/sample/metrics/step17-metrics-validation/manifest.json
+            data/sample/metrics/step17-metrics-validation/report.json
