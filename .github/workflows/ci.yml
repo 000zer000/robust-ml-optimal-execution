@@ -1,0 +1,138 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cpp:
+    name: C++ ${{ matrix.os }} / ${{ matrix.compiler }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: gcc
+            preset: gcc-debug
+          - os: ubuntu-latest
+            compiler: clang
+            preset: clang-debug
+          - os: macos-latest
+            compiler: appleclang
+            preset: clang-debug
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake --preset "${{ matrix.preset }}"
+      - name: Build
+        run: cmake --build --preset "${{ matrix.preset }}"
+      - name: Test
+        run: ctest --preset "${{ matrix.preset }}"
+      - name: Install Python validation dependency
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'gcc'
+        run: python -m pip install jsonschema==4.26.0 numpy==2.3.5 scikit-learn==1.8.0
+      - name: Deterministic kernel, policy and synthetic demos
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'gcc'
+        run: |
+          python scripts/check_kernel_demo.py
+          python scripts/check_policy_demo.py
+          python scripts/validate_synthetic_market.py
+          python scripts/validate_simulator_gate.py
+          python scripts/validate_step11_source_decision.py
+          python scripts/validate_step12_capture.py
+          PYTHONPATH=python python scripts/validate_step13_data.py
+          PYTHONPATH=python python scripts/validate_step14_data.py
+          PYTHONPATH=python python scripts/validate_step15_replay.py
+          python scripts/check_historical_demo.py
+          PYTHONPATH=python python scripts/validate_step16_queue_models.py
+          python scripts/check_queue_demo.py
+          PYTHONPATH=python python scripts/validate_step17_metrics.py
+          python scripts/check_metrics_demo.py
+          python scripts/validate_step18_baselines.py
+          python scripts/validate_step19_almgren_chriss.py
+          python scripts/validate_step20_adaptive.py
+          PYTHONPATH=python python scripts/validate_step21_prediction.py
+          PYTHONPATH=python python scripts/validate_step22_simple_models.py
+
+  python:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "${{ matrix.python }}"
+      - name: Install test tool
+        run: python -m pip install pytest==9.1.1 pytest-cov==7.1.0 coverage==7.15.2 jsonschema==4.26.0 websockets==16.0 numpy==2.3.5 scikit-learn==1.8.0 torch==2.10.0 psutil==7.2.2 threadpoolctl==3.6.0
+      - name: Specification lock
+        run: python scripts/verify_specification_lock.py
+      - name: Repository contract
+        run: |
+          python scripts/validate_repository.py
+          python scripts/validate_policy_contracts.py
+          python scripts/validate_step11_source_decision.py
+          python scripts/validate_step12_capture.py
+          PYTHONPATH=python python scripts/validate_step13_data.py
+          PYTHONPATH=python python scripts/validate_step14_data.py
+          PYTHONPATH=python python scripts/validate_step15_replay.py
+          python scripts/check_historical_demo.py
+          PYTHONPATH=python python scripts/validate_step16_queue_models.py
+          python scripts/check_queue_demo.py
+          PYTHONPATH=python python scripts/validate_step17_metrics.py
+          python scripts/check_metrics_demo.py
+          python scripts/validate_step18_baselines.py
+          python scripts/validate_step19_almgren_chriss.py
+          python scripts/validate_step20_adaptive.py
+          PYTHONPATH=python python scripts/validate_step21_prediction.py
+          PYTHONPATH=python python scripts/validate_step22_simple_models.py
+          PYTHONPATH=python python scripts/validate_step23_temporal_model.py
+          PYTHONPATH=python python scripts/validate_step24_ml_mpc.py
+      - name: Tests
+        env:
+          PYTHONPATH: python
+        run: python -m pytest --cov=robust_execution --cov-branch --cov-report=term-missing tests/python
+      - name: Deterministic sample
+        run: python scripts/check_deterministic_sample.py
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install quality tools
+        run: python -m pip install ruff==0.15.22 mypy==2.3.0 numpy==2.3.5 scikit-learn==1.8.0
+      - run: ruff check python tests/python scripts
+      - run: ruff format --check python tests/python scripts
+      - run: mypy python/robust_execution
+
+  wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Build wheel with C++ binding
+        run: python -m pip wheel --no-deps --wheel-dir dist .
+      - name: Install wheel
+        run: python -m pip install dist/*.whl
+      - name: Import extension
+        run: python -c "import robust_execution; from robust_execution import _core; print(_core.build_info_json())"
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build --tag robust-execution:bootstrap .
+      - name: Smoke test
+        run: docker run --rm robust-execution:bootstrap --version
