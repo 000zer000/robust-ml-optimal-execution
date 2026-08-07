@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "venue_id": "binance_spot",
+  "symbols": ["BTCUSDT", "ETHUSDT"],
+  "allowed_data_origins": ["live_binance", "synthetic_transport_fixture"],
+  "primary_historical_study_repairs_missing_events": false,
+  "crossed_or_locked_books_allowed": false,
+  "negative_or_nonfinite_values_allowed": false,
+  "research_specification_changed": false,
+  "admission": {
+    "require_live_origin": true,
+    "require_capture_complete": true,
+    "require_72h_pilot": true,
+    "require_whole_utc_day": true,
+    "boundary_tolerance_ns": 5000000000,
+    "minimum_depth_messages_per_symbol": 2,
+    "minimum_trade_messages_per_symbol": 2,
+    "maximum_event_receive_delta_ns": 5000000000
+  }
+}

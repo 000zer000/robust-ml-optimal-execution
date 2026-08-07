@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "replay_id": "step15-historical-fixture",
+  "symbols": ["BTCUSDT", "ETHUSDT"],
+  "observation_processing_delay_ns": 5000000,
+  "top_levels": 10,
+  "maximum_recent_trades": 32,
+  "checkpoint_policy": "after_each_delivered_event_validation_only",
+  "require_research_admissible_input": false,
+  "allow_connection_start_proxy_for_sample": true,
+  "require_exact_snapshot_fetch_time_for_research": true,
+  "queue_position_semantics": "not_reconstructed_until_step16",
+  "market_impact_semantics": "ghost_small_agent_no_endogenous_impact"
+}

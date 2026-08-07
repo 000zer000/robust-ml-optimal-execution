@@ -1,0 +1,23 @@
+schema_major = 1
+schema_minor = 0
+venue = "synthetic"
+instrument = "TEST-USD"
+base_asset = "TEST"
+quote_asset = "USD"
+metadata_version = "example-only-v1"
+
+[tick_size]
+numerator = 1
+denominator = 100
+
+[lot_size]
+numerator = 1
+denominator = 1000
+
+[quote_atom_size]
+numerator = 1
+denominator = 100
+
+[order_quantity]
+minimum_lots = 1
+maximum_lots = 1000000

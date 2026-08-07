@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: "Robust ML-Assisted Optimal Execution in Limit Order Books"
+message: "If you use this software or methodology, please cite this repository and the accompanying research paper."
+type: software
+authors:
+  - family-names: Hassani
+    given-names: Othmane
+version: "0.14.0"
+date-released: 2026-08-07
+license: MIT
+abstract: >-
+  Reproducible C++/Python research system for limit-order-book simulation, optimal execution,
+  causal microstructure prediction, matched ML-assisted model predictive control, imitation
+  learning, reinforcement learning, robustness analysis, statistical inference, and low-latency
+  CPU/GPU performance engineering.

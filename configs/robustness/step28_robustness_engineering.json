@@ -1,0 +1,11 @@
+{
+  "schema_version": "robustness-engineering-config-v1",
+  "step": 28,
+  "research_status": "synthetic_validation_only_non_research",
+  "episode_count": 24,
+  "seed": 2800,
+  "ppo_seeds": [27, 127, 227, 327, 427],
+  "compute_budgets_ms": [0.025, 0.05, 0.1, 0.5, 1.0, 5.0],
+  "formal_statistics_deferred_to_step29": true,
+  "formal_performance_deferred_to_step30": true
+}

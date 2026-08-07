@@ -1,0 +1,13 @@
+{
+  "schema_version": "prediction-decision-value-engineering-config-v1",
+  "step": 25,
+  "research_status": "synthetic_validation_only_non_research",
+  "source_dataset": "step23-temporal-deep-validation",
+  "prediction_family": "causal_conv1d_lstm",
+  "candidate_horizons": ["250ms", "1s", "5s"],
+  "ece_bins": 10,
+  "weight_grid_bps": [0, 50, 100, 250, 500, 1000, 2000, 5000, 10000, 25000],
+  "primary_horizon_selected": false,
+  "final_model_family_selected": false,
+  "use_engineering_results_for_research_selection": false
+}
