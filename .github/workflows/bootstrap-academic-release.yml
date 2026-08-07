@@ -1,43 +1,56 @@
-name: Bootstrap academic release
+name: Publish academic release
 
 on:
   push:
     branches: [main]
     paths:
-      - '.bootstrap/READY'
+      - 'release.tar.xz'
 
 permissions:
   contents: write
 
 jobs:
   publish:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Reconstruct curated source snapshot
+      - name: Verify and extract curated release
         shell: bash
         run: |
           set -euo pipefail
-          cat .bootstrap/final.b64.* | base64 --decode > /tmp/release.tar.xz
-          echo '5ce3262950775fd77aa3104bd2d59db5b64df9ef72448261a822eb7d93e6e7dc  /tmp/release.tar.xz' | sha256sum -c -
-          rm -rf /tmp/release
-          mkdir -p /tmp/release
-          tar -xJf /tmp/release.tar.xz -C /tmp/release
-          test -f /tmp/release/README.md
-          test -f /tmp/release/LICENSE
-          test -f /tmp/release/paper/main.tex
-          rsync -a --delete --exclude='.git/' /tmp/release/ ./
+          test -f release.tar.xz
+          echo '5ce3262950775fd77aa3104bd2d59db5b64df9ef72448261a822eb7d93e6e7dc  release.tar.xz' | sha256sum -c -
+          rm -rf /tmp/robust-execution-release
+          mkdir -p /tmp/robust-execution-release
+          tar -xJf release.tar.xz -C /tmp/robust-execution-release
+          test -f /tmp/robust-execution-release/README.md
+          test -f /tmp/robust-execution-release/LICENSE
+          test -f /tmp/robust-execution-release/CITATION.cff
+          test -f /tmp/robust-execution-release/paper/main.tex
+          test -f /tmp/robust-execution-release/.github/workflows/ci.yml
 
-      - name: Compile research paper
+      - name: Build publication assets
         shell: bash
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-publishers texlive-science texlive-pictures lmodern
-          cd paper
+          sudo apt-get install -y -qq \
+            poppler-utils \
+            texlive-latex-base \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            texlive-publishers \
+            texlive-science \
+            texlive-pictures \
+            lmodern
+          cd /tmp/robust-execution-release/paper
+          for f in figures/*.pdf; do
+            pdftoppm -singlefile -png -r 120 "$f" "${f%.pdf}"
+          done
           pdflatex -interaction=nonstopmode -halt-on-error main.tex
           bibtex main
           pdflatex -interaction=nonstopmode -halt-on-error main.tex
@@ -45,24 +58,31 @@ jobs:
           mv main.pdf Robust_ML_Optimal_Execution_Research_Paper.pdf
           test -s Robust_ML_Optimal_Execution_Research_Paper.pdf
 
-      - name: Validate public release surface
+      - name: Validate professor-facing surface
         shell: bash
         run: |
           set -euo pipefail
-          test -f README.md
-          test -f LICENSE
-          test -f CITATION.cff
-          test -f paper/Robust_ML_Optimal_Execution_Research_Paper.pdf
-          ! find . -type f \( -iname '*CV*' -o -iname '*OUTREACH*' -o -iname '*INTERVIEW*' -o -iname '*RED_TEAM*' -o -iname '*CLAIMS_LEDGER*' \) | grep .
-          ! grep -RIl --exclude-dir=.git --exclude='*.pdf' -E 'public-release candidate|portfolio artifact|What the project does not claim|zero-budget limitation' . | grep .
-          python -m compileall -q python scripts
+          ROOT=/tmp/robust-execution-release
+          test -s "$ROOT/paper/Robust_ML_Optimal_Execution_Research_Paper.pdf"
+          test -d "$ROOT/cpp"
+          test -d "$ROOT/python"
+          test -d "$ROOT/tests"
+          test -d "$ROOT/configs"
+          test -d "$ROOT/schemas"
+          test -f "$ROOT/Dockerfile"
+          ! find "$ROOT" -type f \( -iname '*CV*' -o -iname '*OUTREACH*' -o -iname '*INTERVIEW*' -o -iname '*RED_TEAM*' -o -iname '*CLAIMS_LEDGER*' \) | grep .
+          ! grep -Ei 'public-release candidate|portfolio artifact|What the project does not claim|zero-budget limitation' "$ROOT/README.md" "$ROOT/paper/main.tex"
+          python -m compileall -q "$ROOT/python" "$ROOT/scripts"
 
-      - name: Publish clean academic tree
+      - name: Publish clean repository and tag
         shell: bash
         run: |
           set -euo pipefail
+          rsync -a --delete --exclude='.git/' /tmp/robust-execution-release/ ./
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
           git commit -m 'Publish v0.14.0 academic research release'
           git push origin HEAD:main
+          git tag -f v0.14.0
+          git push -f origin v0.14.0
