@@ -1,0 +1,68 @@
+name: Bootstrap academic release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.bootstrap/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct curated source snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .bootstrap/payload.b64.* | base64 --decode > /tmp/release.tar.xz
+          echo 'd064e390a6bf8bf31990b0b994d8b50b71c760c2beb3483268f017ed405068df  /tmp/release.tar.xz' | sha256sum -c -
+          rm -rf /tmp/release
+          mkdir -p /tmp/release
+          tar -xJf /tmp/release.tar.xz -C /tmp/release
+          test -f /tmp/release/README.md
+          test -f /tmp/release/LICENSE
+          test -f /tmp/release/paper/main.tex
+          rsync -a --delete --exclude='.git/' /tmp/release/ ./
+
+      - name: Compile research paper
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-publishers texlive-science texlive-pictures lmodern
+          cd paper
+          pdflatex -interaction=nonstopmode -halt-on-error main.tex
+          bibtex main
+          pdflatex -interaction=nonstopmode -halt-on-error main.tex
+          pdflatex -interaction=nonstopmode -halt-on-error main.tex
+          mv main.pdf Robust_ML_Optimal_Execution_Research_Paper.pdf
+          test -s Robust_ML_Optimal_Execution_Research_Paper.pdf
+
+      - name: Validate public release surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f README.md
+          test -f LICENSE
+          test -f CITATION.cff
+          test -f paper/Robust_ML_Optimal_Execution_Research_Paper.pdf
+          ! find . -type f \( -iname '*CV*' -o -iname '*OUTREACH*' -o -iname '*INTERVIEW*' -o -iname '*RED_TEAM*' -o -iname '*CLAIMS_LEDGER*' \) | grep .
+          ! grep -RIl --exclude-dir=.git --exclude='*.pdf' -E 'public-release candidate|portfolio artifact|What the project does not claim|zero-budget limitation' . | grep .
+          python -m compileall -q python scripts
+
+      - name: Publish clean academic tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Publish v0.14.0 academic research release'
+          git push origin HEAD:main
