@@ -1,0 +1,48 @@
+{
+  "central_question_preserved": true,
+  "files": [
+    {
+      "bytes": 25789,
+      "path": "literature/LITERATURE_REVIEW.md",
+      "sha256": "3ad3218586dc50a6241b1929d367ad6fa862c41e9dc5eb6c79c77fb8e588ce38"
+    },
+    {
+      "bytes": 14157,
+      "path": "literature/ANNOTATED_BIBLIOGRAPHY.md",
+      "sha256": "cfd0d7fa4c5dfe2a93056520ff6030be17d4b527cf31d5c9a65ddc4ddcd848de"
+    },
+    {
+      "bytes": 6529,
+      "path": "literature/DESIGN_EVIDENCE_MATRIX.md",
+      "sha256": "cfa5f8da21954f39252c30b345b964859c652c4ad2d12e52579718dac0ae355f"
+    },
+    {
+      "bytes": 2636,
+      "path": "literature/PROPOSALS_REQUIRING_APPROVAL.md",
+      "sha256": "993e071138c402186d421a125b96bea079083b088f28404e3539798a525e120e"
+    },
+    {
+      "bytes": 3073,
+      "path": "literature/LITERATURE_SEARCH_LOG.md",
+      "sha256": "3ed2ecc1e373194caa27552b2b2df3a4c8cd9c9d50463a04054f22048b9235c4"
+    },
+    {
+      "bytes": 1736,
+      "path": "literature/SOURCE_CATALOG.csv",
+      "sha256": "f7dd6528e212e385716474cf696709cb74ca3efa2cce8c82c97e3788d029a3bc"
+    },
+    {
+      "bytes": 13192,
+      "path": "paper/references.bib",
+      "sha256": "17ffd3627b5a2a5c98f7741c7b57a16713bff1d0fdcda60402ea4d62d62e80fd"
+    },
+    {
+      "bytes": 1691,
+      "path": "STEP3_VALIDATION.md",
+      "sha256": "9fa53b016d42586ce33b3407b5b597b03afab6589a9162bac3b0f700e7fe3ef0"
+    }
+  ],
+  "generated_at": "2026-08-06",
+  "governing_scope_modified": false,
+  "step": 3
+}

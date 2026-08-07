@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/controller/ml-mpc-prediction-tape-v1.schema.json",
+  "title": "Step 24 deterministic prediction tape",
+  "type": "object",
+  "required": ["schema_version", "step", "research_status", "source_dataset", "horizons"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "ml-mpc-prediction-tape-v1"},
+    "step": {"const": 24},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "source_dataset": {"const": "step23-temporal-deep-validation"},
+    "horizons": {
+      "type": "object",
+      "required": ["250ms", "1s", "5s"],
+      "additionalProperties": false,
+      "properties": {
+        "250ms": {"$ref": "#/$defs/horizon"},
+        "1s": {"$ref": "#/$defs/horizon"},
+        "5s": {"$ref": "#/$defs/horizon"}
+      }
+    }
+  },
+  "$defs": {
+    "record": {
+      "type": "object",
+      "required": [
+        "decision_id", "endpoint_row_id", "endpoint_time_ns", "feature_cutoff_time_ns",
+        "available_time_ns", "calibrated_probability", "uncalibrated_probability", "target"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "decision_id": {"type": "integer", "minimum": 1},
+        "endpoint_row_id": {"type": "string"},
+        "endpoint_time_ns": {"type": "integer"},
+        "feature_cutoff_time_ns": {"type": "integer"},
+        "available_time_ns": {"type": "integer"},
+        "calibrated_probability": {"type": "number", "minimum": 0, "maximum": 1},
+        "uncalibrated_probability": {"type": "number", "minimum": 0, "maximum": 1},
+        "target": {"type": "integer", "enum": [0, 1]}
+      }
+    },
+    "horizon": {
+      "type": "object",
+      "required": ["training_base_rate", "prediction_table_sha256", "records"],
+      "additionalProperties": false,
+      "properties": {
+        "training_base_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "prediction_table_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "records": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {"$ref": "#/$defs/record"}
+        }
+      }
+    }
+  }
+}

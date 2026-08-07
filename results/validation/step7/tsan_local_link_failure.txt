@@ -1,0 +1,65 @@
+Local TSan status: NOT EXECUTED — link failed before tests.
+Compiler: Swift Clang 17.0.0
+Configure exit: 0
+Build exit: 1
+
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:648:(.text+0x3c11): undefined reference to `_Block_copy'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:657:(.text+0x3c46): undefined reference to `_Block_release'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:658:(.text+0x3c55): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `_____interceptor_dispatch_io_write_block_invoke':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:648:(.text+0x3c87): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__interceptor_dispatch_io_barrier':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:667:(.text+0x3e1e): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:667:(.text+0x3e5e): undefined reference to `_Block_copy'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:676:(.text+0x3e89): undefined reference to `_Block_release'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:677:(.text+0x3e96): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `_____interceptor_dispatch_io_barrier_block_invoke':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:667:(.text+0x3ec7): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__interceptor_dispatch_io_create':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:685:(.text+0x4088): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:685:(.text+0x40e2): undefined reference to `_Block_copy'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:698:(.text+0x411b): undefined reference to `_Block_release'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:700:(.text+0x4133): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:700:(.text+0x4140): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `_____interceptor_dispatch_io_create_block_invoke':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:685:(.text+0x41da): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__interceptor_dispatch_io_create_with_path':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:710:(.text+0x43e6): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:710:(.text+0x4440): undefined reference to `_Block_copy'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:724:(.text+0x4484): undefined reference to `_Block_release'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:726:(.text+0x449c): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:726:(.text+0x44ab): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `_____interceptor_dispatch_io_create_with_path_block_invoke':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:710:(.text+0x454a): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__interceptor_dispatch_io_create_with_io':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:735:(.text+0x4737): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:735:(.text+0x4791): undefined reference to `_Block_copy'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:748:(.text+0x47cb): undefined reference to `_Block_release'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:750:(.text+0x47e3): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:750:(.text+0x47f0): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `_____interceptor_dispatch_io_create_with_io_block_invoke':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:735:(.text+0x488a): undefined reference to `_NSConcreteStackBlock'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__copy_helper_block_8_32r':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__copy_helper_block_8_32r[__copy_helper_block_8_32r]+0xe): undefined reference to `_Block_object_assign'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__destroy_helper_block_8_32r':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__destroy_helper_block_8_32r[__destroy_helper_block_8_32r]+0xa): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__copy_helper_block_8_32b':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__copy_helper_block_8_32b[__copy_helper_block_8_32b]+0xe): undefined reference to `_Block_object_assign'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__destroy_helper_block_8_32b':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__destroy_helper_block_8_32b[__destroy_helper_block_8_32b]+0xa): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__copy_helper_block_8_32b40r':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__copy_helper_block_8_32b40r[__copy_helper_block_8_32b40r]+0x18): undefined reference to `_Block_object_assign'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__copy_helper_block_8_32b40r[__copy_helper_block_8_32b40r]+0x34): undefined reference to `_Block_object_assign'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__destroy_helper_block_8_32b40r':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__destroy_helper_block_8_32b40r[__destroy_helper_block_8_32b40r]+0xe): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__destroy_helper_block_8_32b40r[__destroy_helper_block_8_32b40r]+0x1d): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__copy_helper_block_8_32b40r48r':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__copy_helper_block_8_32b40r48r[__copy_helper_block_8_32b40r48r]+0x18): undefined reference to `_Block_object_assign'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__copy_helper_block_8_32b40r48r[__copy_helper_block_8_32b40r48r]+0x2a): undefined reference to `_Block_object_assign'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__copy_helper_block_8_32b40r48r[__copy_helper_block_8_32b40r48r]+0x46): undefined reference to `_Block_object_assign'
+/usr/bin/ld: /usr/local/swift/usr/lib/clang/17/lib/linux/libclang_rt.tsan-x86_64.a(tsan_interceptors_libdispatch.cpp.o): in function `__destroy_helper_block_8_32b40r48r':
+/home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__destroy_helper_block_8_32b40r48r[__destroy_helper_block_8_32b40r48r]+0xe): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__destroy_helper_block_8_32b40r48r[__destroy_helper_block_8_32b40r48r]+0x1c): undefined reference to `_Block_object_dispose'
+/usr/bin/ld: /home/build-user/llvm-project/compiler-rt/lib/tsan/rtl/tsan_interceptors_libdispatch.cpp:(.text.__destroy_helper_block_8_32b40r48r[__destroy_helper_block_8_32b40r48r]+0x2b): undefined reference to `_Block_object_dispose'
+clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.

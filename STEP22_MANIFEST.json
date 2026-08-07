@@ -1,0 +1,643 @@
+{
+  "artifacts": [
+    {
+      "baseline_sha256": "2fe47fac9bcabfd0aa7578560e8306f9f557d7d60d7df9461a273587c00a2302",
+      "bytes": 5307,
+      "change": "modified",
+      "path": ".github/workflows/ci.yml",
+      "sha256": "47ff0ae0e3e1f10be2db65bbe5bb89b7649a324d711252b4b829e24183bfdee3"
+    },
+    {
+      "baseline_sha256": "74c603b303fd76369586fea8304c750dbb7d9e89c1240c02e69c7b1b63d2f4c5",
+      "bytes": 6437,
+      "change": "modified",
+      "path": "Makefile",
+      "sha256": "7ba32695c9a87cdce162a2dde35a8f31101fce6c4851a674bb9d111fe3e157cc"
+    },
+    {
+      "bytes": 2570,
+      "change": "added",
+      "path": "STEP22_CHANGELOG.md",
+      "sha256": "2002f4d7805e4b1d4451d634e9d95f2a7da54e30edd9d633b8f4fbda75252c22"
+    },
+    {
+      "bytes": 6605,
+      "change": "added",
+      "path": "STEP22_VALIDATION.md",
+      "sha256": "e07a814eac42b91c539d6af89bba7de422f328a365eae07b9038eb9da7a02d01"
+    },
+    {
+      "bytes": 1501,
+      "change": "added",
+      "path": "configs/models/step22_simple_models_engineering.json",
+      "sha256": "bfbd3c7c8c72ea6384dcda60ceb093b799c3df3b1c01b12e7bfc2ce19b2010bd"
+    },
+    {
+      "bytes": 14546,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/dataset-manifest.json",
+      "sha256": "a0135fbe384edfbf97a8e5a37518c7939018371b76ee15628f35b0f22dcd142c"
+    },
+    {
+      "bytes": 1204,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/base_rate/model-card.json",
+      "sha256": "0283b86914b8225512467016d68d12fe0705742652d7f2dfd45c1f8c427f0242"
+    },
+    {
+      "bytes": 766,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/base_rate/model.pkl",
+      "sha256": "5331206a275586f1f4437b7b667d6661e8d041f6cfe05f3be947aeb4ab1bd31c"
+    },
+    {
+      "bytes": 1013,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/base_rate/reliability.json",
+      "sha256": "1ad95d45b7948ba79c8d31ad56adb941a9cf8f9ba28c3b2cad82c011b476e559"
+    },
+    {
+      "bytes": 2182,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/base_rate/slice-metrics.json",
+      "sha256": "7174fdb2b96e9ee62c0de0b6fb228dbc0faa11927df1690e00365ebb6241127d"
+    },
+    {
+      "bytes": 937,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/base_rate/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "93466ec5a491cf7baa403c4a21c8d75345792ead707572c20cbdd2315b025c43"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/base_rate/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1825,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/gradient_boosted_trees/model-card.json",
+      "sha256": "c05d986a10f947ad95cc90f0975e1eba6f17c2cd433ab6a5d6478ed32b342e63"
+    },
+    {
+      "bytes": 110489,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/gradient_boosted_trees/model.pkl",
+      "sha256": "06bdb170f5847ac1b4f5c50eb86edcd89c37f983a64602ca0aeb06be996932ab"
+    },
+    {
+      "bytes": 1129,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/gradient_boosted_trees/reliability.json",
+      "sha256": "799ada47d3b4627468470892194a0dccf2d240657127d33e90cd0b847a5346e3"
+    },
+    {
+      "bytes": 2618,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/gradient_boosted_trees/slice-metrics.json",
+      "sha256": "29c8f345f666183bc78f9d4d3b65baf700e13bed9ef6dfdbf6dbb89c1b74c270"
+    },
+    {
+      "bytes": 4284,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/gradient_boosted_trees/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "cb22f3592bd1d4e1bec00af397d1fa5def03dc1584837f9d5d968f7ba197fda5"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/gradient_boosted_trees/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1532,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/logistic/model-card.json",
+      "sha256": "97c18b396b802b6b50cc00e9271f249f351b10bddb1e9fd66e1e3a07962a472b"
+    },
+    {
+      "bytes": 2480,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/logistic/model.pkl",
+      "sha256": "32beb233503f12f461a4bfd232637b8fa941dffa99eba43b812d38e91035fe30"
+    },
+    {
+      "bytes": 1126,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/logistic/reliability.json",
+      "sha256": "86ee24240fcbf45adf01e13a5aa137e1cec2b3affccd37d634e783a2300e3ece"
+    },
+    {
+      "bytes": 2674,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/logistic/slice-metrics.json",
+      "sha256": "f41623f7cfa288fcfe26827925b855cc10ff6b90ae51b56468bfbd674ac022c6"
+    },
+    {
+      "bytes": 4225,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/logistic/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "6c35080a7c3f715f76307101aa0491c423f47a0ae4339d905a4b2606c01961a7"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/logistic/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1756,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/simple_mlp/model-card.json",
+      "sha256": "1aec92667bed36b2f225687b81025dffa7c2d8a51a14cf40e3c566758067f3b2"
+    },
+    {
+      "bytes": 14042,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/simple_mlp/model.pkl",
+      "sha256": "4bfe26d8e55ba5ca1b7b6f1b62c7ff5936c2c797c782093b66a1a2a3de968c1b"
+    },
+    {
+      "bytes": 1012,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/simple_mlp/reliability.json",
+      "sha256": "a96a74a171b0903aa6343ae6f0bae5c59e71a3dc0ba430b7d0d446d2bc7a425a"
+    },
+    {
+      "bytes": 2548,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/simple_mlp/slice-metrics.json",
+      "sha256": "fba4371ef7eae1aafa40a72574f024524434204cc560ff31a4e79bdb4a652498"
+    },
+    {
+      "bytes": 3993,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/simple_mlp/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "51a27a23c03a2595a2c2d5487108bc3d393213aa52ba236afef71086f27419c4"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/1s/simple_mlp/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1211,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/base_rate/model-card.json",
+      "sha256": "2cf238980992c392b1ab204881a37b591af2067ec7fffbe1dbf7feb511e1e3c7"
+    },
+    {
+      "bytes": 769,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/base_rate/model.pkl",
+      "sha256": "39191f7f6b8278abd14e064d525683e6caee85adb78ae499a5f366bbc7bac5b9"
+    },
+    {
+      "bytes": 1012,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/base_rate/reliability.json",
+      "sha256": "3822dd339d2c61b8b5c2754985b77ff28b1d4b7562a793b1543d4e6859ffc334"
+    },
+    {
+      "bytes": 2196,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/base_rate/slice-metrics.json",
+      "sha256": "4f106bf97da1cc5d6b0f9fb0a5069b8ae9c014b878df747c070aa110dd27a60d"
+    },
+    {
+      "bytes": 920,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/base_rate/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "68e7979a60d04dc66ec957d63d01d6b939af12b7156e942620bb5810d7991582"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/base_rate/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1834,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/gradient_boosted_trees/model-card.json",
+      "sha256": "621b715fb7690bb7f3cb0a754017991ac2e96d374bc822f566ba36ffa701cf35"
+    },
+    {
+      "bytes": 110492,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/gradient_boosted_trees/model.pkl",
+      "sha256": "d43207aadf3f0152e1bf1e181ba3a08cce79a1ac588f88f0e3e32e07cababef5"
+    },
+    {
+      "bytes": 1039,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/gradient_boosted_trees/reliability.json",
+      "sha256": "b8c8c445c70b87a3a34edfc6c85afd2c599e51935ee809285c7c8a36d49299f5"
+    },
+    {
+      "bytes": 2551,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/gradient_boosted_trees/slice-metrics.json",
+      "sha256": "0a63bb44ec228affd41d2e4b00a493a3d1563a74a22e8b9fc63dc8f924a6b448"
+    },
+    {
+      "bytes": 4278,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/gradient_boosted_trees/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "be058a9e14d4e98999ae2a40bcffba05796a14df3e32711e8daffc236a2c6fca"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/gradient_boosted_trees/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1536,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/logistic/model-card.json",
+      "sha256": "24876cdd55ef7871ab6876e74d221466a3315b22f306a29c3f3f72f1daa23dbf"
+    },
+    {
+      "bytes": 2483,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/logistic/model.pkl",
+      "sha256": "a0aae85a2a3624e1a62c48e4a915dee441aadfaa535169ba8a8417ca1d8633a1"
+    },
+    {
+      "bytes": 1081,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/logistic/reliability.json",
+      "sha256": "1c27ba68ab057d7291910f446df4195e418fb74c3082ba1455879903e6ded34b"
+    },
+    {
+      "bytes": 2564,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/logistic/slice-metrics.json",
+      "sha256": "49cbe44d2e07eb6bc8849fd225be19687b3434dc4d00aad7ae0a02ce224dfec7"
+    },
+    {
+      "bytes": 4257,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/logistic/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "ac4666d0f42ed0cd0e0749e36ec5bd4251232cefaa1083a9eeafbb6b7e508a6c"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/logistic/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/simple_mlp/model-card.json",
+      "sha256": "a5af06905242348f347d49db8f8194d506492c469d033526d347d97d0bbd88d8"
+    },
+    {
+      "bytes": 14045,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/simple_mlp/model.pkl",
+      "sha256": "8249f3e1c1b9fc51c753087a15dcb3bf69e4e999ba9b35b965888c007d477bd4"
+    },
+    {
+      "bytes": 1012,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/simple_mlp/reliability.json",
+      "sha256": "99a67c9e57f932d0c7458fea5be488afd5dfc66bda71ae8a5989f2ebcdcb0a05"
+    },
+    {
+      "bytes": 2552,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/simple_mlp/slice-metrics.json",
+      "sha256": "a50e8e1c3846c1d9266ce2ef3bc41dfc4989f7d8376aa013150b1955d817ff81"
+    },
+    {
+      "bytes": 3919,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/simple_mlp/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "4916be1ed3bf70a28ca1c278981736506670e38982b1a40e469e452775a1fc77"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/250ms/simple_mlp/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1191,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/base_rate/model-card.json",
+      "sha256": "b6aaf410ae3c326736be006ef67815d8245ed3a51bd780332dc8447ed5045ed4"
+    },
+    {
+      "bytes": 766,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/base_rate/model.pkl",
+      "sha256": "243bd53f346e08db54d36f8f431bb48239c7aacd04569a0b4da0e97682e9438b"
+    },
+    {
+      "bytes": 998,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/base_rate/reliability.json",
+      "sha256": "4e23ead738d4ed38f9164e907f90d03ce2d07c05f4b0efb1c87255b2cdd069d2"
+    },
+    {
+      "bytes": 2194,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/base_rate/slice-metrics.json",
+      "sha256": "7c9c4f581ef560150e3d95cd213fd1b8d90323de2a67cd555248adab0034db37"
+    },
+    {
+      "bytes": 949,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/base_rate/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "4bcc51d07d8c727938af139259c890cf0a2b1d670bc7548a4b494b0b1d74f92c"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/base_rate/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1822,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/gradient_boosted_trees/model-card.json",
+      "sha256": "f5f4bd58b13a775a1efbca7aff1cdd8d678d3be4b061bfb5e69b75cb9fba1222"
+    },
+    {
+      "bytes": 110489,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/gradient_boosted_trees/model.pkl",
+      "sha256": "db6d75ca9bf51b4656b2f25b811823e993c7d815c06239c43c2ed81c80f3a96d"
+    },
+    {
+      "bytes": 1153,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/gradient_boosted_trees/reliability.json",
+      "sha256": "bdabbfc7536b060d7a1a85b13d9876c92d8f0f807dee47cc6ae519cbe0db8f20"
+    },
+    {
+      "bytes": 2943,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/gradient_boosted_trees/slice-metrics.json",
+      "sha256": "3df9fa78c95d02773336a7cd2175c7037dff7cecb804b1bb41248c4ba8384274"
+    },
+    {
+      "bytes": 4207,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/gradient_boosted_trees/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "171d0c80692d83bfd24f4c38995d3331b8735c3fdc26b6459bab44d0ada8281a"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/gradient_boosted_trees/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1530,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/logistic/model-card.json",
+      "sha256": "0a62fad8a52bd950055594bddcb1d60906666e7b2e8e73fb00b9a13fa5c5b8fb"
+    },
+    {
+      "bytes": 2480,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/logistic/model.pkl",
+      "sha256": "50383a4746bf565ec462136b569b876760bb7bf78f2cfa68f17c1569a551a0e6"
+    },
+    {
+      "bytes": 1208,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/logistic/reliability.json",
+      "sha256": "f200018a1ace47bd976ef6c4975e8ca1b49c903ed0a9ba220fa58c822b39ba2d"
+    },
+    {
+      "bytes": 2912,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/logistic/slice-metrics.json",
+      "sha256": "fba659c8a1f38c1123062483d711ebfd6b4289d8d5398db47ca2883d0c432d39"
+    },
+    {
+      "bytes": 4170,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/logistic/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "017b2ca4c3f137794abad1acab52cd1f86000389e0cb81625f6982fb1e60c092"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/logistic/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 1753,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/simple_mlp/model-card.json",
+      "sha256": "6305511b97c769558249a28cc00e30555e30d38c14f19624bcfb51bcfaeea36b"
+    },
+    {
+      "bytes": 14043,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/simple_mlp/model.pkl",
+      "sha256": "8b93644016d572fd510d7bcfa2376caa2ac8d16b84741d77cf980bf1583794f1"
+    },
+    {
+      "bytes": 1122,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/simple_mlp/reliability.json",
+      "sha256": "edbdc7b7ade1ccf593d5cf8d091cbadc4fe77e7b2da0bd5e4fce5f19d4fd016a"
+    },
+    {
+      "bytes": 2908,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/simple_mlp/slice-metrics.json",
+      "sha256": "7bc9b9b2b6f44f17fd9f14f8fe549240328b43df45708370057dda77160ad752"
+    },
+    {
+      "bytes": 3705,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/simple_mlp/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "60e696ba798bb16692ee8175b815b50fc3089c2fe3cc19e3f249be87c3cafaf0"
+    },
+    {
+      "bytes": 763,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/models/5s/simple_mlp/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "2cee9118fe66deefc506de842fce4490e4d7af4fd4f3c7c776abf7b51f42b85d"
+    },
+    {
+      "bytes": 16724,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/report.json",
+      "sha256": "efec4c380d7f1aa7138edafbcf83486dac09ff03696612852c27dfa7ca63aafe"
+    },
+    {
+      "bytes": 335,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/split-manifest.json",
+      "sha256": "01a5b041136ddc14bcf075ea170aee48644f7e58cb1e16728069712c34a0ba11"
+    },
+    {
+      "bytes": 33116,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/tables/engineering_training_rows/columns.json.gz",
+      "sha256": "f54ab82a88e7b60f1af58611c47a55007ebdd933c127f2e40a64dadcd08ef7bb"
+    },
+    {
+      "bytes": 2323,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/tables/engineering_training_rows/schema.json",
+      "sha256": "a743fba778b816139076a63ed2c93c1bae411fbe6c88a4087440e4524f174ff3"
+    },
+    {
+      "bytes": 1242,
+      "change": "added",
+      "path": "data/sample/models/step22-simple-models-validation/training-config.json",
+      "sha256": "b2f38c925f58b2395f6ecb8eea0267ff4769cf4f521813fa99891df7edc3fcf0"
+    },
+    {
+      "bytes": 1245,
+      "change": "added",
+      "path": "docs/models/STEP22_MODEL_INFERENCE_CONTRACT.md",
+      "sha256": "bef81ab24578c9e543bfe1327d299ac04f62cea2fc56de4c7e23f2e794954596"
+    },
+    {
+      "bytes": 3743,
+      "change": "added",
+      "path": "docs/models/STEP22_SIMPLE_MODELS.md",
+      "sha256": "81333affb18dff9f020e7acec8a85858e0e004b1df9fc426b5d4535942d36d63"
+    },
+    {
+      "baseline_sha256": "7fa354ccc7d93778cf7e8884ff3ea4d1851241105532eedba7440281ecf13791",
+      "bytes": 1914,
+      "change": "modified",
+      "path": "pyproject.toml",
+      "sha256": "2fdba464302f2a34c446292375cad322a8912c170421f76d4940621695df9920"
+    },
+    {
+      "bytes": 14423,
+      "change": "added",
+      "path": "python/robust_execution/prediction/simple_model_artifacts.py",
+      "sha256": "20753124468c5b775c8022307b0cd825348b04bd0bfc9235fd55f66aaad0efd0"
+    },
+    {
+      "bytes": 37373,
+      "change": "added",
+      "path": "python/robust_execution/prediction/simple_models.py",
+      "sha256": "1169722cbde7c7cee4ce36621820f0f1641728d164ef3217f1c097746bd0b5a0"
+    },
+    {
+      "bytes": 2480,
+      "change": "added",
+      "path": "results/validation/step22/inference_benchmark.json",
+      "sha256": "d41ed0704097790e52dcf0e08e023873f9242aa8148a98fa296d5bea705af254"
+    },
+    {
+      "bytes": 1930,
+      "change": "added",
+      "path": "schemas/prediction/simple-model-card-v1.schema.json",
+      "sha256": "9b4664cfa0a2cfa93f30a6cb486237925f9fa62983aa88fb8300e1a76cfed4a5"
+    },
+    {
+      "bytes": 1692,
+      "change": "added",
+      "path": "schemas/prediction/simple-model-dataset-manifest-v1.schema.json",
+      "sha256": "815b10d34f1c7a131d5aa879197d1ded0bbc48bcfd3afc2479dcada3ee4d3d04"
+    },
+    {
+      "bytes": 2907,
+      "change": "added",
+      "path": "scripts/benchmark_step22_inference.py",
+      "sha256": "9cd0356fa1a3f93e4e3bd2e066f2da6b558017baa7a32d32ba773d5fe7ec1bd3"
+    },
+    {
+      "bytes": 572,
+      "change": "added",
+      "path": "scripts/generate_step22_fixture.py",
+      "sha256": "421ba5dd8b9b1aed7f4758ce0f7535e36b93b1fe16a9873c83359312032675fb"
+    },
+    {
+      "baseline_sha256": "c3e01c5228afff17906a375d035f56d0bd69985a204a4bb616139e38a4cba8c4",
+      "bytes": 20049,
+      "change": "modified",
+      "path": "scripts/validate_repository.py",
+      "sha256": "460f7b3dcc14e96c0adb3e69ee9cbc3d2dc252ae609463e46dce3973c017c4fc"
+    },
+    {
+      "bytes": 3492,
+      "change": "added",
+      "path": "scripts/validate_step22_simple_models.py",
+      "sha256": "ffea280acfe223a4a9a1f6c9f5cf871f177ae221e3680e278e9f5bedf6287c70"
+    },
+    {
+      "bytes": 14799,
+      "change": "added",
+      "path": "tests/python/test_simple_models.py",
+      "sha256": "000f63e983d53eaf0f5071482d6e98b5126ea92c317d5dd61e6c071b33bd1460"
+    }
+  ],
+  "baseline_archive": {
+    "path": "robust-execution-step21-causal-features.zip",
+    "sha256": "e529fe213670047a7bed67174a2c7c2a75b32c03d9b838563728426abbd685eb"
+  },
+  "changed_or_new_artifact_count": 96,
+  "engineering_fixture": {
+    "model_binary_byte_determinism_required": false,
+    "model_count": 12,
+    "rows": 800,
+    "semantic_prediction_determinism_required": true,
+    "split_rows": {
+      "calibration": 80,
+      "engineering_holdout": 160,
+      "train": 400,
+      "validation": 160
+    }
+  },
+  "model_contract": {
+    "calibration_segment": "calibration",
+    "candidate_horizons": [
+      "250ms",
+      "1s",
+      "5s"
+    ],
+    "engineering_holdout_used_for_selection": false,
+    "families": [
+      "base_rate",
+      "logistic",
+      "gradient_boosted_trees",
+      "simple_mlp"
+    ],
+    "feature_count": 20,
+    "final_model_family_selected": false,
+    "hyperparameter_selection_segment": "validation",
+    "locked_research_test_opened": false,
+    "primary_horizon_selected": false,
+    "training_scaler_fit_segment": "train_only"
+  },
+  "repository_version": "0.14.0",
+  "research_specification_changed": false,
+  "research_status": "synthetic_validation_only_non_research",
+  "status": "pass",
+  "step": 22,
+  "tests": {
+    "clean_install": true,
+    "combined_make_test": "execution_window_terminated_at_step22_after_upstream_passed",
+    "cpp_asan_ubsan": 51,
+    "cpp_clang_debug": 51,
+    "cpp_gcc_debug": 51,
+    "cpp_release_ipo": 51,
+    "external_cmake_consumer": true,
+    "mypy_local": "unavailable_registry",
+    "optional_dependency_boundary": true,
+    "python": 363,
+    "python_branch_coverage_percent": 90.5,
+    "python_compileall": true,
+    "ruff_local": "unavailable_registry",
+    "workflow_yaml_parse": true
+  }
+}

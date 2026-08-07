@@ -1,0 +1,14 @@
+{
+  "engineering_validation": "pass",
+  "fixture_files": 12,
+  "fixture_messages": 6,
+  "live_72h_pilot": "pending",
+  "live_smoke_messages": 0,
+  "live_smoke_status": "aborted",
+  "network": {
+    "rest": "failed",
+    "websocket": "failed"
+  },
+  "specification_lock": "7/7",
+  "status": "conditional_pass"
+}

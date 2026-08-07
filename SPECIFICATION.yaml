@@ -1,0 +1,145 @@
+specification_version: 0.2.1
+status: step_2_corrected_and_frozen
+last_updated: '2026-08-06'
+project:
+  title: Learning Robust Execution Policies in Limit Order Books
+  subtitle: Prediction, Optimisation and Stress Testing under Latency and Regime Shifts
+  live_trading: false
+  profitability_claim: false
+  central_research_question: Can machine-learning-assisted execution policies improve realised execution quality relative to strong classical baselines, and do those improvements survive latency, liquidity shifts, queue-model errors, market-impact misspecification, changing fees, and out-of-distribution market regimes?
+problem:
+  parent_order_exogenous: true
+  sides:
+  - buy
+  - sell
+  primary_horizon_seconds: 60
+  secondary_horizons_seconds:
+  - 30
+  - 300
+  primary_decision_grid_ms: 100
+  decision_grid_sensitivities_ms:
+  - 10
+  - 50
+  - 250
+  - 1000
+  active_child_order_limit_primary: 1
+  terminal_completion: common_aggressive_execution
+data:
+  required_instruments: 2
+  minimum_valid_whole_days_per_instrument: 100
+  chronological_split:
+    train_fraction: 0.5
+    validation_fraction: 0.2
+    calibration_fraction: 0.1
+    locked_test_fraction: 0.2
+    minimum_days:
+      train: 50
+      validation: 20
+      calibration: 10
+      locked_test: 20
+  venue: PRE_DATA_FIELD_STEP_11
+  instruments: PRE_DATA_FIELD_STEP_11
+  raw_preservation: true
+  provenance_and_checksums: true
+historical_replay:
+  data_level: aggregate_level_2
+  small_agent_ghost: true
+  endogenous_impact_claim: false
+  queue_models:
+  - optimistic
+  - central
+  - pessimistic
+synthetic_mode:
+  individual_orders: true
+  price_time_priority: true
+  exact_queue_position: true
+  calibrated_regimes: true
+  adversarial_stress: true
+parent_size:
+  unit: fraction_of_training_median_opposite_top5_depth_by_instrument_time_bucket
+  primary_fraction: 0.25
+  sensitivity_fractions:
+  - 0.1
+  - 0.5
+  - 1.0
+prediction:
+  primary_target: best_quote_depletion_or_trade_through
+  candidate_horizons_ms:
+  - 250
+  - 1000
+  - 5000
+  selected_horizon: PRE_DATA_FIELD_BEFORE_CALIBRATION
+  secondary_target: side_signed_post_event_adverse_selection
+  required_models:
+  - base_rate_or_rule
+  - logistic_or_glm
+  - gradient_boosted_trees
+  - simple_mlp
+  - one_compact_temporal_deep_model
+strategies:
+  required:
+  - immediate_aggressive
+  - twap
+  - past_only_volume_informed
+  - almgren_chriss
+  - queue_liquidity_heuristic
+  - non_ml_mpc
+  - ml_assisted_mpc
+  - deep_model_assisted_mpc
+  - imitation_policy
+  - reinforcement_learning_policy
+  - robust_controller_or_policy
+learning:
+  imitation_required: true
+  reinforcement_learning_required: true
+  rl_training_mode: calibrated_synthetic_exact
+  rl_historical_test: zero_shot_aggregate_replay
+  rl_minimum_development_seeds: 5
+  rl_minimum_final_seeds: 10
+statistics:
+  random_row_split: false
+  final_test_model_selection: false
+  primary_resampling: contiguous_day_block_bootstrap_within_instrument
+  iid_episode_bootstrap_primary: false
+  equal_instrument_weighting: true
+  secondary_multiplicity: Holm_within_family
+performance:
+  profiling_before_optimization: true
+  compiled_inference_required: true
+  cpu_gpu_comparison_required: true
+  cuda_decision_required: true
+  custom_cuda_condition: implement_if_profiled_end_to_end_candidate_is_justified_else_measure_no_go
+release:
+  technical_report_required: true
+  automatic_tables_figures: true
+  sample_reproduction_required: true
+  clean_environment_verification_required: true
+  tagged_release_required: true
+  citation_cff_required: true
+  archival_package_required: true
+pre_data_fields:
+- venue_feed_and_instruments
+- exact_split_dates_and_hashes
+- feed_specific_event_ordering
+- central_queue_formula
+- central_latency_values
+- episode_start_cadence
+- exact_feature_set
+- selected_prediction_horizon
+- temporal_deep_architecture
+- reinforcement_learning_algorithm
+- training_derived_stress_thresholds
+- bootstrap_block_length
+- profiled_cuda_candidate
+core_confirmatory_analysis:
+  strategy: ml_assisted_mpc
+  comparator: non_ml_mpc
+  metric: implementation_shortfall_bps
+  paired: true
+  confidence_level: 0.95
+  superiority_rule: two_sided_ci_entirely_below_zero_and_guardrails_pass
+  guardrails:
+    completion_rate_max_deterioration_percentage_points: 1.0
+    cvar95_max_deterioration: max(1_bps, 5_percent_of_abs_comparator_cvar95)
+    inference: dependence_aware_day_block_bootstrap_95_percent_bounds
+  scope_note: tests_one_part_of_central_question_not_a_replacement

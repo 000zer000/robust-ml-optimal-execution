@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "statistics-engineering-config-v1.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version", "step", "research_status", "bootstrap_repetitions",
+    "ranking_bootstrap_repetitions", "seed", "alpha", "min_block_length",
+    "max_block_length", "acf_threshold", "comparator", "challenger_policies",
+    "historical_confirmatory_analysis_blocked"
+  ],
+  "properties": {
+    "schema_version": {"const": "statistics-engineering-config-v1"},
+    "step": {"const": 29},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "bootstrap_repetitions": {"type": "integer", "minimum": 1000},
+    "ranking_bootstrap_repetitions": {"type": "integer", "minimum": 1000},
+    "seed": {"type": "integer"},
+    "alpha": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 0.5},
+    "min_block_length": {"type": "integer", "minimum": 2, "maximum": 7},
+    "max_block_length": {"type": "integer", "minimum": 2, "maximum": 7},
+    "acf_threshold": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
+    "comparator": {"type": "string", "minLength": 1},
+    "challenger_policies": {"type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}},
+    "historical_confirmatory_analysis_blocked": {"const": true}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,9 @@
+{
+  "artifacts": {
+    "parent-order.json": "72d2d8c45312c551e825af4c22e5caf13fedf3de27cac2d5ba5ae80da3bec1b4",
+    "policy-action.json": "40cdcedfea73b0f71600513997b66d67bc7297dbf3afa6c61102f85236b8db93",
+    "policy-environment.json": "72185f6d1420878b0ca3b9333efa8c0542baf5bae31b96db619fcd90e0739683",
+    "policy-observation.json": "6355ff084a1049ff28e1d994eaf9cc2331b15064dc6685d56f9c3353836142e9"
+  },
+  "schema_version": "1.0"
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "step", "research_status", "config_sha256", "teacher_policy", "episode_ids", "tables", "dagger_triggered", "dagger_rounds"],
+  "properties": {
+    "schema_version": {"const": "imitation-teacher-dataset-manifest-v1"},
+    "step": {"const": 26},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "tables": {"type": "object"}
+  }
+}

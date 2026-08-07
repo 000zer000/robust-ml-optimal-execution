@@ -1,0 +1,68 @@
+{
+  "active_orders": [],
+  "asks": [
+    {
+      "order_count": 1,
+      "price_ticks": 102,
+      "quantity_lots": 10
+    }
+  ],
+  "bids": [
+    {
+      "order_count": 1,
+      "price_ticks": 100,
+      "quantity_lots": 10
+    }
+  ],
+  "decision_id": 1,
+  "decision_time": {
+    "domain": "simulation",
+    "ns": 100
+  },
+  "fee_schedule_id": "zero-fee-v1",
+  "latency_model_id": "zero-latency-v1",
+  "lineage": {
+    "delivered_event_count": 1,
+    "last_event_id": 1,
+    "maximum_available_time": {
+      "domain": "simulation",
+      "ns": 0
+    },
+    "maximum_event_time": {
+      "domain": "simulation",
+      "ns": 0
+    },
+    "rolling_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "observation_cutoff": {
+    "domain": "simulation",
+    "ns": 0
+  },
+  "parent": {
+    "arrival_price_ticks": 101,
+    "cumulative_filled_lots": 0,
+    "end_time": {
+      "domain": "simulation",
+      "ns": 1000
+    },
+    "explicit_fees_quote_atoms": 0,
+    "fill_count": 0,
+    "gross_cash_flow_quote_atoms": 0,
+    "net_cash_flow_quote_atoms": 0,
+    "parent_order_id": 1,
+    "remaining_quantity_lots": 10,
+    "side": "buy",
+    "start_time": {
+      "domain": "simulation",
+      "ns": 0
+    },
+    "status": "active",
+    "terminal_completion_applied": false,
+    "terminal_rule_id": "hard-completion-v1",
+    "total_quantity_lots": 10
+  },
+  "pending_command_count": 0,
+  "recent_trades": [],
+  "schema_version": "1.0",
+  "strategy_id": "step8-demo-policy"
+}

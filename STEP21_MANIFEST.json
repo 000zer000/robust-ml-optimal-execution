@@ -1,0 +1,235 @@
+{
+  "artifacts": [
+    {
+      "bytes": 5089,
+      "change": "modified",
+      "path": ".github/workflows/ci.yml",
+      "sha256": "2fe47fac9bcabfd0aa7578560e8306f9f557d7d60d7df9461a273587c00a2302"
+    },
+    {
+      "bytes": 6213,
+      "change": "modified",
+      "path": "Makefile",
+      "sha256": "74c603b303fd76369586fea8304c750dbb7d9e89c1240c02e69c7b1b63d2f4c5"
+    },
+    {
+      "bytes": 1119,
+      "change": "added",
+      "path": "STEP21_CHANGELOG.md",
+      "sha256": "fa35ad70ffca357f3ad69af110b6daaa8be1b70bde5100ffae5c3ffce802f1dd"
+    },
+    {
+      "bytes": 5533,
+      "change": "added",
+      "path": "STEP21_VALIDATION.md",
+      "sha256": "78fdf8e51758e2fecf9074d436613f29fa575983c9707b52513a8e63720a4adb"
+    },
+    {
+      "bytes": 599,
+      "change": "added",
+      "path": "configs/models/step21_causal_features_sample.json",
+      "sha256": "f678daa599c1ffc9d217e7b08c8024debe55b01e2afb890dd5a141d4fd3eb273"
+    },
+    {
+      "bytes": 1773,
+      "change": "added",
+      "path": "data/sample/prediction/step21-prediction-validation/dataset-manifest.json",
+      "sha256": "6a7a85861ffb7714aadfd80faf69945f740aea7a95e18c285a57c7a6291986a2"
+    },
+    {
+      "bytes": 78,
+      "change": "added",
+      "path": "data/sample/prediction/step21-prediction-validation/dataset-manifest.sha256.json",
+      "sha256": "7d528fcd54a3a3697d3a0faf9ca8e6f3da77ff5927b18974f8f420e359ef77cd"
+    },
+    {
+      "bytes": 2428,
+      "change": "added",
+      "path": "data/sample/prediction/step21-prediction-validation/feature-dictionary.json",
+      "sha256": "955af2173a02d5c28e14b65b87d404c7fa329bd5230f399f81701706f6feb73a"
+    },
+    {
+      "bytes": 11123,
+      "change": "added",
+      "path": "data/sample/prediction/step21-prediction-validation/input-events.json",
+      "sha256": "a2293a0c296e255060993e501b9656a442181fcec3499f3bc91e859812550439"
+    },
+    {
+      "bytes": 1148,
+      "change": "added",
+      "path": "data/sample/prediction/step21-prediction-validation/tables/prediction_features/columns.json.gz",
+      "sha256": "58129413f02434fc759ef9ed8385d41a94636a78717d6937bce97c1cb9e10abd"
+    },
+    {
+      "bytes": 2877,
+      "change": "added",
+      "path": "data/sample/prediction/step21-prediction-validation/tables/prediction_features/schema.json",
+      "sha256": "fbc7529f7a89e4583f71f7426c2f69f5fe7373a8925cf339c539c680fd449028"
+    },
+    {
+      "bytes": 557,
+      "change": "added",
+      "path": "data/sample/prediction/step21-prediction-validation/tables/prediction_labels/columns.json.gz",
+      "sha256": "19950dfae19dcf929269232ede10357013ff224608cfa228dee80595d1b64e63"
+    },
+    {
+      "bytes": 1032,
+      "change": "added",
+      "path": "data/sample/prediction/step21-prediction-validation/tables/prediction_labels/schema.json",
+      "sha256": "c0b9af55d4e6a77d5bd444f6467eee235da0c80deab2eff845916fff5dd1ec2f"
+    },
+    {
+      "bytes": 5952,
+      "change": "added",
+      "path": "docs/models/STEP21_CAUSAL_TARGETS_AND_FEATURES.md",
+      "sha256": "807a58f3edcc1c3d9a7f4812feddfe57103148a92930822267e9e6505f614b0c"
+    },
+    {
+      "bytes": 1921,
+      "change": "added",
+      "path": "docs/models/STEP21_LEAKAGE_AND_MUTATION_TESTS.md",
+      "sha256": "b6da00abd589f0215494f64d10cc5d126592a1f206c1798ed19be1fa0201524c"
+    },
+    {
+      "bytes": 911,
+      "change": "added",
+      "path": "python/robust_execution/prediction/__init__.py",
+      "sha256": "88d54992cd577ace096a840c7812f041a14f3782bab57e5149eb450b4d8897c7"
+    },
+    {
+      "bytes": 8269,
+      "change": "added",
+      "path": "python/robust_execution/prediction/artifacts.py",
+      "sha256": "e07de97bb242e0e413cef03023205be66be20fcebd15f2a8d395dfea304daa34"
+    },
+    {
+      "bytes": 15716,
+      "change": "added",
+      "path": "python/robust_execution/prediction/builder.py",
+      "sha256": "dcaac28d4e5339bcea895566c5399bce74197c0c961f62550569066fe86ccc5d"
+    },
+    {
+      "bytes": 5523,
+      "change": "added",
+      "path": "python/robust_execution/prediction/config.py",
+      "sha256": "e006a269731ca142727e19d298073af8dd4fca6d0bf3a91f4c8542ce9941da75"
+    },
+    {
+      "bytes": 4573,
+      "change": "added",
+      "path": "python/robust_execution/prediction/fixture.py",
+      "sha256": "9960edf8cdba61c1863738b88d283933b6c645aff92b607900aa90e1b4d651c8"
+    },
+    {
+      "bytes": 2621,
+      "change": "added",
+      "path": "python/robust_execution/prediction/models.py",
+      "sha256": "98458f4af6ed41e869176795d28d427e6cfef1bdfbed665309dec657513c59d8"
+    },
+    {
+      "bytes": 5148,
+      "change": "added",
+      "path": "python/robust_execution/prediction/verify.py",
+      "sha256": "2be20e581d0bee8c2e84db8a65ddce4269b17e6ea423426dff94b4be31ccdeb4"
+    },
+    {
+      "bytes": 547,
+      "change": "added",
+      "path": "results/validation/step21/leakage_mutation_report.json",
+      "sha256": "a9a290a8993575359fa79fa38c31b15902406aaa1b33060dd307395097cea848"
+    },
+    {
+      "bytes": 1024,
+      "change": "added",
+      "path": "schemas/prediction/feature-dictionary-v1.schema.json",
+      "sha256": "286421c369bafc405623b1656fc980da6f6c0a1d95019ae3db1d849fe7d32476"
+    },
+    {
+      "bytes": 2332,
+      "change": "added",
+      "path": "schemas/prediction/prediction-dataset-manifest-v1.schema.json",
+      "sha256": "54c22bffcc7f205aae3e89739151f314a9421b8cfafc62cbf93290abd60e2d41"
+    },
+    {
+      "bytes": 4408,
+      "change": "added",
+      "path": "scripts/generate_step21_fixture.py",
+      "sha256": "a89137c19d582b411dd7d5ec74ca04229f6f4655ee5d6f8ce84c69ee06919089"
+    },
+    {
+      "bytes": 19010,
+      "change": "modified",
+      "path": "scripts/validate_repository.py",
+      "sha256": "c3e01c5228afff17906a375d035f56d0bd69985a204a4bb616139e38a4cba8c4"
+    },
+    {
+      "bytes": 3301,
+      "change": "added",
+      "path": "scripts/validate_step21_prediction.py",
+      "sha256": "0c17bed84a083203e9c0d4c5d19a2358a1c246030004db9ba3c26d7712b4ffc3"
+    },
+    {
+      "bytes": 3392,
+      "change": "added",
+      "path": "tests/python/test_prediction_artifacts.py",
+      "sha256": "d438b2211c982c9f3fc9ecbf915159f658be73c751e1ffba845ea08246a763f2"
+    },
+    {
+      "bytes": 9955,
+      "change": "added",
+      "path": "tests/python/test_prediction_builder.py",
+      "sha256": "dbf7b9112ddb73619455c9aa9b36be0c6de9d6be3980c32612a5ac6c2ee65600"
+    },
+    {
+      "bytes": 2486,
+      "change": "added",
+      "path": "tests/python/test_prediction_config.py",
+      "sha256": "224ca54652708a549651191f7a9227ef3577791e1b43aaf5f0512f0802a646d5"
+    }
+  ],
+  "prediction_contract": {
+    "candidate_horizons_ns": [
+      250000000,
+      1000000000,
+      5000000000
+    ],
+    "exact_historical_queue_used": false,
+    "feature_count": 20,
+    "features_and_labels_physically_separated": true,
+    "primary_target": "best_quote_depletion_or_trade_through",
+    "secondary_target": "side_signed_post_event_adverse_selection",
+    "selected_horizon": "PRE_DATA_FIELD_BEFORE_CALIBRATION"
+  },
+  "repository_version": "0.14.0",
+  "research_specification_changed": false,
+  "research_status": "synthetic_validation_only_non_research",
+  "status": "pass",
+  "step": 21,
+  "tests": {
+    "clean_install": true,
+    "cpp_asan_ubsan": 51,
+    "cpp_clang_debug": 51,
+    "cpp_gcc_debug": 51,
+    "cpp_release_ipo": 51,
+    "external_cmake_consumer": true,
+    "mypy_local": "unavailable_registry",
+    "python": 347,
+    "python_branch_coverage_percent": 90.58,
+    "ruff_local": "unavailable_registry"
+  },
+  "validation_fixture": {
+    "future_mutation_feature_unchanged": true,
+    "past_mutation_feature_changed": true,
+    "post_horizon_mutation_all_unchanged": true,
+    "quote_depletion_positive_counts": {
+      "1s": 3,
+      "250ms": 3,
+      "5s": 6
+    },
+    "rows": 8,
+    "symbols": [
+      "BTCUSDT",
+      "ETHUSDT"
+    ]
+  }
+}

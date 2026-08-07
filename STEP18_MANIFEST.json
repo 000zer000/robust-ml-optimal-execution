@@ -1,0 +1,96 @@
+{
+  "artifacts": [
+    {
+      "bytes": 8055,
+      "path": "CMakeLists.txt",
+      "sha256": "fb64f3119dac4c60aecacb77b18e94bfdd884f56033dbcb85ad00f7f0e7c26a9"
+    },
+    {
+      "bytes": 5564,
+      "path": "Makefile",
+      "sha256": "35534cb314e0a4abb67b976db2f05b5154ac25cf3f1829fa856650ab233dba16"
+    },
+    {
+      "bytes": 3885,
+      "path": "cpp/tests/CMakeLists.txt",
+      "sha256": "b6370f3f6e5308da77786895bd8023d34f7293b5a98529c1d484fcac504de05e"
+    },
+    {
+      "bytes": 2688,
+      "path": "cpp/include/robust_execution/strategies/baselines.hpp",
+      "sha256": "8b16aa4ea3419903e378ce4c6aa726881f43bc97e499af6e7e6025fa288b514b"
+    },
+    {
+      "bytes": 66,
+      "path": "cpp/include/robust_execution/strategies/strategies.hpp",
+      "sha256": "5e9ae0d8cffdb625cfd2526a68feb0ef8882dc1ed25d58fe58659f6acdc3844d"
+    },
+    {
+      "bytes": 10845,
+      "path": "cpp/src/strategies/baselines.cpp",
+      "sha256": "51cad3c2895b2f24ff77899939c29bd380ad3a9e0f3e179bdaea9caf6d42416e"
+    },
+    {
+      "bytes": 6625,
+      "path": "cpp/tests/test_basic_baselines.cpp",
+      "sha256": "60c366a017659f796af2c39ac823d97a369a8205a5f1af0d93578f16a6598263"
+    },
+    {
+      "bytes": 4054,
+      "path": "cpp/apps/re_baseline_demo.cpp",
+      "sha256": "ebd4e805941c4be7e054dc714fe26e9d6c6bbc128ddb0e18edf9bb03b038b6a6"
+    },
+    {
+      "bytes": 2033,
+      "path": "scripts/validate_step18_baselines.py",
+      "sha256": "b9826ddf668ed1df2a1b49ec76ca60bc72be9dc40385d8fca3d43f3aca8563db"
+    },
+    {
+      "bytes": 2732,
+      "path": "docs/strategies/STEP18_BASIC_BASELINES.md",
+      "sha256": "8ddaf74e988a7151ccbdd044649d780b2cbe3abb23fa4b0ab379fd387f834ff1"
+    },
+    {
+      "bytes": 745,
+      "path": "docs/strategies/STEP18_BASELINE_VALIDATION.md",
+      "sha256": "0af6c9be636120802f713880c32c145c176898aaef0f13789da1d8d231442d80"
+    },
+    {
+      "bytes": 1142,
+      "path": "data/sample/baselines/step18-baselines-validation/report.json",
+      "sha256": "8c699b3a1c02c8260abc3f9e0d68bdd80f30553c6218863a27343bc9f892da18"
+    },
+    {
+      "bytes": 1839,
+      "path": "STEP18_CHANGELOG.md",
+      "sha256": "5ca2fe6e110a78321f02858f12d1b199da2da5fd7491019ffc7a882be6c8e990"
+    },
+    {
+      "bytes": 3377,
+      "path": "STEP18_VALIDATION.md",
+      "sha256": "a59c01fd348678b1cf391648cbce1ca82d9f4758fb2137289959c68de0d05709"
+    }
+  ],
+  "baselines": [
+    "immediate_aggressive",
+    "twap",
+    "past_volume_informed"
+  ],
+  "passive_variants": [
+    "twap",
+    "past_volume_informed"
+  ],
+  "repository_version": "0.14.0",
+  "research_specification_changed": false,
+  "research_status": "synthetic_validation_only_non_research",
+  "status": "pass",
+  "step": 18,
+  "tests": {
+    "cpp_asan_ubsan": 49,
+    "cpp_clang_debug": 49,
+    "cpp_gcc_debug": 49,
+    "cpp_release_ipo": 49,
+    "python": 308,
+    "python_branch_coverage_percent": 90.07
+  }
+}

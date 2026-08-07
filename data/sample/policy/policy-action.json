@@ -1,0 +1,20 @@
+{
+  "decision_id": 1,
+  "decision_time": {
+    "domain": "simulation",
+    "ns": 100
+  },
+  "kind": "submit",
+  "payload": {
+    "client_order_id": 10,
+    "order_type": "market",
+    "placement": null,
+    "post_only": false,
+    "quantity_fraction": {
+      "denominator": 2,
+      "numerator": 1
+    },
+    "time_in_force": "ioc"
+  },
+  "schema_version": "1.0"
+}

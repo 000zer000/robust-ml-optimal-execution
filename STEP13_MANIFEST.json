@@ -1,0 +1,208 @@
+{
+  "files": [
+    {
+      "bytes": 700,
+      "path": "python/robust_execution/data_validation/__init__.py",
+      "sha256": "55d1755199df19079830221e15748c6439d1c94701f4727d8e9f0e90aca71020"
+    },
+    {
+      "bytes": 6635,
+      "path": "python/robust_execution/data_validation/config.py",
+      "sha256": "d142664a60fd7b2d1c849b8349e0a324ba85631b92d043f59481471ca867eead"
+    },
+    {
+      "bytes": 1425,
+      "path": "python/robust_execution/data_validation/models.py",
+      "sha256": "8e782f1135fe7051e0e9b938df221602c69cb037a9f14f167cc31a2254397217"
+    },
+    {
+      "bytes": 23443,
+      "path": "python/robust_execution/data_validation/validator.py",
+      "sha256": "fdf66c4279261d511fa8790b0be71e0c998fb159d361bd4252d101942468a3fa"
+    },
+    {
+      "bytes": 2928,
+      "path": "python/robust_execution/data_validation/verify.py",
+      "sha256": "f64afc539645303695a5f264f6146aaff478eee6e9ddd14078990afd85e0b373"
+    },
+    {
+      "bytes": 8994,
+      "path": "python/robust_execution/data_validation/fixture.py",
+      "sha256": "10fc02752c9ab6a4052c88763b5155c6e6d734262aa231ad3fcf044c54461b17"
+    },
+    {
+      "bytes": 8133,
+      "path": "python/robust_execution/cli.py",
+      "sha256": "83c63614601f316ee8dd511364748c8331ba006712d599f1361bd5e23893abf2"
+    },
+    {
+      "bytes": 23,
+      "path": "python/robust_execution/_version.py",
+      "sha256": "bf8ce62a3b0a38f65ba7a06b5a8cfb88ae124f4b1d65d521f5b41226696e679a"
+    },
+    {
+      "bytes": 701,
+      "path": "configs/data/binance_raw_validation.json",
+      "sha256": "3293128979aafc0f8540f134f2d5a1428af469ece73d1943277d0a86a8f0c383"
+    },
+    {
+      "bytes": 1932,
+      "path": "schemas/data/raw-data-validation-config-v1.schema.json",
+      "sha256": "32d1a4c26058963d6f86da4d83ab138971730cd525eac4569bbea58d40365a2b"
+    },
+    {
+      "bytes": 4739,
+      "path": "schemas/data/raw-data-validation-report-v1.schema.json",
+      "sha256": "c3fe35fe0f93d5c2aeb83dc7662cbef6d110fe872c51d25621b81ebb3ce1bedc"
+    },
+    {
+      "bytes": 1357,
+      "path": "schemas/data/day-admission-decision-v1.schema.json",
+      "sha256": "2df5e693e29a5a0cbb762c75a2cdd2ce66a6d252f10b8119a3d955ba7bc1c69c"
+    },
+    {
+      "bytes": 1693,
+      "path": "schemas/data/quarantine-manifest-v1.schema.json",
+      "sha256": "c3d9a87b37a8917766ad7cc8ced545675aba76190244c6cb07eb758011cb3790"
+    },
+    {
+      "bytes": 3358,
+      "path": "data/sample/validation_step13/step13-full-day-fixture/manifest.json",
+      "sha256": "7179d9f3ca7fcea9de775fa7f819bad6620019b775f99294393fb7cfe517511a"
+    },
+    {
+      "bytes": 1119,
+      "path": "results/validation/step13/step13-fixture-validation/validation-report.json",
+      "sha256": "e2eb0eea81220e00c2f5f2e78116cb97b9d65ad5df491d6c0cb91bb889927604"
+    },
+    {
+      "bytes": 204,
+      "path": "results/validation/step13/step13-fixture-validation/quarantine-manifest.json",
+      "sha256": "fc59c5cc04c69a0e2582009baa1f525fa82b162afb040563f6d4d432a58d9b91"
+    },
+    {
+      "bytes": 5718,
+      "path": "data/sample/capture/step12-offline-fixture/manifest.json",
+      "sha256": "ff9ac43bef6887607989b2a3091bedd346f72eb1a313911002617da152915d76"
+    },
+    {
+      "bytes": 78,
+      "path": "data/sample/capture/step12-offline-fixture/manifest.sha256.json",
+      "sha256": "60d3f3bae64d571c6e7d049dbe26444356b45195f66f6c2df295a2341a1fd987"
+    },
+    {
+      "bytes": 9472,
+      "path": "STEP12_MANIFEST.json",
+      "sha256": "435618412f6554717cd30f9f296c716cd5d155888880b22f89768cc9e5f70ccc"
+    },
+    {
+      "bytes": 244,
+      "path": "scripts/generate_step13_fixture.py",
+      "sha256": "13bfdbd862494b01c863e624dae1eabb57e0d1888bcbfb653b6162130ac973c1"
+    },
+    {
+      "bytes": 3747,
+      "path": "scripts/validate_step13_data.py",
+      "sha256": "43e845cb0be63281abfb3792b471b9d607f61d71f2d1c9e4fa3553b23700516d"
+    },
+    {
+      "bytes": 9403,
+      "path": "scripts/validate_repository.py",
+      "sha256": "771d5ae9f219decdf8772d045a0257781865effa468dd97e4aaa49981e7a7e09"
+    },
+    {
+      "bytes": 4412,
+      "path": "Makefile",
+      "sha256": "25606af84e32c6c581f66bfa175b83c4da0eeb09d4900d394bb2677c77ff1fb3"
+    },
+    {
+      "bytes": 6525,
+      "path": "CMakeLists.txt",
+      "sha256": "fb2ccb619ceb4184b3e9e69540c9ef5aafbb148c25d4e911b08baa457e79acf3"
+    },
+    {
+      "bytes": 1799,
+      "path": "pyproject.toml",
+      "sha256": "8485d5a04ace1185812441bb7ee8288172d82ae366c2e882a750296603cd8e18"
+    },
+    {
+      "bytes": 138,
+      "path": "uv.lock",
+      "sha256": "eb013360a84a0506870e30d4468340b2143fe7814cd60d506cf5058b531dee79"
+    },
+    {
+      "bytes": 486,
+      "path": "cpp/tests/test_build_info.cpp",
+      "sha256": "318be38454d424e1e21e2711bbe87862b683e723006823dc36d80bcf6d2f1b47"
+    },
+    {
+      "bytes": 12883,
+      "path": "tests/python/test_data_validation.py",
+      "sha256": "a8b632d9982a05e92354a2d153d1313a9cfd42d7167c542344abcc038bea3731"
+    },
+    {
+      "bytes": 3566,
+      "path": "tests/python/test_data_validation_config.py",
+      "sha256": "128b872164e4e0e7211f3ff1a450208a92c7dddee2582d61bf816056b62e4443"
+    },
+    {
+      "bytes": 1146,
+      "path": "tests/python/test_step13_contracts.py",
+      "sha256": "7d4e3ac4e00c980ef6b91c942e7da6d82a116654ca33191435d512c439a78206"
+    },
+    {
+      "bytes": 2655,
+      "path": "tests/python/test_cli.py",
+      "sha256": "005e071cdf162c5b207bc5efaf11e676a8992d721f9a3b7ab79b513f04164499"
+    },
+    {
+      "bytes": 4487,
+      "path": "docs/data/STEP13_RAW_DATA_VALIDATION.md",
+      "sha256": "8755871528481b9708d3e3841557c97d210db0e052ce5cfd3bf5fa7ae629916a"
+    },
+    {
+      "bytes": 1927,
+      "path": "docs/data/STEP13_ADMISSION_AND_QUARANTINE_POLICY.md",
+      "sha256": "396cdd9df2f88cc2023df996cd2529a37d351c6517d157a5cc9fb964a5e195b4"
+    },
+    {
+      "bytes": 2251,
+      "path": "STEP13_CHANGELOG.md",
+      "sha256": "7872bfadb8c5d719a10afaaf74c2d20be10497ba05f1290419e3d5d10fe3b8c0"
+    },
+    {
+      "bytes": 3279,
+      "path": "STEP13_VALIDATION.md",
+      "sha256": "0a6602da89c585e1e0b4414f67a1fdb588b343a6cf45a42a3df37e21915a3df2"
+    }
+  ],
+  "fixture": {
+    "admission_status": "fixture_valid_not_admissible",
+    "days": 1,
+    "messages": 8,
+    "structural_status": "valid"
+  },
+  "live_72h_pilot_complete": false,
+  "real_days_admitted": 0,
+  "repository_version": "0.10.0",
+  "research_specification_changed": false,
+  "schema_version": 1,
+  "specification_lock_regenerated": false,
+  "status": "engineering_pass_live_admission_blocked",
+  "step": 13,
+  "validation": {
+    "asan_ubsan": "pass",
+    "clang_debug": "pass",
+    "cmake_install_consumer": "pass_version_0.10.0",
+    "cpp_tests_per_configuration": 36,
+    "deterministic_regeneration": "pass",
+    "gcc_debug": "pass",
+    "gcc_release_ipo": "pass",
+    "integrated_make_test": "pass",
+    "python_branch_coverage_percent": 90.72,
+    "python_compileall": "pass",
+    "python_tests": 136,
+    "repository_required_files": 183,
+    "ruff": "not_executed_registry_unavailable"
+  }
+}

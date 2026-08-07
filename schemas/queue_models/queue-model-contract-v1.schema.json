@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/queue-models/queue-model-contract-v1.schema.json",
+  "title": "Aggregate L2 queue-model contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_id",
+    "models",
+    "sensitivity_additional_ahead_bps",
+    "require_exact_synthetic_comparison",
+    "exact_fifo_reconstructed_historically",
+    "ghost_small_agent_assumption"
+  ],
+  "properties": {
+    "schema_version": {"const": "queue-model-contract-v1"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "models": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "model_id",
+          "assumption",
+          "additional_initial_ahead_bps",
+          "fill_on_trade_through"
+        ],
+        "properties": {
+          "model_id": {"type": "string", "minLength": 1},
+          "assumption": {"enum": ["optimistic", "central", "pessimistic"]},
+          "additional_initial_ahead_bps": {"type": "integer", "minimum": 0, "maximum": 100000},
+          "fill_on_trade_through": {"type": "boolean"}
+        }
+      }
+    },
+    "sensitivity_additional_ahead_bps": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "integer", "minimum": 0, "maximum": 100000}
+    },
+    "require_exact_synthetic_comparison": {"const": true},
+    "exact_fifo_reconstructed_historically": {"const": false},
+    "ghost_small_agent_assumption": {"const": true}
+  }
+}

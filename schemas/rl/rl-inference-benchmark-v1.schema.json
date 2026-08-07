@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rl-inference-benchmark-v1",
+  "type": "object",
+  "required": [
+    "schema_version", "step", "status", "research_status", "state_feature_count",
+    "action_count", "policies"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "rl-inference-benchmark-v1"},
+    "step": {"const": 27},
+    "status": {"const": "engineering_machine_specific_not_step30_performance_claim"},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "state_feature_count": {"type": "integer", "minimum": 1},
+    "action_count": {"type": "integer", "minimum": 2},
+    "policies": {"type": "object", "minProperties": 5}
+  }
+}

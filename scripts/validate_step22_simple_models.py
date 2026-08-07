@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import tempfile
+
+import jsonschema
+
+from robust_execution.prediction.simple_model_artifacts import (
+    FAMILIES,
+    verify_simple_model_fixture,
+    write_simple_model_fixture,
+)
+from robust_execution.prediction.simple_models import load_simple_model_config
+
+ROOT = Path(__file__).resolve().parents[1]
+CONFIG = ROOT / "configs/models/step22_simple_models_engineering.json"
+MANIFEST = ROOT / "data/sample/models/step22-simple-models-validation/dataset-manifest.json"
+
+
+def fail(message: str) -> None:
+    raise SystemExit(message)
+
+
+def main() -> None:
+    config = load_simple_model_config(CONFIG)
+    result = verify_simple_model_fixture(MANIFEST, config)
+    manifest_schema = json.loads(
+        (ROOT / "schemas/prediction/simple-model-dataset-manifest-v1.schema.json").read_text()
+    )
+    jsonschema.Draft202012Validator.check_schema(manifest_schema)
+    jsonschema.validate(instance=json.loads(MANIFEST.read_text()), schema=manifest_schema)
+    card_schema = json.loads(
+        (ROOT / "schemas/prediction/simple-model-card-v1.schema.json").read_text()
+    )
+    jsonschema.Draft202012Validator.check_schema(card_schema)
+    for horizon in config.candidate_horizons:
+        for family in FAMILIES:
+            card = json.loads(
+                (MANIFEST.parent / "models" / horizon / family / "model-card.json").read_text()
+            )
+            jsonschema.validate(instance=card, schema=card_schema)
+    expected = {"status": "ok", "rows": 800, "models": 12, "horizons": 3}
+    if result != expected:
+        fail(f"Step 22 verification changed: {result}")
+    report = json.loads((MANIFEST.parent / "report.json").read_text())
+    if report["research_status"] != "synthetic_validation_only_non_research":
+        fail("Step 22 research boundary changed")
+    if report["primary_horizon_selected"] or report["final_model_family_selected"]:
+        fail("Step 22 must not select the research horizon or final model family")
+    if report["locked_research_test_opened"]:
+        fail("Step 22 may not open the locked research test")
+    if set(report["models"]) != {"250ms", "1s", "5s"}:
+        fail("Step 22 horizon set changed")
+    for horizon in report["models"].values():
+        if set(horizon) != set(FAMILIES):
+            fail("Step 22 model-family set changed")
+    with tempfile.TemporaryDirectory(prefix="step22-rerun-") as temporary:
+        rerun = write_simple_model_fixture(config, Path(temporary))
+        verify_simple_model_fixture(rerun, config)
+        if (rerun.parent / "report.json").read_bytes() != (
+            MANIFEST.parent / "report.json"
+        ).read_bytes():
+            fail("Step 22 semantic report is not deterministic")
+        committed_manifest = json.loads(MANIFEST.read_text())
+        rerun_manifest = json.loads(rerun.read_text())
+        committed = {
+            item["relative_path"]: item["sha256"]
+            for item in committed_manifest["artifacts"]
+            if item["kind"] != "trusted_pickle_model"
+        }
+        repeated = {
+            item["relative_path"]: item["sha256"]
+            for item in rerun_manifest["artifacts"]
+            if item["kind"] != "trusted_pickle_model"
+        }
+        if committed != repeated:
+            fail("Step 22 deterministic non-binary artifacts changed")
+    print(json.dumps({"status": "ok", "step": 22, **result}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

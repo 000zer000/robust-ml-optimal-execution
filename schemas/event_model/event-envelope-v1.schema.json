@@ -1,0 +1,1137 @@
+{
+  "$defs": {
+    "bookLevel": {
+      "additionalProperties": false,
+      "properties": {
+        "order_count": {
+          "oneOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "price_ticks": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "quantity_lots": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "price_ticks",
+        "quantity_lots"
+      ],
+      "type": "object"
+    },
+    "ordering": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_sequence": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "has_source_sequence": {
+          "type": "boolean"
+        },
+        "ingest_sequence": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "source_sequence": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "source_subsequence": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "has_source_sequence",
+        "source_sequence",
+        "source_subsequence",
+        "ingest_sequence",
+        "canonical_sequence"
+      ],
+      "type": "object"
+    },
+    "schemaVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "timestamp": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "unix_utc",
+            "simulation"
+          ]
+        },
+        "ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain",
+        "ns"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://robust-execution.local/schemas/event-model/event-envelope-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "properties": {
+        "kind": {
+          "const": "book_snapshot"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "asks": {
+              "items": {
+                "$ref": "#/$defs/bookLevel"
+              },
+              "type": "array"
+            },
+            "bids": {
+              "items": {
+                "$ref": "#/$defs/bookLevel"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "bids",
+            "asks"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "depth_update"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "set",
+                "delete"
+              ]
+            },
+            "order_count_after": {
+              "oneOf": [
+                {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "price_ticks": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "quantity_after_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "side": {
+              "enum": [
+                "buy",
+                "sell"
+              ]
+            }
+          },
+          "required": [
+            "side",
+            "price_ticks",
+            "quantity_after_lots",
+            "action"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "trade"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "aggressor_side": {
+              "enum": [
+                "unknown",
+                "buy",
+                "sell"
+              ]
+            },
+            "external_trade_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "price_ticks": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "quantity_lots": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "trade_id": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "trade_id",
+            "price_ticks",
+            "quantity_lots",
+            "aggressor_side"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "decision"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "action_name": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "decision_end": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "decision_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "decision_start": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "model_artifact_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "observation_cutoff": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "remaining_inventory_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "strategy_id": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "decision_id",
+            "strategy_id",
+            "observation_cutoff",
+            "decision_start",
+            "decision_end",
+            "remaining_inventory_lots",
+            "action_name"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "order_submit"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "decision_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "decision_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "exchange_receive_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "limit_price_ticks": {
+              "oneOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "order_type": {
+              "enum": [
+                "limit",
+                "market"
+              ]
+            },
+            "outbound_send_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "parent_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "post_only": {
+              "type": "boolean"
+            },
+            "quantity_lots": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "side": {
+              "enum": [
+                "buy",
+                "sell"
+              ]
+            },
+            "time_in_force": {
+              "enum": [
+                "gtc",
+                "ioc",
+                "fok"
+              ]
+            }
+          },
+          "required": [
+            "parent_order_id",
+            "client_order_id",
+            "decision_id",
+            "side",
+            "order_type",
+            "time_in_force",
+            "quantity_lots",
+            "limit_price_ticks",
+            "post_only",
+            "decision_time",
+            "outbound_send_time",
+            "exchange_receive_time"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "order_acknowledged"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "accepted_quantity_lots": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "cumulative_filled_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "external_order_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "leaves_quantity_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "state": {
+              "enum": [
+                "pending_new",
+                "live",
+                "partially_filled",
+                "pending_cancel",
+                "cancelled",
+                "filled",
+                "rejected",
+                "expired",
+                "replaced"
+              ]
+            }
+          },
+          "required": [
+            "client_order_id",
+            "exchange_order_id",
+            "accepted_quantity_lots",
+            "cumulative_filled_lots",
+            "leaves_quantity_lots",
+            "state"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "order_rejected"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "detail": {
+              "type": "string"
+            },
+            "reason": {
+              "enum": [
+                "invalid_price",
+                "invalid_quantity",
+                "tick_violation",
+                "lot_violation",
+                "duplicate_client_order_id",
+                "unknown_order",
+                "already_terminal",
+                "post_only_would_cross",
+                "insufficient_inventory",
+                "rate_limit",
+                "unsupported_order_type",
+                "invalid_state",
+                "internal_error"
+              ]
+            }
+          },
+          "required": [
+            "client_order_id",
+            "reason",
+            "detail"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "cancel_request"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "decision_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "decision_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "exchange_receive_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "outbound_send_time": {
+              "$ref": "#/$defs/timestamp"
+            }
+          },
+          "required": [
+            "client_order_id",
+            "exchange_order_id",
+            "decision_id",
+            "decision_time",
+            "outbound_send_time",
+            "exchange_receive_time"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "cancel_acknowledged"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "cancelled_quantity_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "cumulative_filled_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "leaves_quantity_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "state": {
+              "enum": [
+                "pending_new",
+                "live",
+                "partially_filled",
+                "pending_cancel",
+                "cancelled",
+                "filled",
+                "rejected",
+                "expired",
+                "replaced"
+              ]
+            }
+          },
+          "required": [
+            "client_order_id",
+            "exchange_order_id",
+            "cumulative_filled_lots",
+            "cancelled_quantity_lots",
+            "leaves_quantity_lots",
+            "state"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "cancel_rejected"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "detail": {
+              "type": "string"
+            },
+            "exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "reason": {
+              "enum": [
+                "invalid_price",
+                "invalid_quantity",
+                "tick_violation",
+                "lot_violation",
+                "duplicate_client_order_id",
+                "unknown_order",
+                "already_terminal",
+                "post_only_would_cross",
+                "insufficient_inventory",
+                "rate_limit",
+                "unsupported_order_type",
+                "invalid_state",
+                "internal_error"
+              ]
+            },
+            "resulting_state": {
+              "enum": [
+                "pending_new",
+                "live",
+                "partially_filled",
+                "pending_cancel",
+                "cancelled",
+                "filled",
+                "rejected",
+                "expired",
+                "replaced"
+              ]
+            }
+          },
+          "required": [
+            "client_order_id",
+            "exchange_order_id",
+            "reason",
+            "resulting_state",
+            "detail"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "replace_request"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "decision_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "decision_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "exchange_receive_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "new_limit_price_ticks": {
+              "oneOf": [
+                {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "new_quantity_lots": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "outbound_send_time": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "replacement_client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "client_order_id",
+            "exchange_order_id",
+            "replacement_client_order_id",
+            "decision_id",
+            "new_quantity_lots",
+            "new_limit_price_ticks",
+            "decision_time",
+            "outbound_send_time",
+            "exchange_receive_time"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "replace_acknowledged"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "accepted_quantity_lots": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "leaves_quantity_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "original_client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "original_exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "replacement_client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "replacement_exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "original_client_order_id",
+            "original_exchange_order_id",
+            "replacement_client_order_id",
+            "replacement_exchange_order_id",
+            "accepted_quantity_lots",
+            "leaves_quantity_lots"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "replace_rejected"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "detail": {
+              "type": "string"
+            },
+            "exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "reason": {
+              "enum": [
+                "invalid_price",
+                "invalid_quantity",
+                "tick_violation",
+                "lot_violation",
+                "duplicate_client_order_id",
+                "unknown_order",
+                "already_terminal",
+                "post_only_would_cross",
+                "insufficient_inventory",
+                "rate_limit",
+                "unsupported_order_type",
+                "invalid_state",
+                "internal_error"
+              ]
+            },
+            "replacement_client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "resulting_state": {
+              "enum": [
+                "pending_new",
+                "live",
+                "partially_filled",
+                "pending_cancel",
+                "cancelled",
+                "filled",
+                "rejected",
+                "expired",
+                "replaced"
+              ]
+            }
+          },
+          "required": [
+            "client_order_id",
+            "exchange_order_id",
+            "replacement_client_order_id",
+            "reason",
+            "resulting_state",
+            "detail"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "fill"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "cumulative_filled_lots": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "exchange_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "execution_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "external_match_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "leaves_quantity_lots": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "liquidity_role": {
+              "enum": [
+                "unknown",
+                "maker",
+                "taker"
+              ]
+            },
+            "price_ticks": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "quantity_lots": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "side": {
+              "enum": [
+                "buy",
+                "sell"
+              ]
+            }
+          },
+          "required": [
+            "execution_id",
+            "client_order_id",
+            "exchange_order_id",
+            "side",
+            "price_ticks",
+            "quantity_lots",
+            "cumulative_filled_lots",
+            "leaves_quantity_lots",
+            "liquidity_role"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "fee"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "amount_quote_atoms": {
+              "type": "integer"
+            },
+            "execution_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "fee_schedule_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "liquidity_role": {
+              "enum": [
+                "unknown",
+                "maker",
+                "taker"
+              ]
+            }
+          },
+          "required": [
+            "execution_id",
+            "fee_schedule_id",
+            "amount_quote_atoms",
+            "liquidity_role"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "terminal_completion"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "explicit_fee_quote_atoms": {
+              "type": "integer"
+            },
+            "parent_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "price_ticks": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "quantity_lots": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "rule_id": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "side": {
+              "enum": [
+                "buy",
+                "sell"
+              ]
+            }
+          },
+          "required": [
+            "parent_order_id",
+            "side",
+            "quantity_lots",
+            "price_ticks",
+            "explicit_fee_quote_atoms",
+            "rule_id"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "timer"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "occurrence": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "timer_name": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "timer_name",
+            "occurrence"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "payload"
+      ]
+    }
+  ],
+  "properties": {
+    "available_time": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "event_id": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "event_time": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "instrument": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "ordering": {
+      "$ref": "#/$defs/ordering"
+    },
+    "origin": {
+      "enum": [
+        "historical_feed",
+        "synthetic_exchange",
+        "strategy",
+        "system"
+      ]
+    },
+    "original_timestamp": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    },
+    "receive_time": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "$ref": "#/$defs/schemaVersion"
+    },
+    "source_channel": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "venue": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "run_id",
+    "venue",
+    "instrument",
+    "source_channel",
+    "origin",
+    "event_time",
+    "receive_time",
+    "available_time",
+    "ordering",
+    "original_timestamp",
+    "kind",
+    "payload"
+  ],
+  "title": "Robust Execution Event Envelope v1",
+  "type": "object"
+}

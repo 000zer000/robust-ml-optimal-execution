@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/synthetic/synthetic-market-config-v1.schema.json",
+  "title": "Synthetic market configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "scenario_id", "scenario_class", "run_id", "seed", "grid_step_ns",
+    "initial_reference_ticks", "instrument", "fees", "regimes", "shocks"
+  ],
+  "properties": {
+    "schema_id": {"const": "synthetic-market-config-v1"},
+    "scenario_id": {"type": "string", "minLength": 1},
+    "scenario_class": {"enum": ["designed_synthetic", "adversarial_stress"]},
+    "run_id": {"type": "string", "minLength": 1},
+    "seed": {"type": "integer", "minimum": 0},
+    "grid_step_ns": {"type": "integer", "minimum": 1},
+    "initial_reference_ticks": {"type": "integer", "minimum": 1},
+    "instrument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["venue_id", "instrument_id", "minimum_order_lots", "maximum_order_lots"],
+      "properties": {
+        "venue_id": {"type": "string", "minLength": 1},
+        "instrument_id": {"type": "string", "minLength": 1},
+        "minimum_order_lots": {"type": "integer", "minimum": 1},
+        "maximum_order_lots": {"type": "integer", "minimum": 1}
+      }
+    },
+    "fees": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fee_schedule_id", "maker_atoms_per_lot", "taker_atoms_per_lot"],
+      "properties": {
+        "fee_schedule_id": {"type": "string", "minLength": 1},
+        "maker_atoms_per_lot": {"type": "integer"},
+        "taker_atoms_per_lot": {"type": "integer"}
+      }
+    },
+    "regimes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/regime"}
+    },
+    "shocks": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/shock"}
+    }
+  },
+  "$defs": {
+    "ppm": {"type": "integer", "minimum": 0, "maximum": 1000000},
+    "regime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "regime_id", "scenario_class", "steps", "limit_add_probability_ppm",
+        "market_order_probability_ppm", "cancel_probability_ppm",
+        "reference_move_probability_ppm", "buy_probability_ppm",
+        "excitation_increment_ppm", "excitation_decay_ppm", "excitation_cap_ppm",
+        "resilience_boost_cap_ppm", "half_spread_ticks", "visible_levels_per_side",
+        "target_lots_per_level", "minimum_order_lots", "maximum_order_lots",
+        "maximum_reference_jump_ticks", "impact_microticks_per_lot", "impact_decay_ppm"
+      ],
+      "properties": {
+        "regime_id": {"type": "string", "minLength": 1},
+        "scenario_class": {"enum": ["designed_synthetic", "adversarial_stress"]},
+        "steps": {"type": "integer", "minimum": 1},
+        "limit_add_probability_ppm": {"$ref": "#/$defs/ppm"},
+        "market_order_probability_ppm": {"$ref": "#/$defs/ppm"},
+        "cancel_probability_ppm": {"$ref": "#/$defs/ppm"},
+        "reference_move_probability_ppm": {"$ref": "#/$defs/ppm"},
+        "buy_probability_ppm": {"$ref": "#/$defs/ppm"},
+        "excitation_increment_ppm": {"$ref": "#/$defs/ppm"},
+        "excitation_decay_ppm": {"$ref": "#/$defs/ppm"},
+        "excitation_cap_ppm": {"$ref": "#/$defs/ppm"},
+        "resilience_boost_cap_ppm": {"$ref": "#/$defs/ppm"},
+        "half_spread_ticks": {"type": "integer", "minimum": 1},
+        "visible_levels_per_side": {"type": "integer", "minimum": 1, "maximum": 1000},
+        "target_lots_per_level": {"type": "integer", "minimum": 1},
+        "minimum_order_lots": {"type": "integer", "minimum": 1},
+        "maximum_order_lots": {"type": "integer", "minimum": 1},
+        "maximum_reference_jump_ticks": {"type": "integer", "minimum": 1},
+        "impact_microticks_per_lot": {"type": "integer", "minimum": -1000000000, "maximum": 1000000000},
+        "impact_decay_ppm": {"$ref": "#/$defs/ppm"}
+      }
+    },
+    "shock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shock_id", "scenario_class", "start_step", "duration_steps",
+        "liquidity_multiplier_ppm", "spread_multiplier_ppm",
+        "volatility_multiplier_ppm", "market_order_multiplier_ppm",
+        "cancel_multiplier_ppm", "buy_probability_shift_ppm",
+        "one_time_reference_jump_ticks"
+      ],
+      "properties": {
+        "shock_id": {"type": "string", "minLength": 1},
+        "scenario_class": {"const": "adversarial_stress"},
+        "start_step": {"type": "integer", "minimum": 0},
+        "duration_steps": {"type": "integer", "minimum": 1},
+        "liquidity_multiplier_ppm": {"type": "integer", "minimum": 0, "maximum": 10000000},
+        "spread_multiplier_ppm": {"type": "integer", "minimum": 0, "maximum": 10000000},
+        "volatility_multiplier_ppm": {"type": "integer", "minimum": 0, "maximum": 10000000},
+        "market_order_multiplier_ppm": {"type": "integer", "minimum": 0, "maximum": 10000000},
+        "cancel_multiplier_ppm": {"type": "integer", "minimum": 0, "maximum": 10000000},
+        "buy_probability_shift_ppm": {"type": "integer", "minimum": -1000000, "maximum": 1000000},
+        "one_time_reference_jump_ticks": {"type": "integer"}
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "files": {
+    "DECISIONS.md": "10c7522ea9e68e55f21748772c692651267f95420920406dd0675abc54002b4f",
+    "PROJECT_CONTEXT.md": "46f04d747cc50ffe28f579469aa1c5c4097b8a1fa2d6aea248b5d4ec41e7fa26",
+    "RESEARCH_PROTOCOL.md": "3ec5d2556a7e7b42f091a794a13f23131609a12ac400ac4a76c8c7dcff5abb25",
+    "RESEARCH_QUESTIONS.md": "aafce3f772cc45d2b8a266b6952e42fff00280e9c0d5a735f28922623e15be31",
+    "SCOPE.md": "1d39b8743d07bbe162b50e44288703e7a4e55eb600f8049851d7314c3352a29f",
+    "SPECIFICATION.yaml": "7487a09ded2b30a67b2fde91a9eb5063f6594c9060abdf27d2d55c5cb845df79",
+    "SPECIFICATION_FREEZE.md": "7c64e40ff13082189fc4461fbf5242bc6cc23b0a19cccd136f0aa89b62ee57db"
+  },
+  "generated_from": "corrected Step 2 specification present at Step 4 bootstrap",
+  "purpose": "Detect any unapproved modification to the frozen Step 2 research specification.",
+  "regeneration_policy": "Regenerate only after Othmane explicitly approves a specification amendment and the amendment is recorded.",
+  "schema_version": 1
+}

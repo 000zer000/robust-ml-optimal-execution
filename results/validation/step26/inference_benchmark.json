@@ -1,0 +1,1 @@
+{"rows":150,"schema_version":"imitation-inference-benchmark-v1","status":"engineering_machine_specific_not_step30_performance_claim","step":26,"student_numpy_batch_one":{"p50_ns":12428.5,"p95_ns":13856.049999999996},"teacher_cpp_shared_mpc":{"p50_ns":199407.0,"p95_ns":262686.8999999998}}

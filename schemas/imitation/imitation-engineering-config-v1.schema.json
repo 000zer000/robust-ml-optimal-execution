@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "step", "research_status", "episode_counts", "steps_per_episode", "hidden_units", "alphas"],
+  "properties": {
+    "schema_version": {"const": "imitation-engineering-config-v1"},
+    "step": {"const": 26},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "episode_counts": {"type": "object"},
+    "steps_per_episode": {"type": "integer", "minimum": 4},
+    "hidden_units": {"type": "array", "items": {"type": "integer", "minimum": 2}},
+    "alphas": {"type": "array", "items": {"type": "number", "exclusiveMinimum": 0}}
+  }
+}

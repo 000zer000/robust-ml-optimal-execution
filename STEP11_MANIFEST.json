@@ -1,0 +1,71 @@
+{
+  "central_research_question_changed": false,
+  "date": "2026-08-06",
+  "files": {
+    ".github/workflows/ci.yml": "e22442ba135af63dfaefeaa0d7960cd4ed88f21c995b426eb43a7a85dfa719d0",
+    "CMakeLists.txt": "69cb18f4766975291337f54653fd76da359a29de68d54ed67a19bf3bb58999dc",
+    "Makefile": "e3e269b827d84009ca2512aa83a1c451934ec5b5b75be8b719b2c7da43b569c2",
+    "STEP11_CHANGELOG.md": "1fe18cb0b24a9a8fe119638285d68f094e17b93e1bcaeb5d62fc850601a4147f",
+    "STEP11_VALIDATION.md": "a23af008c1719d030c6128d30e8c696ba0f2499a5f9ba3d043deee2e38279e76",
+    "configs/data/binance_spot_primary.json": "8583582d2b7f091e8b78f5e3bea87d52dce86fbfab7d42c550752abb65173d04",
+    "cpp/tests/test_build_info.cpp": "e0f89eca276b3d3f7fcf1fe679da6472cb77d86cf18f0a9e20390e2842dc969e",
+    "data/sample/source_selection/source_decision.json": "8583582d2b7f091e8b78f5e3bea87d52dce86fbfab7d42c550752abb65173d04",
+    "docs/data/ACQUISITION_OPTIONS.md": "bb0ae73b26206705924b5bd5ec4e33f4cc59ca63055c17c687732517d34a1cce",
+    "docs/data/BINANCE_SPOT_FEED_CONTRACT.md": "9faa33b8d682002ec37ae7c6b80508539f80faef37ff24a3cd947695f7ea852d",
+    "docs/data/DATA_LICENSING_AND_RELEASE_POLICY.md": "4495e6552da2536720e9c4464d225beb505d6f58ee669cafb30b43cf35c38658",
+    "docs/data/PRIMARY_SOURCE_AUDIT.md": "49454a6078a08f9132311069a2be61610e5f2538e8da1a0c4494eb6f864d4cfa",
+    "docs/data/SOURCE_COMPARISON_MATRIX.md": "8960ebb2797e8929fdcbaa26d3a87dd3b4df753daf24d645751ee70551a38b70",
+    "docs/data/STEP11_MARKET_DATA_SOURCE_SELECTION.md": "61d92e9ab85affa3267fd397c86e7b66065ec5fcd1eec78c302eaac176481980",
+    "docs/proposals/STEP11_TARDIS_PURCHASE_APPROVAL.md": "628d9334f2728c566ba2a04b96361271eca09d4ed1b61b7409ce060976ed6cc5",
+    "pyproject.toml": "c4ff07200219b8c47014d6c2963999bd94739dc85aaf3d3585ee33a10afd2e98",
+    "python/robust_execution/_version.py": "115921910e016e4c7dda35ee0a6b76fc90e3404c609ebab67777814083fd500a",
+    "results/validation/step11/local_network_access.txt": "c10335f966aa1041030265a657af1b2d323f89e5742b404b08a0f9b05c0ba847",
+    "results/validation/step11/source_decision.json": "8583582d2b7f091e8b78f5e3bea87d52dce86fbfab7d42c550752abb65173d04",
+    "results/validation/step11/source_decision.json.sha256": "9748bbd78a1cadf0f353708ae709428c64e08d2d9f4784e57e909a7d47e55363",
+    "schemas/data/README.md": "7259407495a365f885e5ba6541ea8de788d7d40f524a57f17a4105b1fee245c2",
+    "schemas/data/market-data-source-decision-v1.schema.json": "0d554a91e2a0a8bbe4d21b034a1836d69e61cf1c94fd484cbd559b6b3257bc24",
+    "scripts/run_bootstrap_validation.sh": "65e1b6b8cb25c7587a09d182971966de7ad0c98f004ddc2171013ee1fc9b3211",
+    "scripts/validate_repository.py": "ca885c9f3c14a08de9ce604348134b4734b690ca1d4f30bd2c839ea18268292a",
+    "scripts/validate_step11_source_decision.py": "ea8769fbf1285ff68c9a7351f283b39ea89ebb76403a224401dccd607183bbf5",
+    "tests/python/test_step11_source_decision.py": "8937644c64a57843703d54b3f0d0ff9c32cb4d330ece4d0ababe68a2fe548ba2",
+    "uv.lock": "df10dfd5fd55c7f948ca5f61731e7ed61f443fe5e2fec34093994aac9f5fa1c5"
+  },
+  "frozen_specification_check": {
+    "checked_files": 7,
+    "lock_regenerated": false,
+    "status": "pass"
+  },
+  "paid_purchase_made": false,
+  "repository_version": "0.8.0",
+  "research_specification_changed": false,
+  "schema_version": 1,
+  "source_decision": {
+    "canonical_raw_source": "official_self_capture",
+    "decision_sha256": "8583582d2b7f091e8b78f5e3bea87d52dce86fbfab7d42c550752abb65173d04",
+    "historical_acceleration": "tardis_conditional_pending_user_approval",
+    "instruments": [
+      "BTCUSDT",
+      "ETHUSDT"
+    ],
+    "venue": "binance_spot"
+  },
+  "status": "complete",
+  "step": 11,
+  "validation": {
+    "asan_ubsan": "pass_no_findings",
+    "clang_debug": "pass",
+    "cpp_tests_per_configuration": 36,
+    "cross_compiler_gate_b_report": "byte_identical",
+    "docker": "configured_not_executed",
+    "downstream_find_package_consumer": "pass_version_0.8",
+    "gcc_debug": "pass",
+    "gcc_release_ipo": "pass",
+    "install_export": "pass",
+    "live_endpoint_access": "not_executed_dns_resolution_failure",
+    "python_branch_coverage_percent": 93.69,
+    "python_tests": 55,
+    "ruff_mypy": "configured_not_executed_tools_unavailable",
+    "tardis_sample_download": "not_executed_dns_resolution_failure",
+    "tsan_local": "known_toolchain_link_failure_not_rerun"
+  }
+}

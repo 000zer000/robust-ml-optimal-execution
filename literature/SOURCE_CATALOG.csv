@@ -1,0 +1,19 @@
+citation_key,topic,publication_status,persistent_identifier,evidence_role
+BertsimasLo1998,Optimal execution,peer-reviewed journal,10.1016/S1386-4181(97)00012-8,foundational
+AlmgrenChriss2001,Optimal execution,peer-reviewed journal,10.21314/JOR.2001.041,foundational
+ObizhaevaWang2013,Impact/resilience,peer-reviewed journal,10.1016/j.finmar.2012.09.001,foundational
+HuangLehalleRosenbaum2015,Queue-reactive simulation,peer-reviewed journal,10.1142/S2382626615500033,core
+ContKukanovStoikov2014,OFI/impact,peer-reviewed journal,10.1093/jjfinec/nbt003,core
+ZhangZohrenRoberts2019,Deep LOB prediction,peer-reviewed journal,10.1109/TSP.2019.2907260,core
+ElmachtoubGrigas2022,Predict-then-optimise,peer-reviewed journal,10.1287/mnsc.2020.3922,core
+RossGordonBagnell2011,Imitation learning,peer-reviewed conference,,core
+ZhangDuanChen2023,RL generalisation,peer-reviewed conference,10.24963/ijcai.2023/553,core
+FreyLiNagy2023,GPU LOB simulation,peer-reviewed conference,10.1145/3604237.3626880,core
+NagyFreyLi2025,Simulator benchmarking,peer-reviewed conference,,current core
+WangGaoLi2026,RL execution,peer-reviewed journal,10.1007/s00780-026-00589-5,current core
+EspanaHafsiLilloVittori2025,RL queue-reactive,preprint,arXiv:2511.15262,current direction
+NobleRosenbaumSouilmi2026,Reality-gap simulation,preprint,arXiv:2603.24137,current direction
+PolitisRomano1994,Dependent bootstrap,peer-reviewed journal,10.1080/01621459.1994.10476870,methodology
+White2000,Data snooping,peer-reviewed journal,10.1111/1468-0262.00152,methodology
+RomanoWolf2005,Multiple testing,peer-reviewed journal,10.1111/j.1468-0262.2005.00615.x,methodology
+BriolaBartolucciAste2025,Deep LOB prediction,peer-reviewed journal,10.1080/14697688.2025.2522911,current core

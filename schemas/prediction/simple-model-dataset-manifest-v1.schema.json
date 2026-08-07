@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/prediction/simple-model-dataset-manifest-v1.schema.json",
+  "title": "Step 22 Simple Model Dataset Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "step", "dataset_id", "software_version", "config_sha256",
+    "step21_feature_contract_sha256", "research_status", "row_count", "model_count",
+    "model_binary_byte_determinism_required", "semantic_prediction_determinism_required",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": "simple-model-dataset-manifest-v1"},
+    "step": {"const": 22},
+    "dataset_id": {"const": "step22-simple-models-validation"},
+    "software_version": {"type": "string"},
+    "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "step21_feature_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "row_count": {"const": 800},
+    "model_count": {"const": 12},
+    "model_binary_byte_determinism_required": {"const": false},
+    "semantic_prediction_determinism_required": {"const": true},
+    "artifacts": {
+      "type": "array",
+      "minItems": 70,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "relative_path", "sha256", "bytes"],
+        "properties": {
+          "kind": {"type": "string"},
+          "relative_path": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 1}
+        }
+      }
+    }
+  }
+}

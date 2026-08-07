@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rl-engineering-config-v1",
+  "type": "object",
+  "required": [
+    "schema_version", "step", "research_status", "algorithm", "algorithm_status",
+    "training_seeds", "train_episodes_per_update", "updates", "steps_per_episode",
+    "parent_lots", "gamma", "gae_lambda", "clip_ratio", "entropy_coef", "value_coef",
+    "learning_rate", "update_epochs", "hidden_units", "inventory_penalty_bps",
+    "invalid_action_penalty_bps", "terminal_impact_multiplier", "evaluation_episodes",
+    "ood_episodes", "seed"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "rl-engineering-config-v1"},
+    "step": {"const": 27},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "algorithm": {"const": "categorical_ppo"},
+    "algorithm_status": {"const": "engineering_candidate_not_frozen_research_field"},
+    "training_seeds": {"type": "array", "minItems": 5, "items": {"type": "integer"}},
+    "train_episodes_per_update": {"type": "integer", "minimum": 4},
+    "updates": {"type": "integer", "minimum": 2},
+    "steps_per_episode": {"type": "integer", "minimum": 4},
+    "parent_lots": {"type": "integer", "minimum": 4},
+    "gamma": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+    "gae_lambda": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+    "clip_ratio": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+    "entropy_coef": {"type": "number", "minimum": 0},
+    "value_coef": {"type": "number", "minimum": 0},
+    "learning_rate": {"type": "number", "exclusiveMinimum": 0},
+    "update_epochs": {"type": "integer", "minimum": 1},
+    "hidden_units": {"type": "integer", "minimum": 4},
+    "inventory_penalty_bps": {"type": "number", "minimum": 0},
+    "invalid_action_penalty_bps": {"type": "number", "minimum": 0},
+    "terminal_impact_multiplier": {"type": "number", "minimum": 0},
+    "evaluation_episodes": {"type": "integer", "minimum": 10},
+    "ood_episodes": {"type": "integer", "minimum": 10},
+    "seed": {"type": "integer"}
+  }
+}

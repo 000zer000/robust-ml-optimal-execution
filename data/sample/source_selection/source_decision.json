@@ -1,0 +1,105 @@
+{
+  "decision_date": "2026-08-06",
+  "decision_status": "selected_with_acquisition_gate",
+  "historical_sources": {
+    "accelerated_backfill": {
+      "data_types": [
+        "incremental_book_L2",
+        "trades"
+      ],
+      "exchange_id": "binance",
+      "free_sample_access": "first_day_of_each_month",
+      "normalized_csv_role": "parser_development_historical_replay_and_cross_check",
+      "provider": "tardis_dev",
+      "raw_replay_role": "eligible_only_if_access_plan_includes_exchange_native_raw_data",
+      "status": "conditionally_selected_pending_user_purchase_approval"
+    },
+    "canonical_raw_corpus": {
+      "minimum_valid_whole_days_per_instrument": 100,
+      "planned_calendar_day_buffer": 20,
+      "source": "self_capture_from_official_binance_market_data_only_endpoints",
+      "status": "selected"
+    },
+    "official_binance_archive_role": "trade_cross_check_only_not_full_l2_history",
+    "semantic_source": "official_binance_live_feed"
+  },
+  "instruments": [
+    {
+      "base_asset": "BTC",
+      "quote_asset": "USDT",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "base_asset": "ETH",
+      "quote_asset": "USDT",
+      "symbol": "ETHUSDT"
+    }
+  ],
+  "known_boundaries": [
+    "aggregate L2 does not reveal individual order identity or exact historical FIFO queue position",
+    "initial REST snapshot is capped at 5000 levels per side",
+    "a 24 hour WebSocket lifetime requires overlap or controlled rotation",
+    "normalized vendor CSV does not substitute for preservation of raw exchange messages",
+    "vendor and venue licences may prohibit redistribution even when access is public",
+    "historical realism remains unvalidated until Steps 12 through 16"
+  ],
+  "live_feed_contract": {
+    "collector_arrival_timestamp_required": true,
+    "connection_rotation_required_before_hours": 24,
+    "depth_snapshot_limit_per_side": 5000,
+    "depth_stream_template": "<symbol_lower>@depth@100ms",
+    "exchange_event_time_field": "E",
+    "final_update_id_field": "u",
+    "first_update_id_field": "U",
+    "gap_policy": "invalidate_current_book_and_rebuild_from_new_snapshot",
+    "timestamp_unit_parameter": "timeUnit=MICROSECOND",
+    "trade_stream_template": "<symbol_lower>@trade",
+    "trade_time_field": "T"
+  },
+  "paid_purchase_made": false,
+  "primary_venue": {
+    "display_name": "Binance Spot",
+    "market_type": "spot",
+    "metadata_path": "/api/v3/exchangeInfo",
+    "public_market_data_only": true,
+    "rest_base": "https://data-api.binance.vision",
+    "semantic_authority": "official_binance_spot_api_documentation",
+    "snapshot_path": "/api/v3/depth",
+    "venue_id": "binance_spot",
+    "websocket_base": "wss://data-stream.binance.vision"
+  },
+  "publication_policy": {
+    "commit_credentials": false,
+    "commit_raw_market_data": false,
+    "commit_vendor_normalized_rows": false,
+    "public_sample_policy": "synthetic_fixtures_or_redistribution_cleared_minimal_samples_only",
+    "publish_derived_high_frequency_dataset": false,
+    "written_license_clearance_required_before_any_market_data_release": true
+  },
+  "research_specification_changed": false,
+  "schema_version": 1,
+  "source_urls": {
+    "binance_market_only": "https://github.com/binance/binance-spot-api-docs/blob/master/faqs/market_data_only.md",
+    "binance_public_archive": "https://github.com/binance/binance-public-data/blob/master/README.md",
+    "binance_rest": "https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md",
+    "binance_ws": "https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md",
+    "bybit_book": "https://bybit-exchange.github.io/docs/v5/websocket/public/orderbook",
+    "coinbase_channels": "https://docs.cdp.coinbase.com/exchange/websocket-feed/channels",
+    "tardis_billing": "https://docs.tardis.dev/faq/billing-and-subscriptions",
+    "tardis_binance": "https://docs.tardis.dev/historical-data-details/binance",
+    "tardis_bybit": "https://docs.tardis.dev/downloadable-csv-files/historical-data-details/bybit-spot",
+    "tardis_coinbase": "https://docs.tardis.dev/historical-data-details/coinbase",
+    "tardis_csv": "https://docs.tardis.dev/downloadable-csv-files",
+    "tardis_terms": "https://docs.tardis.dev/legal/terms-of-service"
+  },
+  "step": 11,
+  "step12_entry_gates": [
+    "query_exchangeInfo_at_capture_start_and persist exact symbol filters",
+    "run at least 72 hours of live pilot capture for both instruments",
+    "measure actual compressed and uncompressed bytes per day before storage procurement",
+    "verify snapshot_delta reconstruction and forced reconnect recovery",
+    "verify update ID continuity duplicate handling and clock capture",
+    "obtain explicit user approval before any paid Tardis purchase",
+    "preserve raw bytes checksums connection metadata and collector timestamps"
+  ]
+}

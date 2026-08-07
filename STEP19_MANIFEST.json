@@ -1,0 +1,147 @@
+{
+  "artifacts": [
+    {
+      "bytes": 8459,
+      "change": "modified",
+      "path": "CMakeLists.txt",
+      "sha256": "bc75fcb0a8469c489143108916faa8985762bd1f5d25cd7e5693174889b4aa02"
+    },
+    {
+      "bytes": 5766,
+      "change": "modified",
+      "path": "Makefile",
+      "sha256": "a233d8cf54f30999bcc54194c634d896cf5549495eaaaac99d5f323cfbd6255f"
+    },
+    {
+      "bytes": 2997,
+      "change": "added",
+      "path": "STEP19_CHANGELOG.md",
+      "sha256": "c915009a28f7de37f41bcc0781005d6b2bf889e56288b8e1a1e18ba32d638fec"
+    },
+    {
+      "bytes": 4066,
+      "change": "added",
+      "path": "STEP19_VALIDATION.md",
+      "sha256": "4145863294e788b404be495e5086c136f5ad48af06e99f80cfa131003e211f8c"
+    },
+    {
+      "bytes": 6089,
+      "change": "added",
+      "path": "cpp/apps/re_almgren_chriss_demo.cpp",
+      "sha256": "84ff238a1413f16af3c75906bc4c93e262fb4bbab173f9aab2b4846fdc89674c"
+    },
+    {
+      "bytes": 2347,
+      "change": "added",
+      "path": "cpp/include/robust_execution/strategies/almgren_chriss.hpp",
+      "sha256": "d95de04f01ca7daac5fdbf19bcff01692acaa37c5e2be04e98bfefa0a492e0ce"
+    },
+    {
+      "bytes": 125,
+      "change": "modified",
+      "path": "cpp/include/robust_execution/strategies/strategies.hpp",
+      "sha256": "ed16461c63b1b383b4b1c3b8596b19b44c4c4b8720a1d32d7527cec1a0a0de3e"
+    },
+    {
+      "bytes": 16034,
+      "change": "added",
+      "path": "cpp/src/strategies/almgren_chriss.cpp",
+      "sha256": "6c452c6717949099d23013d1a3e9ba671cefd7b34d0286a149194c5bb18e81a4"
+    },
+    {
+      "bytes": 3950,
+      "change": "modified",
+      "path": "cpp/tests/CMakeLists.txt",
+      "sha256": "509b986d27ca2f9371870880df3a339fc3c83bf2df0830a3710eee2951455462"
+    },
+    {
+      "bytes": 8060,
+      "change": "added",
+      "path": "cpp/tests/test_almgren_chriss.cpp",
+      "sha256": "352c154a3aa23a2fd1c0be74d413727564d90ed99bfceb79e94af00566238e3f"
+    },
+    {
+      "bytes": 2752,
+      "change": "added",
+      "path": "data/sample/almgren_chriss/step19-validation/report.json",
+      "sha256": "bd49d219d3dd6910b9d0b79bd5d76db84ef3b9d8f82fae65dbc9114917316da9"
+    },
+    {
+      "bytes": 4287,
+      "change": "added",
+      "path": "docs/strategies/STEP19_ALMGREN_CHRISS.md",
+      "sha256": "103117a736dd1cdc1faccc5cd9a513770bc373ed2459676640a2953e03122214"
+    },
+    {
+      "bytes": 1557,
+      "change": "added",
+      "path": "docs/strategies/STEP19_ALMGREN_CHRISS_VALIDATION.md",
+      "sha256": "3dc421fbe694fe72f4673938f5a99bf02ec376166ba4836c996cddb30ebf7f9f"
+    },
+    {
+      "bytes": 230,
+      "change": "added",
+      "path": "results/validation/step19/almgren_chriss_cross_compiler.sha256",
+      "sha256": "82fe83e4bf0513c8d3c04528e1a61c18f68f68985dd391976d6eadc33df8037c"
+    },
+    {
+      "bytes": 16665,
+      "change": "modified",
+      "path": "scripts/validate_repository.py",
+      "sha256": "8bac1b3420d5edf6aba7c9a7df30246b4e66453d919018a3ee93f0a44a1f38b3"
+    },
+    {
+      "bytes": 4276,
+      "change": "added",
+      "path": "scripts/validate_step19_almgren_chriss.py",
+      "sha256": "63b711c5b72c0c2d0e962400311a6e5aacf35308b1d47a5d92e9b0e8ade00e38"
+    }
+  ],
+  "implementation": {
+    "calibration_cutoff_required": true,
+    "integer_lot_conservation": true,
+    "primary_execution_style": "aggressive",
+    "risk_neutral_matches_twap": true,
+    "stable_tridiagonal_solver": true
+  },
+  "model": "discrete_linear_almgren_chriss_zero_drift",
+  "repository_version": "0.14.0",
+  "research_specification_changed": false,
+  "research_status": "synthetic_validation_only_non_research",
+  "status": "pass",
+  "step": 19,
+  "tests": {
+    "cpp_asan_ubsan": 50,
+    "cpp_clang_debug": 50,
+    "cpp_gcc_debug": 50,
+    "cpp_release_ipo": 50,
+    "python": 308,
+    "python_branch_coverage_percent": 90.07
+  },
+  "validation_oracles": {
+    "high_risk_lots": [
+      73,
+      20,
+      5,
+      2
+    ],
+    "moderate_kappa": "ln(2)",
+    "moderate_risk_lots": [
+      51,
+      26,
+      14,
+      9
+    ],
+    "risk_neutral_lots": [
+      25,
+      25,
+      25,
+      25
+    ],
+    "synthetic_shortfall_bps": {
+      "high_risk": 68,
+      "moderate_risk": 37,
+      "risk_neutral": 0
+    }
+  }
+}

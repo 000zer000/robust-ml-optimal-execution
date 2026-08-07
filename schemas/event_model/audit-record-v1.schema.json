@@ -1,0 +1,53 @@
+{
+  "$id": "https://robust-execution.local/schemas/event-model/audit-record-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "append_index": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "event": {
+      "$ref": "event-envelope-v1.schema.json"
+    },
+    "previous_record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "append_index",
+    "previous_record_sha256",
+    "event",
+    "record_sha256"
+  ],
+  "title": "Robust Execution Audit Record v1",
+  "type": "object"
+}

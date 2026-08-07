@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/data/canonical-data-config-v1.schema.json",
+  "title": "Canonical data configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "venue_id", "symbols", "output_tier", "input_policy", "format_policy", "instruments", "research_specification_changed"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "venue_id": {"const": "binance_spot"},
+    "symbols": {"const": ["BTCUSDT", "ETHUSDT"]},
+    "output_tier": {"enum": ["sample", "processed"]},
+    "input_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["require_verified_capture", "require_structurally_valid_day", "reject_quarantined_days", "require_research_admission_for_processed", "allow_structurally_valid_fixture_sample", "repair_or_interpolate_missing_events"],
+      "properties": {
+        "require_verified_capture": {"const": true},
+        "require_structurally_valid_day": {"const": true},
+        "reject_quarantined_days": {"const": true},
+        "require_research_admission_for_processed": {"const": true},
+        "allow_structurally_valid_fixture_sample": {"type": "boolean"},
+        "repair_or_interpolate_missing_events": {"const": false}
+      }
+    },
+    "format_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["base_format", "compression", "exact_decimal_conversion", "parquet_required_for_processed", "parquet_optional_for_sample"],
+      "properties": {
+        "base_format": {"const": "re_columnar_v1"},
+        "compression": {"const": "gzip"},
+        "exact_decimal_conversion": {"const": true},
+        "parquet_required_for_processed": {"const": true},
+        "parquet_optional_for_sample": {"const": true}
+      }
+    },
+    "instruments": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["symbol", "price_increment", "quantity_increment", "source"],
+        "properties": {
+          "symbol": {"enum": ["BTCUSDT", "ETHUSDT"]},
+          "price_increment": {"type": "string", "minLength": 1},
+          "quantity_increment": {"type": "string", "minLength": 1},
+          "source": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "research_specification_changed": {"const": false}
+  }
+}

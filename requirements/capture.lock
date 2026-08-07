@@ -1,0 +1,3 @@
+# Step 12 live-capture runtime dependency.
+# Pinned separately because the core simulator remains dependency-light.
+websockets==16.0

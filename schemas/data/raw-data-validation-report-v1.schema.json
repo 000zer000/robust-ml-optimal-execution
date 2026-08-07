@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/robust-execution/raw-data-validation-report-v1.schema.json",
+  "title": "Raw data validation report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "step",
+    "validation_id",
+    "source_run_id",
+    "source_manifest_sha256",
+    "venue_id",
+    "symbols",
+    "data_origin",
+    "software_version",
+    "validation_config_sha256",
+    "research_specification_changed",
+    "missing_events_repaired",
+    "source_capture_verified",
+    "total_raw_records",
+    "issue_counts",
+    "days",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "step": {
+      "const": 13
+    },
+    "validation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "venue_id": {
+      "const": "binance_spot"
+    },
+    "symbols": {
+      "const": [
+        "BTCUSDT",
+        "ETHUSDT"
+      ]
+    },
+    "data_origin": {
+      "enum": [
+        "live_binance",
+        "synthetic_transport_fixture"
+      ]
+    },
+    "software_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "validation_config_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "research_specification_changed": {
+      "const": false
+    },
+    "missing_events_repaired": {
+      "const": false
+    },
+    "source_capture_verified": {
+      "const": true
+    },
+    "total_raw_records": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "issue_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "critical",
+        "warning"
+      ],
+      "properties": {
+        "critical": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "days": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/dayDecision"
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "admitted_days",
+        "quarantined_days",
+        "structurally_valid_days",
+        "non_admissible_valid_days"
+      ],
+      "properties": {
+        "admitted_days": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quarantined_days": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "structurally_valid_days": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "non_admissible_valid_days": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "$defs": {
+    "dayDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "day",
+        "structural_status",
+        "admission_status",
+        "reasons",
+        "total_messages",
+        "depth_messages",
+        "trade_messages",
+        "first_received_utc_ns",
+        "last_received_utc_ns",
+        "critical_issue_count",
+        "warning_count"
+      ],
+      "properties": {
+        "day": {
+          "type": "string",
+          "format": "date"
+        },
+        "structural_status": {
+          "enum": [
+            "valid",
+            "invalid"
+          ]
+        },
+        "admission_status": {
+          "enum": [
+            "admitted",
+            "quarantined",
+            "fixture_valid_not_admissible",
+            "not_admissible"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "total_messages": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "depth_messages": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "trade_messages": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "first_received_utc_ns": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "last_received_utc_ns": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "critical_issue_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

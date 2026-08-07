@@ -1,0 +1,1 @@
+{"chronological":true,"days":{"calibration":10,"engineering_holdout":20,"train":50,"validation":20},"research_locked_test_opened":false,"rows":{"calibration":80,"engineering_holdout":160,"train":400,"validation":160},"schema_version":"simple-model-split-manifest-v1","split_unit":"whole_synthetic_day","symbols":["BTCUSDT","ETHUSDT"]}

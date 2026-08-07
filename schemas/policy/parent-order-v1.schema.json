@@ -1,0 +1,91 @@
+{
+  "$id": "https://robust-execution.local/schemas/policy/parent-order-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "arrival_price_ticks": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "end_time": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "unix_utc",
+            "simulation"
+          ]
+        },
+        "ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain",
+        "ns"
+      ],
+      "type": "object"
+    },
+    "instrument": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "parent_order_id": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "side": {
+      "enum": [
+        "buy",
+        "sell"
+      ]
+    },
+    "start_time": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "unix_utc",
+            "simulation"
+          ]
+        },
+        "ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain",
+        "ns"
+      ],
+      "type": "object"
+    },
+    "terminal_rule_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "total_quantity_lots": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "venue": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "parent_order_id",
+    "venue",
+    "instrument",
+    "side",
+    "total_quantity_lots",
+    "start_time",
+    "end_time",
+    "arrival_price_ticks",
+    "terminal_rule_id"
+  ],
+  "type": "object"
+}

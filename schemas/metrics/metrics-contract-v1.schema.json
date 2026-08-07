@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/metrics/metrics-contract-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "step", "accounting", "benchmarks", "adverse_selection", "tail_risk", "latency", "performance", "research_status"],
+  "properties": {
+    "schema_version": {"const": "metrics-contract-v1"},
+    "step": {"const": 17},
+    "accounting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fee_sign_convention", "implementation_shortfall_formula", "buy_side_sign", "sell_side_sign", "basis_point_scale", "require_complete_parent_for_final_shortfall", "terminal_completion_included", "quote_notional_must_be_exact"],
+      "properties": {
+        "fee_sign_convention": {"const": "positive_cost_negative_rebate"},
+        "implementation_shortfall_formula": {"const": "side_sign*(execution_notional-benchmark_notional)+explicit_fees"},
+        "buy_side_sign": {"const": 1},
+        "sell_side_sign": {"const": -1},
+        "basis_point_scale": {"const": 10000},
+        "require_complete_parent_for_final_shortfall": {"const": true},
+        "terminal_completion_included": {"const": true},
+        "quote_notional_must_be_exact": {"const": true}
+      }
+    },
+    "benchmarks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "external_benchmarks_allowed"],
+      "properties": {
+        "required": {"const": ["arrival_price"]},
+        "external_benchmarks_allowed": {"const": true}
+      }
+    },
+    "adverse_selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["formula", "required_coverage_reporting", "validation_horizons_ns"],
+      "properties": {
+        "formula": {"const": "side_sign*(fill_price-markout_mid_price)*quantity"},
+        "required_coverage_reporting": {"const": true},
+        "validation_horizons_ns": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "exclusiveMinimum": 0}}
+      }
+    },
+    "tail_risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["var_method", "cvar_method", "levels", "sample_variance_denominator", "require_independent_episode_audit", "reject_incomplete_episodes"],
+      "properties": {
+        "var_method": {"const": "empirical_nearest_rank"},
+        "cvar_method": {"const": "fractional_worst_tail_mean"},
+        "levels": {"const": [0.95, 0.99]},
+        "sample_variance_denominator": {"const": "n_minus_1"},
+        "require_independent_episode_audit": {"const": true},
+        "reject_incomplete_episodes": {"const": true}
+      }
+    },
+    "latency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["percentiles", "method", "units"],
+      "properties": {
+        "percentiles": {"const": [0.5, 0.95, 0.99]},
+        "method": {"const": "empirical_nearest_rank"},
+        "units": {"const": "nanoseconds"}
+      }
+    },
+    "performance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["throughput_formula", "memory_measure", "benchmark_claims_allowed"],
+      "properties": {
+        "throughput_formula": {"const": "events_processed*1e9/wall_time_ns"},
+        "memory_measure": {"const": "peak_rss_bytes"},
+        "benchmark_claims_allowed": {"const": false}
+      }
+    },
+    "research_status": {"const": "synthetic_validation_only_non_research"}
+  }
+}

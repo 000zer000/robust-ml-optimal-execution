@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/robust-execution/historical-replay-config-v1.schema.json",
+  "title": "Historical Replay Configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "replay_id", "symbols", "observation_processing_delay_ns",
+    "top_levels", "maximum_recent_trades", "checkpoint_policy",
+    "require_research_admissible_input", "allow_connection_start_proxy_for_sample",
+    "require_exact_snapshot_fetch_time_for_research", "queue_position_semantics",
+    "market_impact_semantics"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "replay_id": {"type": "string", "minLength": 1},
+    "symbols": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z0-9]+$"}},
+    "observation_processing_delay_ns": {"type": "integer", "minimum": 0},
+    "top_levels": {"type": "integer", "minimum": 1},
+    "maximum_recent_trades": {"type": "integer", "minimum": 1},
+    "checkpoint_policy": {"const": "after_each_delivered_event_validation_only"},
+    "require_research_admissible_input": {"type": "boolean"},
+    "allow_connection_start_proxy_for_sample": {"type": "boolean"},
+    "require_exact_snapshot_fetch_time_for_research": {"type": "boolean"},
+    "queue_position_semantics": {"const": "not_reconstructed_until_step16"},
+    "market_impact_semantics": {"const": "ghost_small_agent_no_endogenous_impact"}
+  }
+}

@@ -1,0 +1,7 @@
+episode_id,timestamp_ns,remaining_lots
+detailed-buy,0,100
+detailed-buy,100,60
+detailed-buy,300,30
+detailed-buy,700,10
+detailed-buy,1000,10
+detailed-buy,1100,0

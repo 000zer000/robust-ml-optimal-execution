@@ -1,0 +1,388 @@
+{
+  "$id": "https://robust-execution.local/schemas/data/market-data-source-decision-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Market Data Source Decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "step",
+    "decision_date",
+    "decision_status",
+    "research_specification_changed",
+    "paid_purchase_made",
+    "primary_venue",
+    "instruments",
+    "live_feed_contract",
+    "historical_sources",
+    "publication_policy",
+    "step12_entry_gates",
+    "known_boundaries",
+    "source_urls"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "step": {
+      "const": 11
+    },
+    "decision_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "decision_status": {
+      "const": "selected_with_acquisition_gate"
+    },
+    "research_specification_changed": {
+      "const": false
+    },
+    "paid_purchase_made": {
+      "const": false
+    },
+    "primary_venue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "venue_id",
+        "display_name",
+        "market_type",
+        "semantic_authority",
+        "public_market_data_only",
+        "websocket_base",
+        "rest_base",
+        "snapshot_path",
+        "metadata_path"
+      ],
+      "properties": {
+        "venue_id": {
+          "const": "binance_spot"
+        },
+        "display_name": {
+          "const": "Binance Spot"
+        },
+        "market_type": {
+          "const": "spot"
+        },
+        "semantic_authority": {
+          "const": "official_binance_spot_api_documentation"
+        },
+        "public_market_data_only": {
+          "const": true
+        },
+        "websocket_base": {
+          "const": "wss://data-stream.binance.vision"
+        },
+        "rest_base": {
+          "const": "https://data-api.binance.vision"
+        },
+        "snapshot_path": {
+          "const": "/api/v3/depth"
+        },
+        "metadata_path": {
+          "const": "/api/v3/exchangeInfo"
+        }
+      }
+    },
+    "instruments": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": false,
+      "prefixItems": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "symbol",
+            "base_asset",
+            "quote_asset"
+          ],
+          "properties": {
+            "symbol": {
+              "const": "BTCUSDT"
+            },
+            "base_asset": {
+              "const": "BTC"
+            },
+            "quote_asset": {
+              "const": "USDT"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "symbol",
+            "base_asset",
+            "quote_asset"
+          ],
+          "properties": {
+            "symbol": {
+              "const": "ETHUSDT"
+            },
+            "base_asset": {
+              "const": "ETH"
+            },
+            "quote_asset": {
+              "const": "USDT"
+            }
+          }
+        }
+      ]
+    },
+    "live_feed_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collector_arrival_timestamp_required",
+        "connection_rotation_required_before_hours",
+        "depth_snapshot_limit_per_side",
+        "depth_stream_template",
+        "exchange_event_time_field",
+        "final_update_id_field",
+        "first_update_id_field",
+        "gap_policy",
+        "timestamp_unit_parameter",
+        "trade_stream_template",
+        "trade_time_field"
+      ],
+      "properties": {
+        "collector_arrival_timestamp_required": {
+          "const": true
+        },
+        "connection_rotation_required_before_hours": {
+          "const": 24
+        },
+        "depth_snapshot_limit_per_side": {
+          "const": 5000
+        },
+        "depth_stream_template": {
+          "const": "<symbol_lower>@depth@100ms"
+        },
+        "exchange_event_time_field": {
+          "const": "E"
+        },
+        "final_update_id_field": {
+          "const": "u"
+        },
+        "first_update_id_field": {
+          "const": "U"
+        },
+        "gap_policy": {
+          "const": "invalidate_current_book_and_rebuild_from_new_snapshot"
+        },
+        "timestamp_unit_parameter": {
+          "const": "timeUnit=MICROSECOND"
+        },
+        "trade_stream_template": {
+          "const": "<symbol_lower>@trade"
+        },
+        "trade_time_field": {
+          "const": "T"
+        }
+      }
+    },
+    "historical_sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accelerated_backfill",
+        "canonical_raw_corpus",
+        "official_binance_archive_role",
+        "semantic_source"
+      ],
+      "properties": {
+        "accelerated_backfill": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "data_types",
+            "exchange_id",
+            "free_sample_access",
+            "normalized_csv_role",
+            "provider",
+            "raw_replay_role",
+            "status"
+          ],
+          "properties": {
+            "data_types": {
+              "const": [
+                "incremental_book_L2",
+                "trades"
+              ]
+            },
+            "exchange_id": {
+              "const": "binance"
+            },
+            "free_sample_access": {
+              "const": "first_day_of_each_month"
+            },
+            "normalized_csv_role": {
+              "const": "parser_development_historical_replay_and_cross_check"
+            },
+            "provider": {
+              "const": "tardis_dev"
+            },
+            "raw_replay_role": {
+              "const": "eligible_only_if_access_plan_includes_exchange_native_raw_data"
+            },
+            "status": {
+              "const": "conditionally_selected_pending_user_purchase_approval"
+            }
+          }
+        },
+        "canonical_raw_corpus": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "minimum_valid_whole_days_per_instrument",
+            "planned_calendar_day_buffer",
+            "source",
+            "status"
+          ],
+          "properties": {
+            "minimum_valid_whole_days_per_instrument": {
+              "const": 100
+            },
+            "planned_calendar_day_buffer": {
+              "const": 20
+            },
+            "source": {
+              "const": "self_capture_from_official_binance_market_data_only_endpoints"
+            },
+            "status": {
+              "const": "selected"
+            }
+          }
+        },
+        "official_binance_archive_role": {
+          "const": "trade_cross_check_only_not_full_l2_history"
+        },
+        "semantic_source": {
+          "const": "official_binance_live_feed"
+        }
+      }
+    },
+    "publication_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit_credentials",
+        "commit_raw_market_data",
+        "commit_vendor_normalized_rows",
+        "public_sample_policy",
+        "publish_derived_high_frequency_dataset",
+        "written_license_clearance_required_before_any_market_data_release"
+      ],
+      "properties": {
+        "commit_credentials": {
+          "const": false
+        },
+        "commit_raw_market_data": {
+          "const": false
+        },
+        "commit_vendor_normalized_rows": {
+          "const": false
+        },
+        "public_sample_policy": {
+          "const": "synthetic_fixtures_or_redistribution_cleared_minimal_samples_only"
+        },
+        "publish_derived_high_frequency_dataset": {
+          "const": false
+        },
+        "written_license_clearance_required_before_any_market_data_release": {
+          "const": true
+        }
+      }
+    },
+    "known_boundaries": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 10
+      }
+    },
+    "step12_entry_gates": {
+      "type": "array",
+      "minItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 10
+      }
+    },
+    "source_urls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binance_market_only",
+        "binance_public_archive",
+        "binance_rest",
+        "binance_ws",
+        "bybit_book",
+        "coinbase_channels",
+        "tardis_billing",
+        "tardis_binance",
+        "tardis_bybit",
+        "tardis_coinbase",
+        "tardis_csv",
+        "tardis_terms"
+      ],
+      "properties": {
+        "binance_market_only": {
+          "type": "string",
+          "pattern": "^https://github\\.com/binance/"
+        },
+        "binance_public_archive": {
+          "type": "string",
+          "pattern": "^https://github\\.com/binance/"
+        },
+        "binance_rest": {
+          "type": "string",
+          "pattern": "^https://github\\.com/binance/"
+        },
+        "binance_ws": {
+          "type": "string",
+          "pattern": "^https://github\\.com/binance/"
+        },
+        "bybit_book": {
+          "type": "string",
+          "pattern": "^https://bybit-exchange\\.github\\.io/"
+        },
+        "coinbase_channels": {
+          "type": "string",
+          "pattern": "^https://docs\\.cdp\\.coinbase\\.com/"
+        },
+        "tardis_billing": {
+          "type": "string",
+          "pattern": "^https://docs\\.tardis\\.dev/"
+        },
+        "tardis_binance": {
+          "type": "string",
+          "pattern": "^https://docs\\.tardis\\.dev/"
+        },
+        "tardis_bybit": {
+          "type": "string",
+          "pattern": "^https://docs\\.tardis\\.dev/"
+        },
+        "tardis_coinbase": {
+          "type": "string",
+          "pattern": "^https://docs\\.tardis\\.dev/"
+        },
+        "tardis_csv": {
+          "type": "string",
+          "pattern": "^https://docs\\.tardis\\.dev/"
+        },
+        "tardis_terms": {
+          "type": "string",
+          "pattern": "^https://docs\\.tardis\\.dev/"
+        }
+      }
+    }
+  }
+}

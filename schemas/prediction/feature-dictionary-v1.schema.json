@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/prediction/feature-dictionary-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "feature_count",
+    "feature_names",
+    "all_features_causal",
+    "uses_exact_historical_queue_position",
+    "uses_future_volume_profile",
+    "definitions"
+  ],
+  "properties": {
+    "schema_version": {"const": "prediction-feature-dictionary-v1"},
+    "feature_count": {"const": 20},
+    "feature_names": {
+      "type": "array",
+      "minItems": 20,
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "all_features_causal": {"const": true},
+    "uses_exact_historical_queue_position": {"const": false},
+    "uses_future_volume_profile": {"const": false},
+    "definitions": {
+      "type": "object",
+      "minProperties": 20,
+      "additionalProperties": {"type": "string", "minLength": 1}
+    }
+  }
+}

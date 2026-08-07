@@ -1,0 +1,381 @@
+{
+  "architecture": "causal_conv1d_lstm",
+  "architecture_count": 1,
+  "artifacts": [
+    {
+      "baseline_sha256": "47ff0ae0e3e1f10be2db65bbe5bb89b7649a324d711252b4b829e24183bfdee3",
+      "bytes": 5431,
+      "change": "modified",
+      "path": ".github/workflows/ci.yml",
+      "sha256": "69a4cd5617ace3a2cbcbdbf8fd1eb843fd25f9cbc739eb762de7a816c21e9123"
+    },
+    {
+      "baseline_sha256": "7ba32695c9a87cdce162a2dde35a8f31101fce6c4851a674bb9d111fe3e157cc",
+      "bytes": 7022,
+      "change": "modified",
+      "path": "Makefile",
+      "sha256": "3729708a86ba37914bebd63bccf370811218d4c809ebd99dd2c4b65c1910ddae"
+    },
+    {
+      "bytes": 4000,
+      "change": "added",
+      "path": "STEP23_CHANGELOG.md",
+      "sha256": "843c51db80893e6a8f4c83507e5e55713ae9f26fdc1e34eb0baa8f33c7e040da"
+    },
+    {
+      "bytes": 7278,
+      "change": "added",
+      "path": "STEP23_VALIDATION.md",
+      "sha256": "7b2fdbedbe65c12969d6a15be64f1a3b8521254f3037587f9b24606ebb981efd"
+    },
+    {
+      "bytes": 2123,
+      "change": "added",
+      "path": "configs/models/step23_temporal_deep_engineering.json",
+      "sha256": "fccb28598ddc4dcbda0c0e14ec4b64e55d9a5ec43993743ee69fc0da5d4e4ee8"
+    },
+    {
+      "bytes": 6264,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/dataset-manifest.json",
+      "sha256": "2fd8133cb66cafc180493020576f9bc12d910895598f7fbae10fdc4aea059f9e"
+    },
+    {
+      "bytes": 419,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/1s/causal_conv1d_lstm/decision-proxy.json",
+      "sha256": "054c70cdf3e331430daa1d3f56f929284ba557eeb97bf8978760a54ebf0d0d8c"
+    },
+    {
+      "bytes": 2768,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/1s/causal_conv1d_lstm/model-card.json",
+      "sha256": "53414489a39734be33fe45903c4c951f9aa547c495a63005553908a8c1e3121f"
+    },
+    {
+      "bytes": 1510,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/1s/causal_conv1d_lstm/ood-diagnostics.json",
+      "sha256": "2dfd02a8f0ca09c791ea6f6ac252e0974135d7637afb31d4f46324b52c943d25"
+    },
+    {
+      "bytes": 1054,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/1s/causal_conv1d_lstm/reliability.json",
+      "sha256": "3f0fb0f9cd97b0a3824b84e3d9873c127ddb2063a41afe29d1da94bdf616e0ff"
+    },
+    {
+      "bytes": 2540,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/1s/causal_conv1d_lstm/slice-metrics.json",
+      "sha256": "8fb5a916bfd227200a9d9b35e1ee6e86eb341d4d13e9e057df10d0acdf3c6de5"
+    },
+    {
+      "bytes": 10898,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/1s/causal_conv1d_lstm/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "e50c24fb3946fdaae1a9941670f0a966c2b5716b385f1db63d76fe7f1ea97771"
+    },
+    {
+      "bytes": 995,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/1s/causal_conv1d_lstm/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "998abd32d0ac11899304f5a66ed9c87ae437118ece677881bd903573b858e439"
+    },
+    {
+      "bytes": 22282,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/1s/causal_conv1d_lstm/weights.json",
+      "sha256": "9ffbfd1e92dc3431334ba87fe073065abf93cc87e73fe2696056e4f3a989433d"
+    },
+    {
+      "bytes": 443,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/250ms/causal_conv1d_lstm/decision-proxy.json",
+      "sha256": "d3d1abeddf4a2d9e314ffa57313985ca15c525d7ade29c7f1891372059c87d01"
+    },
+    {
+      "bytes": 2776,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/250ms/causal_conv1d_lstm/model-card.json",
+      "sha256": "0cf9ca4844fed7ad082f92a689cbf1aac7b7b0de79e16d4a31b8c40250f38db9"
+    },
+    {
+      "bytes": 1498,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/250ms/causal_conv1d_lstm/ood-diagnostics.json",
+      "sha256": "a3b5fa80f30bf81dded0516453df697759c35f0de633f407923da053e15022d0"
+    },
+    {
+      "bytes": 1056,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/250ms/causal_conv1d_lstm/reliability.json",
+      "sha256": "f9feea8b6cc495bb8e88ec4867a9377e274907da419271d142450b119f35703b"
+    },
+    {
+      "bytes": 2546,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/250ms/causal_conv1d_lstm/slice-metrics.json",
+      "sha256": "9f6cac16ed51605def260a7a865740baa0d27f7f2c7ff3095ad75dcfe2b433e8"
+    },
+    {
+      "bytes": 10867,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/250ms/causal_conv1d_lstm/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "8541a32f8c589635c4d4b5ab066174307d4369faacb0ef531103d86510fe27c7"
+    },
+    {
+      "bytes": 995,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/250ms/causal_conv1d_lstm/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "998abd32d0ac11899304f5a66ed9c87ae437118ece677881bd903573b858e439"
+    },
+    {
+      "bytes": 40982,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/250ms/causal_conv1d_lstm/weights.json",
+      "sha256": "ba0e0792875c9eb422c99c5d95ad970463decb1dd83387c429b469a141052d3a"
+    },
+    {
+      "bytes": 441,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/5s/causal_conv1d_lstm/decision-proxy.json",
+      "sha256": "903b2452a5ffbdf34b2b8e4120240092bfdf683e0dfb6bc05f72a63aa97bf4b4"
+    },
+    {
+      "bytes": 2767,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/5s/causal_conv1d_lstm/model-card.json",
+      "sha256": "e2794fdf53d4eb493ac1b9014ac9e036903649b8d6056d93527cf13166a3c832"
+    },
+    {
+      "bytes": 1647,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/5s/causal_conv1d_lstm/ood-diagnostics.json",
+      "sha256": "9142dba7a17e326355cea001c4d3d9e4fec7be8001fa8c9309f837fa6b449d3d"
+    },
+    {
+      "bytes": 1152,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/5s/causal_conv1d_lstm/reliability.json",
+      "sha256": "993ce9d53bf9c24dd5aadb418445f9ebe32275b1f07fcfbd7ee30c2ad9fdfd5f"
+    },
+    {
+      "bytes": 2916,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/5s/causal_conv1d_lstm/slice-metrics.json",
+      "sha256": "f3592cf273a6ed253143f6978971b0fce71ae5e1bb79320a5fac612083a87325"
+    },
+    {
+      "bytes": 10967,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/5s/causal_conv1d_lstm/tables/engineering_holdout_predictions/columns.json.gz",
+      "sha256": "36731d3b39e4c31750579ff77ac20cdc2ff81e13bf3fb6b09bf2e5a1feb06a25"
+    },
+    {
+      "bytes": 995,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/5s/causal_conv1d_lstm/tables/engineering_holdout_predictions/schema.json",
+      "sha256": "998abd32d0ac11899304f5a66ed9c87ae437118ece677881bd903573b858e439"
+    },
+    {
+      "bytes": 41055,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/models/5s/causal_conv1d_lstm/weights.json",
+      "sha256": "83e6fed3e304dbc8b07559fe7ddf7b5b93709ca38cb9da51d354c4f65a40b0f8"
+    },
+    {
+      "bytes": 5992,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/report.json",
+      "sha256": "9b7f7a4ed2700c4449fdbc9d56ed29b5355bfefa1a584aebeb4346b1f4b27817"
+    },
+    {
+      "bytes": 533,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/split-manifest.json",
+      "sha256": "51aed122b1694a87047308c7f5364b22eab9fd5328d3e9f52313b2ba7255882f"
+    },
+    {
+      "bytes": 11535,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/tables/engineering_sequences/columns.json.gz",
+      "sha256": "74b4db42afe012d87cff12e42922a8c2d80063feacbe04628bc3686479a44691"
+    },
+    {
+      "bytes": 630,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/tables/engineering_sequences/schema.json",
+      "sha256": "fed9202ae053564e33eb748815d045e2a6fc82b21ce3983d224ab23b53bd6491"
+    },
+    {
+      "bytes": 178896,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/tables/engineering_training_rows/columns.json.gz",
+      "sha256": "88a8fa71d19015b00ddc83bd809dbbdb6794d4a22f5d3c031162e39e70fbec80"
+    },
+    {
+      "bytes": 2323,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/tables/engineering_training_rows/schema.json",
+      "sha256": "a743fba778b816139076a63ed2c93c1bae411fbe6c88a4087440e4524f174ff3"
+    },
+    {
+      "bytes": 1724,
+      "change": "added",
+      "path": "data/sample/models/step23-temporal-deep-validation/training-config.json",
+      "sha256": "efde0322326a7cae6a0e5ee8f6d84a2fc1ca8bd144b31fb94fd2918ddc4eae95"
+    },
+    {
+      "bytes": 2257,
+      "change": "added",
+      "path": "docs/models/STEP23_MODEL_INFERENCE_CONTRACT.md",
+      "sha256": "9aa6e439f335777a302d5f05908b655e01e19964457d3f8d108022bcd32177d6"
+    },
+    {
+      "bytes": 7249,
+      "change": "added",
+      "path": "docs/models/STEP23_TEMPORAL_DEEP_MODEL.md",
+      "sha256": "2a85e9427a84c38c52ae513df5d89f9bed4c1139da8f7047c6a73e9b53f20227"
+    },
+    {
+      "baseline_sha256": "2fdba464302f2a34c446292375cad322a8912c170421f76d4940621695df9920",
+      "bytes": 2070,
+      "change": "modified",
+      "path": "pyproject.toml",
+      "sha256": "dbfb41006e7ed32e3b4d8ef53f47c9d8e602b43f1067583d7d85434fea64def8"
+    },
+    {
+      "bytes": 16215,
+      "change": "added",
+      "path": "python/robust_execution/prediction/temporal_model_artifacts.py",
+      "sha256": "cc65688d0c11cd4c54b60b8df083aa5eb602ddd102649dec9820035f604bd7d0"
+    },
+    {
+      "bytes": 45145,
+      "change": "added",
+      "path": "python/robust_execution/prediction/temporal_models.py",
+      "sha256": "c712ef6e8e36f5979cfcf48b81cadfb51f9bb7bc611718263a30957b191af3c7"
+    },
+    {
+      "baseline_sha256": "607bcc5d8a7dbb7d99bb2334b74cd657b54729b196206709305e51a8b2bfabd1",
+      "bytes": 820,
+      "change": "modified",
+      "path": "requirements/README.md",
+      "sha256": "2a658b33457af5fda1f3bf0ec41abd70a984581b2339ee7ec453acf42ac9ee13"
+    },
+    {
+      "bytes": 1261,
+      "change": "added",
+      "path": "results/validation/step23/inference_benchmark.json",
+      "sha256": "ee4a7f673882c10318c492a3da00c94153c804c0b9a3de56b9e63a405e79139a"
+    },
+    {
+      "bytes": 1660,
+      "change": "added",
+      "path": "schemas/prediction/temporal-model-card-v1.schema.json",
+      "sha256": "115ea9ef09a983ee8ef71cfe27e0bcd10511d0f305bdfff3432ce519c92eb1f1"
+    },
+    {
+      "bytes": 1846,
+      "change": "added",
+      "path": "schemas/prediction/temporal-model-dataset-manifest-v1.schema.json",
+      "sha256": "7e15d2d8c6cb0c78ed4563a263e0bc9f713e6e68bed69ebc02d221f8ba277041"
+    },
+    {
+      "bytes": 1891,
+      "change": "added",
+      "path": "scripts/benchmark_step23_inference.py",
+      "sha256": "dc74739fd5f161ea9beccf3c082300611d9581253fce6c50f8bbeb61bfbc3c95"
+    },
+    {
+      "bytes": 584,
+      "change": "added",
+      "path": "scripts/generate_step23_fixture.py",
+      "sha256": "078267e9870eb67f3d8975d6b1fa2d7e4f3aacf4af94b7d4f1ce266bc5e3cf92"
+    },
+    {
+      "baseline_sha256": "3eeb393a7f56620cb9a751e6bf5794a7a1a6c26f8bb967f8b20d3f31f87841da",
+      "bytes": 2056,
+      "change": "modified",
+      "path": "scripts/run_bootstrap_validation.sh",
+      "sha256": "3646dd6e9d79d2538fb88081b2a1ba8d6ca3edb24d10395ebb8bc50fc411d983"
+    },
+    {
+      "baseline_sha256": "460f7b3dcc14e96c0adb3e69ee9cbc3d2dc252ae609463e46dce3973c017c4fc",
+      "bytes": 21105,
+      "change": "modified",
+      "path": "scripts/validate_repository.py",
+      "sha256": "0a8a1a7c6dd9f52fd11498c0b92f0682225e2d55a6cd682abf81e7a487c53120"
+    },
+    {
+      "bytes": 3378,
+      "change": "added",
+      "path": "scripts/validate_step23_temporal_model.py",
+      "sha256": "efccc996f5effb0200c88d60fb758cac2136fd3d805c05b6fa8776b1bfb34de0"
+    },
+    {
+      "bytes": 13547,
+      "change": "added",
+      "path": "tests/python/test_temporal_models.py",
+      "sha256": "7480689c76cf39bf16ef2303a6dea8e6728baa2948c1b32180ee6cd9dd3dc59c"
+    }
+  ],
+  "changed_or_added_artifact_count": 52,
+  "final_model_family_selected": false,
+  "inference_benchmark": "results/validation/step23/inference_benchmark.json",
+  "locked_research_test_opened": false,
+  "primary_horizon_selected": false,
+  "removed_artifact_count": 0,
+  "removed_artifacts": [],
+  "repository_version": "0.14.0",
+  "research_specification_changed": false,
+  "research_status": "synthetic_validation_only_non_research",
+  "schema_version": "step23-change-manifest-v1",
+  "source_rows": 4800,
+  "split_sequences": {
+    "calibration": 200,
+    "engineering_holdout": 400,
+    "train": 1000,
+    "validation": 400
+  },
+  "status": "engineering_complete_research_blocked_by_gate_c",
+  "step": 23,
+  "temporal_sequences": 2000,
+  "validation": {
+    "clean_release_install": "passed",
+    "compileall": "passed",
+    "core_import_with_torch_blocked": "passed",
+    "coverage": {
+      "branch_aware_percent": 90.30723219140837,
+      "branches": 1936,
+      "covered_branches": 1614,
+      "covered_lines": 5029,
+      "method": "combined_from_separately_completed_base_and_temporal_coverage_runs",
+      "minimum_percent": 90.0,
+      "statements": 5420
+    },
+    "cpp": {
+      "asan_ubsan": "51/51 passed; no findings",
+      "clang_debug": "51/51 passed",
+      "gcc_debug": "51/51 passed",
+      "gcc_release": "51/51 passed"
+    },
+    "external_find_package_consumer": "passed",
+    "full_python_tests": {
+      "failed": 0,
+      "passed": 378
+    },
+    "mypy": "not available locally; not claimed",
+    "repository_contract": "409 required files passed",
+    "ruff": "not available locally; not claimed",
+    "sequential_make_test_python": "local execution harness terminated during combined coverage; no green claim",
+    "specification_lock": "7/7 passed",
+    "step23_artifact_validator": "passed",
+    "step23_over_100_char_python_lines": 0,
+    "step23_python_tests": {
+      "failed": 0,
+      "passed": 15
+    }
+  }
+}

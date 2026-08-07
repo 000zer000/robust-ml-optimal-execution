@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/metrics/metrics-validation-report-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "step", "research_status", "historical_results_claimed", "detailed_ledger", "detailed_episode", "detailed_audit", "aggregate", "tail_episodes", "aggregate_episode_count", "buy_sell_symmetry_passed", "incomplete_episode_rejected_from_aggregate", "independent_audit_passed", "exact_accounting_passed", "state_bounds_passed", "deterministic"],
+  "properties": {
+    "schema_version": {"const": "metrics-validation-v1"},
+    "step": {"const": 17},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "historical_results_claimed": {"const": false},
+    "aggregate_episode_count": {"type": "integer", "minimum": 40},
+    "buy_sell_symmetry_passed": {"const": true},
+    "incomplete_episode_rejected_from_aggregate": {"const": true},
+    "independent_audit_passed": {"const": true},
+    "exact_accounting_passed": {"const": true},
+    "state_bounds_passed": {"const": true},
+    "deterministic": {"const": true},
+    "detailed_ledger": {"type": "object"},
+    "detailed_episode": {"type": "object"},
+    "detailed_audit": {
+      "type": "object",
+      "required": ["schema_version", "passed", "issue_count", "issues"],
+      "properties": {"schema_version": {"const": "metric-audit-v1"}, "passed": {"const": true}, "issue_count": {"const": 0}, "issues": {"const": []}},
+      "additionalProperties": false
+    },
+    "aggregate": {"type": "object"},
+    "tail_episodes": {"type": "array", "minItems": 40, "items": {"type": "object"}}
+  }
+}

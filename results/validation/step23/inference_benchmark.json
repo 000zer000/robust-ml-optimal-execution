@@ -1,0 +1,46 @@
+{
+  "architecture": "causal_conv1d_lstm",
+  "machine": {
+    "platform": "Linux-6.18.35-x86_64-with-glibc2.41",
+    "processor": "",
+    "python": "3.13.5"
+  },
+  "models": {
+    "1s": {
+      "claim_status": "engineering_machine_specific_not_step30_performance_claim",
+      "mean_ns": 242804.425,
+      "p50_ns": 226717,
+      "p95_ns": 273908,
+      "p99_ns": 296111,
+      "parameter_count": 1073,
+      "repetitions": 200,
+      "sequence_length": 8,
+      "torch_threads": 1
+    },
+    "250ms": {
+      "claim_status": "engineering_machine_specific_not_step30_performance_claim",
+      "mean_ns": 237904.27,
+      "p50_ns": 227609,
+      "p95_ns": 281349,
+      "p99_ns": 375078,
+      "parameter_count": 1993,
+      "repetitions": 200,
+      "sequence_length": 8,
+      "torch_threads": 1
+    },
+    "5s": {
+      "claim_status": "engineering_machine_specific_not_step30_performance_claim",
+      "mean_ns": 237387.785,
+      "p50_ns": 227338,
+      "p95_ns": 276020,
+      "p99_ns": 383381,
+      "parameter_count": 1993,
+      "repetitions": 200,
+      "sequence_length": 8,
+      "torch_threads": 1
+    }
+  },
+  "schema_version": "step23-inference-benchmark-v1",
+  "status": "engineering_machine_specific_not_step30_performance_claim",
+  "step": 23
+}

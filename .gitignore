@@ -1,0 +1,41 @@
+# Build and packaging
+/build/
+/dist/
+*.egg-info/
+*.so
+*.dylib
+*.dll
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Generated research artifacts and data
+/data/raw/
+/data/interim/
+/data/processed/
+/experiments/runs/
+/results/raw/
+/results/processed/
+/results/sample/
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local profiling / benchmark by-products
+gmon.out
+*.profraw
+*.profdata

@@ -1,0 +1,1 @@
+{"base_asset":"TEST","instrument":"TEST-USD","lot_size":{"denominator":1000,"numerator":1},"maximum_order_quantity_lots":1000000,"metadata_version":"step5-synthetic-v1","minimum_order_quantity_lots":1,"quote_asset":"USD","quote_atom_size":{"denominator":100,"numerator":1},"schema_version":{"major":1,"minor":0},"tick_size":{"denominator":100,"numerator":1},"venue":"synthetic"}

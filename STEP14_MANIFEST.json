@@ -1,0 +1,235 @@
+{
+  "canonical_fixture": {
+    "classification": "sample_only_non_research",
+    "duplicates_dropped": 0,
+    "manifest_sha256": "28814b584e07d386f95b187142a0d0703f164902979a139dd0e51e226ffad986",
+    "messages": 8,
+    "research_admissible": false,
+    "rows": 24,
+    "tables": 6
+  },
+  "files": [
+    {
+      "bytes": 672,
+      "path": "python/robust_execution/canonical_data/__init__.py",
+      "sha256": "a6474d3018499fd4359c78a298f0b632a8bd16a183c39a902a8be2b14e27649d"
+    },
+    {
+      "bytes": 8404,
+      "path": "python/robust_execution/canonical_data/config.py",
+      "sha256": "ce50412801ea55960519b20ff51e3c2e4f79a28c48e620d581781ea9f09e0a0d"
+    },
+    {
+      "bytes": 2923,
+      "path": "python/robust_execution/canonical_data/models.py",
+      "sha256": "c320b350c4d0bb2f38c6336d03eff4b24afe371611d3a159d22653befc3af1b4"
+    },
+    {
+      "bytes": 2282,
+      "path": "python/robust_execution/canonical_data/parquet.py",
+      "sha256": "69b97490beac8d1cbe6e230a2334b0ab18e8c06289940ac73bb8baef1e87079f"
+    },
+    {
+      "bytes": 25033,
+      "path": "python/robust_execution/canonical_data/builder.py",
+      "sha256": "a498e2772d73bc42720b1ef2a21e75996ecb680b90ad5f33dc6602e302718d2b"
+    },
+    {
+      "bytes": 5748,
+      "path": "python/robust_execution/canonical_data/verify.py",
+      "sha256": "1f45d26c3d6b6aa44c2dbfb39f225fb43b8e1c3f42d42e46994d8579a16ab0d8"
+    },
+    {
+      "bytes": 9973,
+      "path": "python/robust_execution/cli.py",
+      "sha256": "a1f00f2401d43f5abe6941b6d1911a0a4a72a03cfdefcecc8c13145e17b0c43f"
+    },
+    {
+      "bytes": 23,
+      "path": "python/robust_execution/_version.py",
+      "sha256": "ada32ef5703d2448ef7684e616a70ec3baa1257db8ad80cfed7992e7d4c03be4"
+    },
+    {
+      "bytes": 1035,
+      "path": "configs/data/binance_canonical_sample.json",
+      "sha256": "d6221c6fd4b1e51233d1fd153d065a81ca63bfb9edfc16691bdf9d23922829d8"
+    },
+    {
+      "bytes": 1159,
+      "path": "configs/data/binance_canonical_processed.template.json",
+      "sha256": "5fe0e4c07406389509aa095086456874aad6acf01e4159b184dbadb839586ce0"
+    },
+    {
+      "bytes": 140,
+      "path": "requirements/canonical.lock",
+      "sha256": "d296e9070ad2c074fdada08d59dd8a0fd5ed91823c256e15c434d79669492544"
+    },
+    {
+      "bytes": 2464,
+      "path": "schemas/data/canonical-data-config-v1.schema.json",
+      "sha256": "607437fb665045a0b73c14078fa3620b98131804c1ee8596f661c321744970fe"
+    },
+    {
+      "bytes": 1693,
+      "path": "schemas/data/canonical-dataset-manifest-v1.schema.json",
+      "sha256": "b3a274fa0f0a5b9ebb76868d41128b269564eab29110b7eef762b2daf1f225d3"
+    },
+    {
+      "bytes": 702,
+      "path": "schemas/data/canonical-columnar-table-v1.schema.json",
+      "sha256": "8c1f6d596cb78dce404ca6112fcf7b623fecbe49684370f64c68470148cb9bdb"
+    },
+    {
+      "bytes": 3653,
+      "path": "data/sample/canonical/step14-canonical-fixture/dataset-manifest.json",
+      "sha256": "28814b584e07d386f95b187142a0d0703f164902979a139dd0e51e226ffad986"
+    },
+    {
+      "bytes": 78,
+      "path": "data/sample/canonical/step14-canonical-fixture/dataset-manifest.sha256.json",
+      "sha256": "ae1e733d803574ac6430326cfa0cd56f9fd12e3bc2e59e7dcf3c6146efee5a30"
+    },
+    {
+      "bytes": 1007,
+      "path": "scripts/generate_step14_fixture.py",
+      "sha256": "6dd987afd06704a00fec92e8acb371f97dcae381f7becdb9b9bf5d66a477e8cf"
+    },
+    {
+      "bytes": 2713,
+      "path": "scripts/validate_step14_data.py",
+      "sha256": "a53000916b70af24348d89dab3ae2def3b07b2a4689c8f6f90c10d0e74f859f9"
+    },
+    {
+      "bytes": 10445,
+      "path": "scripts/validate_repository.py",
+      "sha256": "a84bf6d2e6bc2b1b398a0f7aa1b502473e6fd2af7161e322cf0cd7af0e5cbfb4"
+    },
+    {
+      "bytes": 1655,
+      "path": "tests/python/test_canonical_config.py",
+      "sha256": "7a0117f867d2b7042449607c4b67afc6a4655d052147b358e777866304ce6ad9"
+    },
+    {
+      "bytes": 5145,
+      "path": "tests/python/test_canonical_builder.py",
+      "sha256": "1e14868b2411346711e33a5e1b740f801268179ed9187e9822b8086314cc5957"
+    },
+    {
+      "bytes": 798,
+      "path": "tests/python/test_canonical_cli.py",
+      "sha256": "f12618b253e4b99b64182d8a6e7c51a0cf0ae429396b0e8915a8a05d70bef337"
+    },
+    {
+      "bytes": 13848,
+      "path": "tests/python/test_canonical_failure_paths.py",
+      "sha256": "ee4c206385240358713d746894535fd4c161bf1729a47e731aee57e59e19c5b9"
+    },
+    {
+      "bytes": 5447,
+      "path": "docs/data/STEP14_CANONICAL_DATASETS.md",
+      "sha256": "fb188597cc8a7f3a77256c0722750045cf0ea308f5a086f407d2e56de20127c6"
+    },
+    {
+      "bytes": 3199,
+      "path": "docs/data/STEP14_SCHEMA_AND_PROVENANCE.md",
+      "sha256": "67ab9b6ba19aba38fbaf72e38dd88d45395a28b6729c218a382ba6874ac79a1a"
+    },
+    {
+      "bytes": 1795,
+      "path": "STEP14_CHANGELOG.md",
+      "sha256": "7c2486f5197fa53922b8e1f5e89f486954ce635c7ec7974ce3290e4a5c5a78b2"
+    },
+    {
+      "bytes": 3500,
+      "path": "STEP14_VALIDATION.md",
+      "sha256": "632177ea812f2b83144699b9b7eddf434892e227a362f8b01d08514b85b0ceb9"
+    },
+    {
+      "bytes": 4609,
+      "path": "Makefile",
+      "sha256": "e554d9d33ef7a1c95df1ef50ad7d4fa5a399cd13d05c050b70dc518c16b09861"
+    },
+    {
+      "bytes": 6525,
+      "path": "CMakeLists.txt",
+      "sha256": "7785c21893d7420011682e0906e778464045358306ed2632aa6affd21dd1097d"
+    },
+    {
+      "bytes": 1865,
+      "path": "pyproject.toml",
+      "sha256": "fcb7391e94ca8ae86d2e3f7cd553dc3f69ddbc9329582d1a0a41dd6aaf013e45"
+    },
+    {
+      "bytes": 138,
+      "path": "uv.lock",
+      "sha256": "ea6dccee46d117aee82251b6048edaf414d1c39a7d1c27a93b0626c1efb7929f"
+    },
+    {
+      "bytes": 486,
+      "path": "cpp/tests/test_build_info.cpp",
+      "sha256": "3c686faa6b4f5630a487d79fe6deb404b967c38ee7b7ab56d83fb9a524349431"
+    },
+    {
+      "bytes": 3899,
+      "path": ".github/workflows/ci.yml",
+      "sha256": "bf89c8054a4b02f653606d39c22d8156e1745ddaee20f88e3600526204dfd872"
+    },
+    {
+      "bytes": 2068,
+      "path": ".github/workflows/reproducibility.yml",
+      "sha256": "23c14a1202f24355b00eba965e854fd2d5b986c313a3a41595e0d01277f13a23"
+    },
+    {
+      "bytes": 1345,
+      "path": "scripts/run_bootstrap_validation.sh",
+      "sha256": "9cd2009d87261d586eaaca02a3917188d36f4ab95dd32ccb98d97512bcb855fe"
+    },
+    {
+      "bytes": 5718,
+      "path": "data/sample/capture/step12-offline-fixture/manifest.json",
+      "sha256": "93123fa20ca97991ef790f899eb6dc69b03ca90ed9b47a0cc98c3af5cea715bd"
+    },
+    {
+      "bytes": 3358,
+      "path": "data/sample/validation_step13/step13-full-day-fixture/manifest.json",
+      "sha256": "e6121d0ed7f615307aee5b12e35c1cece28811f306ded14459d3748a0756abe0"
+    },
+    {
+      "bytes": 1119,
+      "path": "results/validation/step13/step13-fixture-validation/validation-report.json",
+      "sha256": "e4c4edfe2f425e46deb7c47306be886c2fcf17b7a297c62a7bf9eac70305861b"
+    },
+    {
+      "bytes": 9474,
+      "path": "STEP12_MANIFEST.json",
+      "sha256": "bbc73467f924129f5f80deb3ab3e22b4931e25474ea50c6478e4535891418971"
+    },
+    {
+      "bytes": 7049,
+      "path": "STEP13_MANIFEST.json",
+      "sha256": "32b4d65aea6713a9de4d48631d8bb9c2a8ee4daee8d129da1846ad0bb2ae6080"
+    }
+  ],
+  "live_72h_pilot_complete": false,
+  "real_days_admitted": 0,
+  "repository_version": "0.11.0",
+  "research_specification_changed": false,
+  "schema_version": 1,
+  "specification_lock_regenerated": false,
+  "status": "engineering_pass_real_dataset_pending",
+  "step": 14,
+  "validation": {
+    "asan_ubsan": "pass",
+    "clang_debug": "pass",
+    "cmake_install_consumer": "pass_version_0.11.0",
+    "cpp_tests_per_configuration": 36,
+    "deterministic_regeneration": "pass",
+    "gcc_debug": "pass",
+    "gcc_release_ipo": "pass",
+    "mypy": "not_executed_registry_unavailable",
+    "parquet_engine_local": "not_installed",
+    "python_branch_coverage_percent": 90.11,
+    "python_tests": 162,
+    "ruff": "not_executed_registry_unavailable"
+  }
+}

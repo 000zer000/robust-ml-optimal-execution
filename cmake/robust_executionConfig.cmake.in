@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/robust_executionTargets.cmake")
+check_required_components(robust_execution)

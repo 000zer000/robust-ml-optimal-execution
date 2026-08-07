@@ -1,0 +1,11 @@
+step=10
+gate_id=gate-b
+decision=pass
+checks_passed=7/7
+sensitivities_passed=4/4
+generated_seeds=64
+generated_steps=16384
+differential_seeds=32
+differential_commands=64000
+mutation_cases=2048
+report_sha256=d59b06d19b7af478b98974c34d335501cefbcb8d4e771beb058564c2562567cf

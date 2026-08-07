@@ -1,0 +1,145 @@
+{
+  "artifacts": [
+    {
+      "bytes": 8821,
+      "change": "modified",
+      "path": "CMakeLists.txt",
+      "sha256": "b4734a76829a01b087561e528e85718e0aab64a0bc66addc07a06b8ef057eefd"
+    },
+    {
+      "bytes": 5982,
+      "change": "modified",
+      "path": "Makefile",
+      "sha256": "cfb26ed6f36dff73f302bbe0e509c4b6b5197deff223dabd79deedb0290917b7"
+    },
+    {
+      "bytes": 3623,
+      "change": "added",
+      "path": "STEP20_CHANGELOG.md",
+      "sha256": "bc91f3cab53f41f80c180a86e33364ccac65a18003ef87723ddefa06ee11d545"
+    },
+    {
+      "bytes": 4792,
+      "change": "added",
+      "path": "STEP20_VALIDATION.md",
+      "sha256": "60b221d20a8d067d4c716a0200068f6c0972b48e6e14e055417534cc54b7dfde"
+    },
+    {
+      "bytes": 1245,
+      "change": "added",
+      "path": "configs/strategies/step20_non_ml_adaptive.json",
+      "sha256": "e54d555df8ede9e9d7ca4012a61369e1f2945a5817b132005a01010b55e45873"
+    },
+    {
+      "bytes": 10330,
+      "change": "added",
+      "path": "cpp/apps/re_adaptive_demo.cpp",
+      "sha256": "cd9f7d543b4e2dab80cb1177877300649688605f063b02b596dab421f447e7bb"
+    },
+    {
+      "bytes": 4723,
+      "change": "added",
+      "path": "cpp/include/robust_execution/strategies/adaptive.hpp",
+      "sha256": "c3ebbac6c796dcb92f0be43e01d4d19480891375b9b07264caade5b696261752"
+    },
+    {
+      "bytes": 177,
+      "change": "modified",
+      "path": "cpp/include/robust_execution/strategies/strategies.hpp",
+      "sha256": "2d53b00a509c0968370b4671cc498ae78d86bd592d07fc34a4b4132efcdfbd71"
+    },
+    {
+      "bytes": 29657,
+      "change": "added",
+      "path": "cpp/src/strategies/adaptive.cpp",
+      "sha256": "e3386d43929e19342704f5d8c332f099119e8369e931c9dfb6f323a3e74da31e"
+    },
+    {
+      "bytes": 4025,
+      "change": "modified",
+      "path": "cpp/tests/CMakeLists.txt",
+      "sha256": "5be085045394ce850178a9e1db908817759fc7c3b9edc1772199ca3ec43f3a9f"
+    },
+    {
+      "bytes": 13312,
+      "change": "added",
+      "path": "cpp/tests/test_adaptive_strategies.cpp",
+      "sha256": "4e41e852422ba574e75df968f9db71084b40c0016b4d83703dd9ace1a47a5cf5"
+    },
+    {
+      "bytes": 1624,
+      "change": "added",
+      "path": "data/sample/adaptive/step20-validation/report.json",
+      "sha256": "eb018c68678c1ff5eba76fce41814a6f21178f596034848b352f3551806a2467"
+    },
+    {
+      "bytes": 5425,
+      "change": "added",
+      "path": "docs/strategies/STEP20_ADAPTIVE_BASELINES.md",
+      "sha256": "8537d217695c9ae0ea4a90d6a0b038841558c1621d8033dfb1e42572652fa839"
+    },
+    {
+      "bytes": 1408,
+      "change": "added",
+      "path": "docs/strategies/STEP20_GATE_D.md",
+      "sha256": "10590a0035a9820a8dc66982c9cf82a00cd594a41d7164703b52deb36600beea"
+    },
+    {
+      "bytes": 236,
+      "change": "added",
+      "path": "results/validation/step20/adaptive_cross_compiler.sha256",
+      "sha256": "f269e75350aa2cd21a106aae1a99038908c8b0292f6e39ac896669eaa6ccf47c"
+    },
+    {
+      "bytes": 17241,
+      "change": "modified",
+      "path": "scripts/validate_repository.py",
+      "sha256": "af4289ba8c032ae2b314bc4d7f211354f9fe763ec20f34ec86d8f5e426761170"
+    },
+    {
+      "bytes": 3002,
+      "change": "added",
+      "path": "scripts/validate_step20_adaptive.py",
+      "sha256": "cb961aff5087c660a42dc67a5c629f10203fe1502f37a35a841da2299ee0f734"
+    }
+  ],
+  "boundaries": {
+    "future_ml_mpc_same_controller_constraints_required": true,
+    "historical_exact_queue_used": false,
+    "ml_or_learned_signal_used": false,
+    "terminal_completion_owner": "step8_common_terminal_layer"
+  },
+  "comparators": [
+    "queue_aware_heuristic",
+    "non_ml_receding_horizon_mpc"
+  ],
+  "gate_d": {
+    "engineering": "pass",
+    "historical_research_activation": "blocked_until_gate_c",
+    "reason": "zero_admitted_live_days_and_live_pilot_pending"
+  },
+  "oracles": {
+    "early_mpc_mode": "passive",
+    "early_mpc_nodes": 937,
+    "heuristic_shortfall_bps": 33,
+    "late_mpc_mode": "aggressive",
+    "mpc_shortfall_bps": -111,
+    "performance_interpretation": "test_oracles_only_not_strategy_ranking"
+  },
+  "repository_version": "0.14.0",
+  "research_specification_changed": false,
+  "research_status": "synthetic_validation_only_non_research",
+  "status": "pass",
+  "step": 20,
+  "tests": {
+    "clean_install": true,
+    "cpp_asan_ubsan": 51,
+    "cpp_clang_debug": 51,
+    "cpp_gcc_debug": 51,
+    "cpp_release_ipo": 51,
+    "cross_compiler_output": "byte_identical",
+    "external_cmake_consumer": true,
+    "python": 308,
+    "python_branch_coverage_percent": 90.07
+  }
+}
