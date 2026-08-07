@@ -28,13 +28,13 @@ dependencies = []
 
 [project.optional-dependencies]
 canonical = ["pyarrow==25.0.0"]
-models = ["numpy==2.3.5", "scikit-learn==1.8.0"]
-deep-models = ["numpy==2.3.5", "scikit-learn==1.8.0", "torch==2.10.0"]
-imitation = ["numpy==2.3.5", "scikit-learn==1.8.0"]
-rl = ["numpy==2.3.5", "torch==2.10.0"]
-statistics = ["numpy==2.3.5"]
+models = ["numpy==2.4.6", "scikit-learn==1.8.0"]
+deep-models = ["numpy==2.4.6", "scikit-learn==1.8.0", "torch==2.10.0"]
+imitation = ["numpy==2.4.6", "scikit-learn==1.8.0"]
+rl = ["numpy==2.4.6", "torch==2.10.0"]
+statistics = ["numpy==2.4.6"]
 performance = [
-  "numpy==2.3.5",
+  "numpy==2.4.6",
   "scikit-learn==1.8.0",
   "torch==2.10.0",
   "psutil==7.2.2",
