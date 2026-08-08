@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "results/validation/step30/performance_report.json"
 CONFIG = ROOT / "configs/performance/step30_performance_engineering.json"
 HASHES = ROOT / "results/validation/step30/artifact_hashes.json"
-RELEASE_MANIFEST = ROOT / "STEP30_MANIFEST.json"
+RELEASE_MANIFEST = ROOT / "evidence/validation-ledger/STEP30_MANIFEST.json"
 CUDA_SUPPLEMENT = ROOT / "evidence/performance/STEP30_CUDA_GATE.json"
 PYBIND_SUPPLEMENT = ROOT / "evidence/performance/STEP30_PYBIND_BOUNDARY_SUPPLEMENT.json"
 

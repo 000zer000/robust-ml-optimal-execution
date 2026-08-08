@@ -20,7 +20,7 @@ REPORT = OUTPUT / "report.json"
 MANIFEST = OUTPUT / "manifest.json"
 CONFIG = ROOT / "configs/statistics/step29_statistics_engineering.json"
 STEP28 = ROOT / "data/sample/robustness/step28-engineering-matrix/report.json"
-RELEASE_MANIFEST = ROOT / "STEP29_MANIFEST.json"
+RELEASE_MANIFEST = ROOT / "evidence/validation-ledger/STEP29_MANIFEST.json"
 
 
 def fail(message: str) -> None:

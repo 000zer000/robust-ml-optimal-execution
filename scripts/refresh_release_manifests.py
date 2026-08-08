@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+VALIDATION_LEDGER = ROOT / "evidence" / "validation-ledger"
 ACTIVE_RELEASE_STEPS = range(25, 31)
 
 
@@ -27,7 +28,7 @@ def main() -> int:
 
     stale: list[str] = []
     for step in ACTIVE_RELEASE_STEPS:
-        path = ROOT / f"STEP{step}_MANIFEST.json"
+        path = VALIDATION_LEDGER / f"STEP{step}_MANIFEST.json"
         payload = json.loads(path.read_text(encoding="utf-8"))
         files = payload.get("files")
         if not isinstance(files, dict):

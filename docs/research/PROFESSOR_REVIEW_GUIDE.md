@@ -23,6 +23,10 @@ bootstrap inference, and end-to-end timing measurements.
 5. For a complete Linux validation, run `bash scripts/run_bootstrap_validation.sh`; for the paper,
    install Tectonic and run `make paper-build`.
 
+Historical implementation records and their artifact hashes remain available in the
+[validation ledger](../../evidence/validation-ledger/), but are archived away from the project
+root so that they do not obscure the scientific entry points above.
+
 ## What is novel here
 
 - **Decision-value diagnosis.** Forecasts are evaluated through a matched MPC rather than treated

@@ -10,7 +10,8 @@
 
 - **Version:** 0.5.0
 - **Status:** 32-step binding roadmap
-- **Current position:** Step 8 complete
+- **Current position at this historical checkpoint:** Step 8 complete
+- **Final release position:** Steps 1–32 complete under the controlled-simulator evidence boundary
 - **Last updated:** 2026-08-06
 
 The project proceeds one gated step at a time. A step is complete only when its deliverables and acceptance criteria are satisfied. Advanced work remains in the full final scope but cannot bypass dependencies.
@@ -214,8 +215,14 @@ Acceptance: Gate K and the full `SCOPE.md` definition of done pass.
 
 ---
 
-## Current next action
+## Historical next action at this checkpoint
 
 **Step 30 — Performance engineering and CUDA decision.** Step 29 engineering statistical
 validation is complete; the historical Tier-1 confirmatory analysis remains blocked by Gate C, so
 Gate I is not promoted to a historical-statistics pass.
+
+For the current release status, use the [README](README.md) and
+[professor review guide](docs/research/PROFESSOR_REVIEW_GUIDE.md). Steps 30–32 were subsequently
+completed for the registered controlled environment. Gate C remains intentionally closed because
+no qualifying licensed historical feed was admitted; the repository does not present simulated
+results as historical evidence.

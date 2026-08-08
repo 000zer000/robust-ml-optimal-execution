@@ -17,7 +17,7 @@ POLICY = OUTPUT / "policy.json"
 CONFIG = ROOT / "configs/imitation/step26_imitation_engineering.json"
 ORACLE = native_executable(ROOT, "robust_execution_imitation_oracle")
 BENCHMARK = ROOT / "results/validation/step26/inference_benchmark.json"
-MANIFEST = ROOT / "STEP26_MANIFEST.json"
+MANIFEST = ROOT / "evidence/validation-ledger/STEP26_MANIFEST.json"
 
 
 def fail(message: str) -> None:

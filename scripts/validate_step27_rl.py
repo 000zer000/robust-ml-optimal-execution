@@ -26,7 +26,7 @@ REPORT = OUTPUT / "report.json"
 MANIFEST = OUTPUT / "manifest.json"
 CONFIG = ROOT / "configs/rl/step27_ppo_engineering.json"
 BENCHMARK = ROOT / "results/validation/step27/inference_benchmark.json"
-RELEASE_MANIFEST = ROOT / "STEP27_MANIFEST.json"
+RELEASE_MANIFEST = ROOT / "evidence/validation-ledger/STEP27_MANIFEST.json"
 
 
 def fail(message: str) -> None:

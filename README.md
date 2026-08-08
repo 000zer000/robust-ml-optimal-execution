@@ -170,13 +170,22 @@ paper/               Research paper PDF, LaTeX source, bibliography, publication
 configs/             Frozen and engineering experiment configurations
 schemas/             Versioned JSON interchange contracts
 data/sample/         Deterministic research fixtures
-evidence/            Hardware/data evidence used by the release
+evidence/            Hardware/data evidence and archived validation records
+  validation-ledger/ Staged changelogs, validation reports and artifact manifests
 scripts/             Generators, validators, profiling and reproduction tools
 tests/               Python validation and regression suites
 docs/                Architecture, market-data, controller and methodology documentation
 results/validation/  Deterministic validation artifacts
-STEP*_*.md/json      Immutable staged validation ledger and artifact hashes
 ```
+
+The staged implementation ledger is retained under
+[`evidence/validation-ledger/`](evidence/validation-ledger/) for auditability without crowding the
+project root. It is provenance material; the paper, review guide, and claim-traceability table are
+the intended entry points for readers.
+
+The root research-governance documents preserve the frozen protocol and historical decision trail;
+they are not progress dashboards. Current release status and claim boundaries are reported here and
+in the professor review guide.
 
 ## Verification
 

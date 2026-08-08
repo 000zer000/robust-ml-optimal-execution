@@ -22,7 +22,7 @@ CONFIG = ROOT / "configs/analysis/step25_prediction_decision_value_engineering.j
 REPORT = ROOT / "data/sample/analysis/step25-prediction-decision-value/report.json"
 SCHEMA = ROOT / "schemas/analysis/prediction-decision-value-report-v1.schema.json"
 STEP24_REPORT = ROOT / "data/sample/controller/step24-ml-mpc-validation/report.json"
-MANIFEST = ROOT / "STEP25_MANIFEST.json"
+MANIFEST = ROOT / "evidence/validation-ledger/STEP25_MANIFEST.json"
 
 
 def fail(message: str) -> None:
