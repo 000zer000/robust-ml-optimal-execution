@@ -11,6 +11,7 @@ REQUIRED = [
     "README.md",
     "LICENSE",
     "CITATION.cff",
+    "FINAL_RELEASE_MANIFEST.json",
     "paper/Robust_ML_Optimal_Execution_Research_Paper.pdf",
     "paper/main.tex",
     "paper/references.bib",
@@ -90,6 +91,23 @@ def main() -> int:
     citation = (ROOT / "CITATION.cff").read_text()
     if 'version: "0.14.0"' not in citation:
         print("CITATION.cff version is inconsistent with the software release")
+        return 1
+
+    manifest = json.loads((ROOT / "FINAL_RELEASE_MANIFEST.json").read_text())
+    if manifest.get("python_tests_total") != 480:
+        print("final release manifest has a stale Python test count")
+        return 1
+    manifest_files = manifest.get("files")
+    if not isinstance(manifest_files, dict):
+        print("final release manifest files must be an object")
+        return 1
+    invalid_hashes = [
+        relative
+        for relative, expected in manifest_files.items()
+        if not (ROOT / relative).is_file() or sha256(ROOT / relative) != expected
+    ]
+    if invalid_hashes:
+        print("final release manifest has missing or stale files:", *invalid_hashes, sep="\n- ")
         return 1
 
     print(f"release validation PASS ({len(REQUIRED)} canonical artifacts)")

@@ -91,6 +91,7 @@ Therefore **Gate J passes**. The deployment recommendation is CPU for latency-se
 
 - Python tests in the final audited tree: **480/480 passed**;
 - branch-aware repository coverage: **91%** (required >=90%);
+- Python warnings: **0**, with warnings treated as test errors;
 - dedicated Step 30 Python tests: **7/7 passed**;
 - GCC Debug C++: **53/53 passed**;
 - Clang Debug C++: **53/53 passed**;
@@ -101,7 +102,7 @@ Therefore **Gate J passes**. The deployment recommendation is CPU for latency-se
 - clean Release installation and external CMake consumer: passed;
 - new/touched Step 30 source lines over 100 characters: **0**.
 
-The full one-shot Python suite passed at 90.77% branch coverage. No coverage threshold was lowered
+The full one-shot Python suite passed at 90.78% branch coverage. No coverage threshold was lowered
 and no Step 30 module was excluded. Ruff 0.15.22 formatting/lint and mypy 2.3.0 also pass on the
 final audited tree.
 

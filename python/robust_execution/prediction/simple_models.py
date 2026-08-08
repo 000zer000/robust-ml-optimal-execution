@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import pickle
 import random
 import statistics
@@ -41,6 +42,17 @@ HORIZON_TARGETS: dict[str, str] = {
 
 class SimpleModelError(RuntimeError):
     """Raised when Step 22 training would violate its frozen data protocol."""
+
+
+def _fit_single_worker(estimator: Any, x: np.ndarray, y: np.ndarray) -> Any:
+    """Fit without leaking a process-wide job-discovery override to callers."""
+    previous = os.environ.get("LOKY_MAX_CPU_COUNT")
+    os.environ.setdefault("LOKY_MAX_CPU_COUNT", "1")
+    try:
+        return estimator.fit(x, y)
+    finally:
+        if previous is None:
+            os.environ.pop("LOKY_MAX_CPU_COUNT", None)
 
 
 @dataclass(frozen=True)
@@ -535,7 +547,7 @@ def _fit_estimator(
         classifier = LogisticRegression(
             C=float(params["C"]), solver="lbfgs", max_iter=1000, random_state=seed
         )
-        classifier.fit(scaler.transform(x_fit), y_fit)
+        _fit_single_worker(classifier, scaler.transform(x_fit), y_fit)
         return TrainOnlyScaledEstimator(scaler=scaler, classifier=classifier)
     if family == "gradient_boosted_trees":
         estimator = HistGradientBoostingClassifier(
@@ -546,7 +558,7 @@ def _fit_estimator(
             early_stopping=False,
             random_state=seed,
         )
-        estimator.fit(x_fit, y_fit)
+        _fit_single_worker(estimator, x_fit, y_fit)
         return estimator
     if family == "simple_mlp":
         scaler_source = x_fit if scaler_fit_x is None else scaler_fit_x
@@ -558,7 +570,7 @@ def _fit_estimator(
             max_iter=2000,
             random_state=seed,
         )
-        classifier.fit(scaler.transform(x_fit), y_fit)
+        _fit_single_worker(classifier, scaler.transform(x_fit), y_fit)
         return TrainOnlyScaledEstimator(scaler=scaler, classifier=classifier)
     raise SimpleModelError(f"cannot fit estimator for family {family}")
 
@@ -602,7 +614,7 @@ def _fit_platt(probabilities: np.ndarray, y: np.ndarray) -> PlattCalibrator:
     p = _clip_probabilities(probabilities)
     z = np.log(p / (1.0 - p)).reshape(-1, 1)
     model = LogisticRegression(C=1e12, solver="lbfgs", max_iter=1000)
-    model.fit(z, y)
+    _fit_single_worker(model, z, y)
     return PlattCalibrator(intercept=float(model.intercept_[0]), slope=float(model.coef_[0, 0]))
 
 
@@ -633,7 +645,7 @@ def _calibration_regression(
     if float(np.std(z)) < 1e-12:
         return None, None
     model = LogisticRegression(C=1e12, solver="lbfgs", max_iter=1000)
-    model.fit(z, y)
+    _fit_single_worker(model, z, y)
     return float(model.intercept_[0]), float(model.coef_[0, 0])
 
 

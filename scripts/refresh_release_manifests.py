@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check or refresh the active Step 25-30 release-manifest hashes."""
+"""Check or refresh the active Step 25-30 and final release-manifest hashes."""
 
 from __future__ import annotations
 
@@ -47,12 +47,32 @@ def main() -> int:
                 encoding="utf-8",
             )
 
+    final_path = ROOT / "FINAL_RELEASE_MANIFEST.json"
+    final_payload = json.loads(final_path.read_text(encoding="utf-8"))
+    final_files = final_payload.get("files")
+    if not isinstance(final_files, dict):
+        raise SystemExit(f"{final_path.name}: files must be an object")
+    for relative, expected in final_files.items():
+        source = ROOT / relative
+        if not source.is_file():
+            raise SystemExit(f"{final_path.name}: missing tracked artifact {relative}")
+        actual = sha256(source)
+        if actual != expected:
+            stale.append(f"{final_path.name}: {relative}")
+            if args.write:
+                final_files[relative] = actual
+    if args.write:
+        final_path.write_text(
+            json.dumps(final_payload, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
     if stale and not args.write:
-        print("stale active release-manifest hashes:")
+        print("stale release-manifest hashes:")
         print("\n".join(f"- {entry}" for entry in stale))
         return 1
     action = "refreshed" if args.write else "verified"
-    print(f"active release manifests: {action} ({len(stale)} stale hashes found)")
+    print(f"release manifests: {action} ({len(stale)} stale hashes found)")
     return 0
 
 

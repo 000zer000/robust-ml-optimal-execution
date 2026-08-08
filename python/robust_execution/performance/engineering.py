@@ -16,6 +16,7 @@ import shutil
 import statistics
 import subprocess
 import time
+import warnings
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
@@ -142,7 +143,8 @@ def timed_callable(
 
 
 def read_cpp_timings(path: Path) -> dict[str, object]:
-    rows = list(csv.DictReader(path.open(encoding="utf-8")))
+    with path.open(encoding="utf-8") as stream:
+        rows = list(csv.DictReader(stream))
     if not rows:
         raise PerformanceError(f"empty C++ timing file: {path}")
     elapsed = [float(row["elapsed_ns"]) for row in rows]
@@ -222,6 +224,17 @@ def _bench_torch(
             iterations=config.iterations_per_repetition,
         )
     return result
+
+
+def _trace_registered_fixed_shape(
+    module: nn.Module,
+    example_inputs: torch.Tensor | tuple[torch.Tensor, ...],
+) -> torch.jit.ScriptModule:
+    """Trace a registered fixed-shape benchmark without known upstream warning noise."""
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=DeprecationWarning, module=r"torch\..*")
+        warnings.filterwarnings("ignore", category=torch.jit.TracerWarning)
+        return torch.jit.trace(module, example_inputs, check_trace=True)
 
 
 def _load_extension(path: Path) -> object:
@@ -307,7 +320,7 @@ def benchmark_models(root: Path, config: PerformanceConfig) -> dict[str, object]
             if raw.shape[0] < batch:
                 repeats = math.ceil(batch / raw.shape[0])
                 raw = raw.repeat((repeats, 1, 1))[:batch]
-            traced = torch.jit.trace(temporal, raw, check_trace=True)
+            traced = _trace_registered_fixed_shape(temporal, raw)
             eager_out = temporal(raw)
             trace_out = traced(raw)
             if not torch.allclose(eager_out, trace_out, atol=1e-6, rtol=1e-6):
@@ -345,7 +358,7 @@ def benchmark_models(root: Path, config: PerformanceConfig) -> dict[str, object]
             obs[:, 0] = 0.72
             obs[:, 1] = 0.55
             mask = torch.ones((batch, len(ACTION_LABELS)), dtype=torch.bool)
-            traced = torch.jit.trace(ppo, (obs, mask), check_trace=True)
+            traced = _trace_registered_fixed_shape(ppo, (obs, mask))
             if not torch.equal(ppo(obs, mask), traced(obs, mask)):
                 raise PerformanceError("PPO traced inference changed decisions")
             eager = _bench_torch(ppo, (obs, mask), config)
@@ -372,7 +385,7 @@ def benchmark_models(root: Path, config: PerformanceConfig) -> dict[str, object]
         raw_t = torch.from_numpy(raw_np)
         expected = imitation_numpy.predict(raw_np)[0]
         class_index = np.asarray([imitation_numpy.classes.index(str(v)) for v in expected])
-        traced = torch.jit.trace(imitation_torch, raw_t, check_trace=True)
+        traced = _trace_registered_fixed_shape(imitation_torch, raw_t)
         actual = traced(raw_t).detach().cpu().numpy()
         if not np.array_equal(class_index, actual):
             raise PerformanceError("imitation traced inference changed decisions")

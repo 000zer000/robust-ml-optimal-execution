@@ -51,9 +51,9 @@ At one CPU thread and batch one:
 | PPO seed 27 | 31.1 us | 15.8 us | 17.5 us |
 | Imitation policy | 11.9 us NumPy | 9.8 us | 10.4 us |
 
-TorchScript is retained only as a measured compatibility datapoint. The installed PyTorch 2.10
-build emits deprecation warnings for tracing, so it is not presented as the future deployment
-recommendation.
+TorchScript is retained only as a measured compatibility datapoint. PyTorch 2.10 deprecates
+tracing, so the registered fixed-shape benchmark scopes out its known deprecation/tracer warnings
+and does not present TorchScript as the future deployment recommendation.
 
 Current compiler-path experiments show:
 

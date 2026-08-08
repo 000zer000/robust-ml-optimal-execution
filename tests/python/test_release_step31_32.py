@@ -9,6 +9,18 @@ def test_canonical_research_paper_and_sources_exist():
     assert pdf.is_file() and pdf.stat().st_size > 100_000
     for rel in ["paper/main.tex", "paper/references.bib", "paper/make_figures.py"]:
         assert (ROOT / rel).is_file()
+    figure_script = (ROOT / "paper/make_figures.py").read_text()
+    assert "/mnt/data" not in figure_script
+    for rel in [
+        "data/sample/analysis/step25-prediction-decision-value/report.json",
+        "data/sample/imitation/step26-imitation-validation/report.json",
+        "data/sample/rl/step27-ppo-engineering/report.json",
+        "data/sample/robustness/step28-engineering-matrix/report.json",
+        "data/sample/statistics/step29-engineering-inference/report.json",
+        "results/validation/step30/performance_report.json",
+        "evidence/performance/STEP30_CUDA_GATE.json",
+    ]:
+        assert rel in figure_script
 
 
 def test_cuda_gate_is_closed_and_batch_one_cpu_selected():

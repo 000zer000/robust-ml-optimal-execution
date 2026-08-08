@@ -32,8 +32,8 @@ PYTHONPATH=python python3 scripts/validate_step29_statistics.py
 PYTHONPATH=python python3 scripts/validate_step30_performance.py
 python3 scripts/validate_release.py
 python3 -m compileall -q python/robust_execution scripts tests
-python3 -m ruff check python tests/python scripts
-python3 -m ruff format --check python tests/python scripts
+python3 -m ruff check python tests/python scripts paper
+python3 -m ruff format --check python tests/python scripts paper
 python3 -m mypy python/robust_execution
 PYTHONPATH=python python3 -m pytest --cov=robust_execution --cov-branch --cov-report=term-missing tests/python
 python3 scripts/check_deterministic_sample.py

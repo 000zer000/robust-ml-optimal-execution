@@ -22,8 +22,8 @@ On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`. The native pr
 python scripts/verify_specification_lock.py
 python scripts/validate_repository.py
 python -m compileall -q python/robust_execution scripts tests
-ruff check python tests/python scripts
-ruff format --check python tests/python scripts
+ruff check python tests/python scripts paper
+ruff format --check python tests/python scripts paper
 mypy python/robust_execution
 ```
 
