@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import platform
-import sys
 import tempfile
 from pathlib import Path
 
@@ -28,14 +26,6 @@ def fail(message: str) -> None:
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def canonical_artifact_platform() -> bool:
-    return (
-        platform.system() == "Linux"
-        and platform.machine().lower() in {"amd64", "x86_64"}
-        and sys.version_info[:2] == (3, 13)
-    )
 
 
 def main() -> None:
@@ -133,23 +123,17 @@ def main() -> None:
         for name in artifact_names:
             if (first / name).read_bytes() != (second / name).read_bytes():
                 fail(f"Step 26 same-host deterministic regeneration mismatch: {name}")
-            if canonical_artifact_platform() and (
-                (first / name).read_bytes() != (OUTPUT / name).read_bytes()
-            ):
-                fail(f"Step 26 canonical Linux artifact mismatch: {name}")
-        if not canonical_artifact_platform():
-            regenerated = json.loads((first / "report.json").read_text(encoding="utf-8"))
-            for key in ("teacher", "data", "covariate_shift", "evaluation", "fallback"):
-                if regenerated[key] != report[key]:
-                    fail(f"Step 26 cross-platform semantic mismatch: {key}")
-            regenerated_selection = regenerated["model_selection"]
-            if (
-                regenerated_selection["selected_alpha"]
-                != report["model_selection"]["selected_alpha"]
-                or regenerated_selection["selected_hidden_units"]
-                != report["model_selection"]["selected_hidden_units"]
-            ):
-                fail("Step 26 cross-platform model selection mismatch")
+        regenerated = json.loads((first / "report.json").read_text(encoding="utf-8"))
+        for key in ("teacher", "data", "covariate_shift", "evaluation", "fallback"):
+            if regenerated[key] != report[key]:
+                fail(f"Step 26 cross-host semantic mismatch: {key}")
+        regenerated_selection = regenerated["model_selection"]
+        if (
+            regenerated_selection["selected_alpha"] != report["model_selection"]["selected_alpha"]
+            or regenerated_selection["selected_hidden_units"]
+            != report["model_selection"]["selected_hidden_units"]
+        ):
+            fail("Step 26 cross-host model selection mismatch")
 
     if not MANIFEST.is_file():
         fail("Step 26 release manifest is missing")

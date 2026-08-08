@@ -89,7 +89,7 @@ Therefore **Gate J passes**. The deployment recommendation is CPU for latency-se
 
 ## 6. Correctness and quality matrix
 
-- Python tests in the final audited tree: **478/478 passed**;
+- Python tests in the final audited tree: **479/479 passed**;
 - branch-aware repository coverage: **91%** (required >=90%);
 - dedicated Step 30 Python tests: **7/7 passed**;
 - GCC Debug C++: **53/53 passed**;
@@ -113,7 +113,7 @@ final audited tree.
 
 ## 8. Integrated repository command
 
-The final audit ran every semantic validator through Step 30, all 478 Python tests with branch
+The final audit ran every semantic validator through Step 30, all 479 Python tests with branch
 coverage, all 53 native tests under Clang Debug, ASan+UBSan and ThreadSanitizer, and the static
 quality checks. The GitHub Actions workflows independently exercise GCC, Clang, AppleClang,
 Python 3.11/3.13, wheel installation, Docker smoke testing, reproducibility and sanitizers.

@@ -140,7 +140,7 @@ The committed manifest hashes:
 - reliability/slice/OOD/decision-proxy artifacts;
 - aggregate report.
 
-A clean rerun must reproduce all semantic artifact hashes and the aggregate report byte-for-byte under the pinned environment.
+A clean validation performs two independent regenerations and requires all semantic artifact hashes and the aggregate report to match byte-for-byte on that host. The committed fixture is separately integrity-checked and its stored predictions must agree with reconstructed Torch inference within the registered tolerance; fitted bytes are not claimed portable across CPU kernels.
 
 ## What Step 23 does not claim
 

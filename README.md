@@ -175,7 +175,7 @@ STEP*_*.md/json      Immutable staged validation ledger and artifact hashes
 
 ## Verification
 
-The release is exercised under GCC and Clang builds plus ASan/UBSan and ThreadSanitizer, with **53/53 native tests** in each matrix. The Python suite contains **478 tests** and enforces at least **90% branch-aware repository coverage**. Research artifacts use byte regeneration on the canonical Linux x86-64/Python 3.13 environment. Other platforms require two byte-identical same-host regenerations plus the registered numeric or scientific-contract checks; model-training bytes are not claimed portable across ML/BLAS kernels.
+The release is exercised under GCC and Clang builds plus ASan/UBSan and ThreadSanitizer, with **53/53 native tests** in each matrix. The Python suite contains **479 tests** and enforces at least **90% branch-aware repository coverage**. Every generated ML artifact is reproduced twice byte-for-byte on the executing host, while committed artifacts are integrity-checked and subjected to their registered numeric or scientific-contract checks. Model-training bytes are not claimed portable across CPUs or ML/BLAS kernels.
 
 ## Citation
 

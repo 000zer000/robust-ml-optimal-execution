@@ -1,6 +1,6 @@
 # Reproduction guide
 
-The canonical byte-for-byte artifact environment is Linux x86-64 with Python 3.13 and the exact direct dependencies in `requirements/test.lock`. GCC 14 and Clang 18 are exercised in GitHub Actions. macOS and Python 3.11 are supported for correctness checks; scikit-learn and Torch model fitting may differ across ML/BLAS kernels, so non-canonical environments require two byte-identical same-host regenerations plus each step's registered numeric or scientific-contract checks.
+Python 3.13 on Linux x86-64 with the exact direct dependencies in `requirements/test.lock` is the primary CI reproduction environment. GCC 14 and Clang 18 are exercised in GitHub Actions; macOS and Python 3.11 are also supported for correctness checks. Scikit-learn and Torch fitting can differ across CPUs and ML/BLAS kernels even when those coarse environment identifiers match. The contract therefore requires two byte-identical regenerations on the executing host, verifies every committed artifact's integrity, and applies each step's registered numeric or scientific checks. It deliberately does not claim that fitted-model bytes are portable between machines.
 
 ## Fresh-clone setup
 

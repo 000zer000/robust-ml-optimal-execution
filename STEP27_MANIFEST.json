@@ -4,10 +4,10 @@
   "dedicated_step27_tests_passed": 11,
   "files": {
     "Makefile": "9769fcd8059558c3ac3d0314ab6d6fadbb7139b68773bed0f9f59c96cfe25355",
-    "README.md": "90d8f3f556da55d7edca7bcfe0afcebfc1d59c787ba7ab55e29deff1514cbd87",
+    "README.md": "8c608559a854e3347f6dd720e7d4aaa708278ba1deca5e08e1c96a45a89e41ad",
     "ROADMAP.md": "b23050e818a734ccbe4533909c2aacf5200bc730fa345a5778a2020e9dbb2e68",
-    "STEP25_MANIFEST.json": "a7605368e9e3d6dbe1b55822d32b8571e7d76492663f0830d3f9e8ef2a4ef357",
-    "STEP26_MANIFEST.json": "2dfa48270e8378636c141055fb74518a9bab19a8c25598dc25ae8870fa2eeb5b",
+    "STEP25_MANIFEST.json": "51a4d4fadccd4a093e58b588b9a2d58cc69ed3fc472491f5927fe1af5d0d355c",
+    "STEP26_MANIFEST.json": "42a0377fd38fb899eb9bcf3c2dfc7e7c8d3f5b721d7cfb510089199bae60762c",
     "STEP27_CHANGELOG.md": "83705d48c6fc7ebe1c1739e116f9a676c26963f168e886b21e9a3fda81b6a526",
     "STEP27_VALIDATION.md": "d8c0b0948f08ca333d48b658b689afa454b52bbdda75e978e9d1822d18ac852b",
     "configs/rl/step27_ppo_engineering.json": "fc0ddf47246349194b78f3e298a542e4fc0579a82b80e668dd3643714a112e4a",
@@ -35,7 +35,7 @@
     "scripts/generate_step27_rl.py": "f08dc21822de1ba3e2d9b0615649bd65bde891c0ffcdf71fadb641da4a27ee8a",
     "scripts/run_bootstrap_validation.sh": "856e44e6b8c0b0e10c26a651065106f7f57773931f7a6585931696e085bafb9e",
     "scripts/validate_repository.py": "06188c0b6213a8e5a0fdf3c392a88ed763014cf411c41674c25670e7bd5cfddc",
-    "scripts/validate_step27_rl.py": "a56c8cc2e1535ac8f01ab6e06d90dbf05d7a9323fb7a7457a7ea5dfefae82348",
+    "scripts/validate_step27_rl.py": "77ba9d3c4424e70ec3bf31511b78938fde2f31c08ca485a8b076484c1cbf1a7b",
     "tests/python/test_rl_step27.py": "f732008c09070acd3d1b664ced025944c7eeabf3ede0796fba9154a5a6c91488"
   },
   "final_rl_algorithm_selected": false,

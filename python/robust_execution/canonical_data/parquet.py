@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib
 from pathlib import Path
 from typing import Any
 
@@ -29,8 +30,8 @@ def write_parquet_table(
 ) -> dict[str, object]:
     """Write one Parquet table with the repository-pinned PyArrow implementation."""
     try:
-        import pyarrow as pa
-        import pyarrow.parquet as pq
+        pa = importlib.import_module("pyarrow")
+        pq = importlib.import_module("pyarrow.parquet")
     except ImportError as exc:
         raise ParquetExportError(
             "pyarrow==25.0.0 is required for research-processed canonical data"
@@ -53,7 +54,7 @@ def write_parquet_table(
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         raise ParquetExportError(f"refusing to overwrite Parquet artifact: {path}")
-    pq.write_table(  # type: ignore[no-untyped-call]
+    pq.write_table(
         table,
         path,
         compression="zstd",

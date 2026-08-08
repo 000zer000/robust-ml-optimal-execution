@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import platform
 import shutil
 import sys
 import tempfile
@@ -36,14 +35,6 @@ def fail(message: str) -> None:
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def canonical_artifact_platform() -> bool:
-    return (
-        platform.system() == "Linux"
-        and platform.machine().lower() in {"amd64", "x86_64"}
-        and sys.version_info[:2] == (3, 13)
-    )
 
 
 def load_schema(name: str) -> dict[str, object]:
@@ -123,21 +114,16 @@ def main() -> None:
         for name in artifact_names:
             if (rerun_outputs[0] / name).read_bytes() != (rerun_outputs[1] / name).read_bytes():
                 fail(f"Step 27 same-host deterministic regeneration mismatch: {name}")
-            if canonical_artifact_platform() and (
-                (rerun_outputs[0] / name).read_bytes() != (OUTPUT / name).read_bytes()
-            ):
-                fail(f"Step 27 canonical Linux artifact mismatch: {name}")
-        if not canonical_artifact_platform():
-            regenerated = json.loads((rerun_outputs[0] / "report.json").read_text(encoding="utf-8"))
-            for key in (
-                "aggregate",
-                "baselines",
-                "environment_contract",
-                "reward_audit",
-                "seed_results",
-            ):
-                if regenerated[key] != report[key]:
-                    fail(f"Step 27 cross-platform semantic mismatch: {key}")
+        regenerated = json.loads((rerun_outputs[0] / "report.json").read_text(encoding="utf-8"))
+        for key in (
+            "aggregate",
+            "baselines",
+            "environment_contract",
+            "reward_audit",
+            "seed_results",
+        ):
+            if regenerated[key] != report[key]:
+                fail(f"Step 27 cross-host semantic mismatch: {key}")
     if not RELEASE_MANIFEST.is_file():
         fail("Step 27 release manifest is missing")
     release = json.loads(RELEASE_MANIFEST.read_text(encoding="utf-8"))

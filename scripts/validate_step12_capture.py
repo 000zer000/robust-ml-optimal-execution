@@ -41,7 +41,7 @@ def deterministic_payload_hashes(root: Path) -> dict[str, str]:
 
 
 def normalized_manifest(path: Path) -> dict[str, object]:
-    """Remove only host provenance and its derived byte counts from a fixture manifest."""
+    """Remove only host provenance and its derived size totals from a fixture manifest."""
     manifest = json.loads(path.read_text(encoding="utf-8"))
     runtime = manifest.get("runtime")
     if not isinstance(runtime, dict) or set(runtime) != {
@@ -62,12 +62,18 @@ def normalized_manifest(path: Path) -> dict[str, object]:
     if len(runtime_artifacts) != 1:
         raise RuntimeError("Step 12 runtime artifact must appear exactly once")
     runtime_bytes = runtime_artifacts[0].get("compressed_bytes")
+    runtime_raw_bytes = runtime_artifacts[0].get("uncompressed_bytes")
     total_bytes = manifest.get("total_compressed_bytes")
-    if not isinstance(runtime_bytes, int) or not isinstance(total_bytes, int):
+    total_raw_bytes = manifest.get("total_uncompressed_bytes")
+    if not all(
+        isinstance(value, int)
+        for value in (runtime_bytes, runtime_raw_bytes, total_bytes, total_raw_bytes)
+    ):
         raise RuntimeError("Step 12 runtime byte accounting is malformed")
     manifest["runtime"] = "host-specific-provenance-verified-separately"
     manifest["artifacts"] = [item for item in artifacts if item not in runtime_artifacts]
     manifest["total_compressed_bytes"] = total_bytes - runtime_bytes
+    manifest["total_uncompressed_bytes"] = total_raw_bytes - runtime_raw_bytes
     return manifest
 
 

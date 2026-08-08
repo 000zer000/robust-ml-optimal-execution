@@ -3,9 +3,9 @@
   "cpp_tests_per_configuration": 52,
   "files": {
     "Makefile": "9769fcd8059558c3ac3d0314ab6d6fadbb7139b68773bed0f9f59c96cfe25355",
-    "README.md": "90d8f3f556da55d7edca7bcfe0afcebfc1d59c787ba7ab55e29deff1514cbd87",
+    "README.md": "8c608559a854e3347f6dd720e7d4aaa708278ba1deca5e08e1c96a45a89e41ad",
     "ROADMAP.md": "b23050e818a734ccbe4533909c2aacf5200bc730fa345a5778a2020e9dbb2e68",
-    "STEP27_MANIFEST.json": "f3863015136a40c2c38211b49bec5a4cf372f4ed433c477b70ccc72f0eaa856b",
+    "STEP27_MANIFEST.json": "3574f01c83e5ecbbe10adbfb4670a5260d18543f0e543a91662caa8338781529",
     "STEP28_CHANGELOG.md": "54d8254f4eeb91c249527d962d5c1f176f418e2ac864b555f6405b513ad80bef",
     "STEP28_VALIDATION.md": "9e94e05abb2bf79af116856b5e36271fb06243cf32514a3daa7522db6ef76f8f",
     "configs/robustness/step28_robustness_engineering.json": "d9bccfcce182b6a0e635bf39bbefcb43d47ea8350f1c3339d1803b8c565bc9d1",

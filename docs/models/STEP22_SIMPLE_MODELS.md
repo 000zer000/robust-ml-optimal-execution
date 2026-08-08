@@ -70,7 +70,7 @@ No model is promoted because of these synthetic metrics.
 
 Every horizon/family stores a model card, calibrated/uncalibrated prediction table, reliability data, slice metrics and a trusted local pickle artifact. Pickle files are integrity-hashed but must only be loaded from trusted repository artifacts.
 
-Scikit-learn tree/MLP pickle bytes are not treated as scientific reproducibility evidence because equivalent fitted objects can serialize differently after use. Reproducibility is instead enforced by byte-identical deterministic model cards, prediction tables, metrics/reliability artifacts, selected hyperparameters, and semantic prediction equality after reload.
+Scikit-learn tree/MLP pickle bytes are not treated as scientific reproducibility evidence because equivalent fitted objects can serialize differently after use. Every committed artifact is integrity-checked and every stored prediction is compared with a reloaded model. Regeneration must also produce byte-identical model cards, prediction tables, metrics/reliability artifacts, selected hyperparameters and reports across two independent runs on the executing host. Those fitted bytes are not claimed portable across different CPUs or ML/BLAS kernels.
 
 ## Research boundary
 
