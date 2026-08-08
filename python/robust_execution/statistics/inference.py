@@ -24,6 +24,9 @@ class StatisticalError(ValueError):
     """Raised when the Step 29 statistical contract is violated."""
 
 
+ARTIFACT_FLOAT_SIGNIFICANT_DIGITS = 12
+
+
 @dataclass(frozen=True)
 class Step29Config:
     schema_version: str
@@ -53,8 +56,26 @@ class PairedHistoricalRow:
     comparator_completion: float = 1.0
 
 
+def _canonical_artifact_value(value: object) -> object:
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise StatisticalError("artifact values must be finite")
+        return float(f"{value:.{ARTIFACT_FLOAT_SIGNIFICANT_DIGITS}g}")
+    if isinstance(value, dict):
+        return {key: _canonical_artifact_value(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_canonical_artifact_value(item) for item in value]
+    return value
+
+
 def canonical_json(value: object) -> str:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    """Serialize research artifacts with cross-kernel-stable published precision."""
+    return json.dumps(
+        _canonical_artifact_value(value),
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    )
 
 
 def sha256_path(path: Path) -> str:
@@ -368,7 +389,7 @@ def _csv_bytes(rows: Sequence[Mapping[str, object]]) -> bytes:
     writer = csv.DictWriter(buffer, fieldnames=fields, lineterminator="\n")
     writer.writeheader()
     for row in rows:
-        writer.writerow({field: row.get(field) for field in fields})
+        writer.writerow({field: _canonical_artifact_value(row.get(field)) for field in fields})
     return buffer.getvalue().encode("utf-8")
 
 

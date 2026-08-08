@@ -21,6 +21,10 @@ absolute autocorrelation is below 0.1 at lags five and six.
 The analysis uses 4,096 circular moving-block bootstrap repetitions. Every resample keeps the same
 indices for both policies, so the paired-market-path contract is preserved.
 
+Published JSON and CSV floating-point values use 12 significant digits. This is far finer than any
+registered decision threshold while removing final-bit differences between supported CPU/NumPy
+kernels; the statistical calculations themselves still run in float64 before serialization.
+
 ## Effect estimates
 
 Each engineering contrast records:

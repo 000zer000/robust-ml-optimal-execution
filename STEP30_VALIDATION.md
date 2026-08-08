@@ -89,7 +89,7 @@ Therefore **Gate J passes**. The deployment recommendation is CPU for latency-se
 
 ## 6. Correctness and quality matrix
 
-- Python tests in the final audited tree: **479/479 passed**;
+- Python tests in the final audited tree: **480/480 passed**;
 - branch-aware repository coverage: **91%** (required >=90%);
 - dedicated Step 30 Python tests: **7/7 passed**;
 - GCC Debug C++: **53/53 passed**;
@@ -101,7 +101,7 @@ Therefore **Gate J passes**. The deployment recommendation is CPU for latency-se
 - clean Release installation and external CMake consumer: passed;
 - new/touched Step 30 source lines over 100 characters: **0**.
 
-The full one-shot Python suite passed at 90.75% branch coverage. No coverage threshold was lowered
+The full one-shot Python suite passed at 90.77% branch coverage. No coverage threshold was lowered
 and no Step 30 module was excluded. Ruff 0.15.22 formatting/lint and mypy 2.3.0 also pass on the
 final audited tree.
 
@@ -113,7 +113,7 @@ final audited tree.
 
 ## 8. Integrated repository command
 
-The final audit ran every semantic validator through Step 30, all 479 Python tests with branch
+The final audit ran every semantic validator through Step 30, all 480 Python tests with branch
 coverage, all 53 native tests under Clang Debug, ASan+UBSan and ThreadSanitizer, and the static
 quality checks. The GitHub Actions workflows independently exercise GCC, Clang, AppleClang,
 Python 3.11/3.13, wheel installation, Docker smoke testing, reproducibility and sanitizers.

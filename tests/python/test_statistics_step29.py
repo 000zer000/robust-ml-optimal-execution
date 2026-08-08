@@ -13,6 +13,7 @@ from robust_execution.statistics.inference import (
     Step29Config,
     autocorrelation,
     bootstrap_tier1_guardrails,
+    canonical_json,
     cvar95,
     equal_instrument_paired_estimate,
     generate_step29_artifacts,
@@ -56,6 +57,14 @@ def test_autocorrelation_rejects_bad_lag() -> None:
         autocorrelation([1, 2, 3], 0)
     with pytest.raises(StatisticalError):
         autocorrelation([1, 2, 3], 3)
+
+
+def test_artifact_json_uses_canonical_cross_kernel_precision() -> None:
+    left = canonical_json({"value": 1.23456789012341})
+    right = canonical_json({"value": 1.23456789012349})
+    assert left == right == '{"value":1.23456789012}'
+    with pytest.raises(StatisticalError, match="finite"):
+        canonical_json({"value": float("nan")})
 
 
 def test_moving_block_bootstrap_is_deterministic_and_contiguous() -> None:
