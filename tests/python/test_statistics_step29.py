@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -36,9 +36,7 @@ def test_config_and_gate_boundary() -> None:
     assert config.historical_confirmatory_analysis_blocked
     with pytest.raises(StatisticalError):
         validate_config(
-            Step29Config(
-                **{**config.__dict__, "historical_confirmatory_analysis_blocked": False}
-            )
+            Step29Config(**{**config.__dict__, "historical_confirmatory_analysis_blocked": False})
         )
 
 
@@ -46,9 +44,7 @@ def test_block_length_follows_frozen_acf_rule() -> None:
     report = json.loads(STEP28.read_text())
     metrics = report["interactive_metrics"]["central_reference"]
     seeds = (27, 127, 227, 327, 427)
-    ppo = np.mean(
-        [metrics[f"ppo_seed_{seed}"]["episode_costs_bps"] for seed in seeds], axis=0
-    )
+    ppo = np.mean([metrics[f"ppo_seed_{seed}"]["episode_costs_bps"] for seed in seeds], axis=0)
     diff = ppo - np.asarray(metrics["liquidity_aware"]["episode_costs_bps"])
     block, acf = select_block_length(diff, threshold=0.1, minimum=2, maximum=7)
     assert block == 5
@@ -93,10 +89,10 @@ def test_paired_inference_detects_clear_effect_and_preserves_pairing() -> None:
 
 def test_paired_inference_rejects_misaligned_and_nonfinite() -> None:
     with pytest.raises(StatisticalError):
-        paired_block_inference([1, 2], [1], block_length=1, repetitions=10, seed=1, alpha=.05)
+        paired_block_inference([1, 2], [1], block_length=1, repetitions=10, seed=1, alpha=0.05)
     with pytest.raises(StatisticalError):
         paired_block_inference(
-            [1, float("nan")], [1, 2], block_length=1, repetitions=10, seed=1, alpha=.05
+            [1, float("nan")], [1, 2], block_length=1, repetitions=10, seed=1, alpha=0.05
         )
 
 

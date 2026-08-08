@@ -5,9 +5,11 @@ import argparse
 import csv
 import hashlib
 import json
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
+
+from native_executable import native_executable
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "python"))
@@ -22,19 +24,22 @@ def sha256(path: Path) -> str:
 
 
 def write_json(path: Path, value: object) -> None:
-    path.write_text(json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8"
+    )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-root", type=Path, default=ROOT / "data/sample/queue_models")
-    parser.add_argument("--executable", type=Path, default=ROOT / "build/gcc-debug/robust_execution_queue_demo")
+    parser.add_argument("--executable", type=Path)
     args = parser.parse_args()
+    executable = args.executable or native_executable(ROOT, "robust_execution_queue_demo")
     target = args.output_root / "step16-queue-model-validation"
     if target.exists():
         raise SystemExit(f"Step 16 fixture output already exists: {target}")
     target.mkdir(parents=True)
-    completed = subprocess.run([str(args.executable)], check=True, capture_output=True, text=True)
+    completed = subprocess.run([str(executable)], check=True, capture_output=True, text=True)
     report = json.loads(completed.stdout)
     report_path = target / "report.json"
     write_json(report_path, report)
@@ -75,9 +80,7 @@ def main() -> int:
 
     artifacts = []
     for path in (report_path, scenario_path, sensitivity_path):
-        artifacts.append(
-            {"path": path.name, "sha256": sha256(path), "bytes": path.stat().st_size}
-        )
+        artifacts.append({"path": path.name, "sha256": sha256(path), "bytes": path.stat().st_size})
     manifest = {
         "schema_version": "queue-model-evidence-manifest-v1",
         "step": 16,

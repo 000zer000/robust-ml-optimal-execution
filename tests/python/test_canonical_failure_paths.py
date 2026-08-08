@@ -3,12 +3,14 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
-from pathlib import Path
 import sys
 import types
+from decimal import Decimal
+from pathlib import Path
 
 import pytest
 
+from robust_execution.canonical_data import build_canonical_dataset
 from robust_execution.canonical_data.builder import (
     CanonicalDataError,
     _build_rows,
@@ -29,7 +31,6 @@ from robust_execution.canonical_data.verify import (
     CanonicalDataVerificationError,
     verify_canonical_dataset,
 )
-from robust_execution.canonical_data import build_canonical_dataset
 
 CAPTURE = Path("data/sample/validation_step13/step13-full-day-fixture/manifest.json")
 REPORT = Path("results/validation/step13/step13-fixture-validation/validation-report.json")
@@ -51,7 +52,12 @@ def _rewrite_manifest(path: Path, mutate) -> dict[str, object]:
     mutate(value)
     path.write_text(json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n")
     path.with_name("dataset-manifest.sha256.json").write_text(
-        json.dumps({"sha256": hashlib.sha256(path.read_bytes()).hexdigest()}, sort_keys=True, separators=(",", ":")) + "\n"
+        json.dumps(
+            {"sha256": hashlib.sha256(path.read_bytes()).hexdigest()},
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
     )
     return value
 
@@ -63,13 +69,17 @@ def _rewrite_table(manifest: Path, name: str, mutate) -> None:
     with gzip.open(path, "rt") as handle:
         table = json.load(handle)
     mutate(table)
-    with path.open("wb") as raw:
-        with gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as handle:
-            handle.write(json.dumps(table, sort_keys=True, separators=(",", ":")).encode() + b"\n")
+    with path.open("wb") as raw, gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as handle:
+        handle.write(json.dumps(table, sort_keys=True, separators=(",", ":")).encode() + b"\n")
     item["data_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
     manifest.write_text(json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n")
     manifest.with_name("dataset-manifest.sha256.json").write_text(
-        json.dumps({"sha256": hashlib.sha256(manifest.read_bytes()).hexdigest()}, sort_keys=True, separators=(",", ":")) + "\n"
+        json.dumps(
+            {"sha256": hashlib.sha256(manifest.read_bytes()).hexdigest()},
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
     )
 
 
@@ -124,7 +134,7 @@ def test_low_level_reader_and_selection_failures(tmp_path: Path) -> None:
 
 def test_decimal_and_payload_failure_paths() -> None:
     with pytest.raises(CanonicalDataError, match="not a decimal"):
-        decimal_to_units(object(), config_increment := __import__("decimal").Decimal("0.01"), "x")
+        decimal_to_units(object(), Decimal("0.01"), "x")
     valid = {
         "raw_payload_utf8": '{"stream":"x","data":{"e":"unknown","s":"BTCUSDT"}}',
         "raw_payload_sha256": "a" * 64,
@@ -139,7 +149,20 @@ def test_decimal_and_payload_failure_paths() -> None:
 def test_build_rows_rejects_bad_depth_shape() -> None:
     config = load_canonical_data_config(CONFIG)
     record = {
-        "raw_payload_utf8": json.dumps({"stream": "x", "data": {"e": "depthUpdate", "E": 1, "s": "BTCUSDT", "U": 1, "u": 1, "b": "bad", "a": []}}),
+        "raw_payload_utf8": json.dumps(
+            {
+                "stream": "x",
+                "data": {
+                    "e": "depthUpdate",
+                    "E": 1,
+                    "s": "BTCUSDT",
+                    "U": 1,
+                    "u": 1,
+                    "b": "bad",
+                    "a": [],
+                },
+            }
+        ),
         "symbol": "BTCUSDT",
         "run_id": "r",
         "_source_record_index": 0,
@@ -171,9 +194,11 @@ def test_snapshot_parser_rejects_unknown_connection(tmp_path: Path) -> None:
     }
     path = root / "manifest.json"
     path.write_text(json.dumps(manifest))
-    with (root / "snapshots/BTCUSDT/unknown-100.json.gz").open("wb") as raw:
-        with gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as handle:
-            handle.write(b'{"lastUpdateId":100,"bids":[],"asks":[]}')
+    with (
+        (root / "snapshots/BTCUSDT/unknown-100.json.gz").open("wb") as raw,
+        gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as handle,
+    ):
+        handle.write(b'{"lastUpdateId":100,"bids":[],"asks":[]}')
     with pytest.raises(CanonicalDataError, match="not in manifest"):
         _snapshot_rows(path, load_canonical_data_config(CONFIG), "d", {"2027-01-15"})
 
@@ -204,18 +229,18 @@ def test_parquet_status_and_export(monkeypatch: pytest.MonkeyPatch, tmp_path: Pa
     artifact = write_parquet_table(
         tmp_path / "table.parquet",
         [{"a": 1, "b": True, "c": "x"}],
-        {"columns": [
-            {"name": "a", "logical_type": "int64"},
-            {"name": "b", "logical_type": "bool"},
-            {"name": "c", "logical_type": "utf8"},
-        ]},
+        {
+            "columns": [
+                {"name": "a", "logical_type": "int64"},
+                {"name": "b", "logical_type": "bool"},
+                {"name": "c", "logical_type": "utf8"},
+            ]
+        },
         ("a", "b", "c"),
     )
     assert artifact["rows"] == 1
     with pytest.raises(ParquetExportError, match="overwrite"):
-        write_parquet_table(
-            tmp_path / "table.parquet", [], {"columns": []}, ()
-        )
+        write_parquet_table(tmp_path / "table.parquet", [], {"columns": []}, ())
     fake_pa.__version__ = "24.0.0"
     with pytest.raises(ParquetExportError, match="exactly"):
         write_parquet_table(tmp_path / "other.parquet", [], {"columns": []}, ())
@@ -223,7 +248,9 @@ def test_parquet_status_and_export(monkeypatch: pytest.MonkeyPatch, tmp_path: Pa
 
 def test_verify_failure_matrix(tmp_path: Path) -> None:
     manifest = _build(tmp_path)
-    _rewrite_manifest(manifest, lambda value: value.update({"research_specification_changed": True}))
+    _rewrite_manifest(
+        manifest, lambda value: value.update({"research_specification_changed": True})
+    )
     with pytest.raises(CanonicalDataVerificationError, match="specification"):
         verify_canonical_dataset(manifest)
 
@@ -257,6 +284,7 @@ def test_processed_dataset_writes_pinned_parquet(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     import shutil
+
     import robust_execution.canonical_data.builder as builder_module
 
     capture_root = tmp_path / "live-capture"
@@ -269,9 +297,7 @@ def test_processed_dataset_writes_pinned_parquet(
     capture["pilot_72h_complete"] = True
     capture["actual_duration_seconds"] = 259200.0
     capture["status"] = "complete"
-    capture_manifest.write_text(
-        json.dumps(capture, sort_keys=True, separators=(",", ":")) + "\n"
-    )
+    capture_manifest.write_text(json.dumps(capture, sort_keys=True, separators=(",", ":")) + "\n")
     capture_manifest.with_name("manifest.sha256.json").write_text(
         json.dumps(
             {"sha256": hashlib.sha256(capture_manifest.read_bytes()).hexdigest()},
@@ -288,9 +314,7 @@ def test_processed_dataset_writes_pinned_parquet(
     report["days"][0]["reasons"] = []
     report["summary"]["admitted_days"] = 1
     report["summary"]["non_admissible_valid_days"] = 0
-    validation_report.write_text(
-        json.dumps(report, sort_keys=True, separators=(",", ":")) + "\n"
-    )
+    validation_report.write_text(json.dumps(report, sort_keys=True, separators=(",", ":")) + "\n")
     validation_report.with_name("validation-report.sha256.json").write_text(
         json.dumps(
             {"sha256": hashlib.sha256(validation_report.read_bytes()).hexdigest()},
@@ -318,7 +342,9 @@ def test_processed_dataset_writes_pinned_parquet(
 
     fake_pa.table = lambda arrays: FakeTable(arrays)
     fake_pq = types.ModuleType("pyarrow.parquet")
-    fake_pq.write_table = lambda table, path, **kwargs: Path(path).write_bytes(b"PAR1" + bytes([table.num_rows]))
+    fake_pq.write_table = lambda table, path, **kwargs: Path(path).write_bytes(
+        b"PAR1" + bytes([table.num_rows])
+    )
     fake_pa.parquet = fake_pq
     monkeypatch.setitem(sys.modules, "pyarrow", fake_pa)
     monkeypatch.setitem(sys.modules, "pyarrow.parquet", fake_pq)

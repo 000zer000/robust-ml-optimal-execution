@@ -6,31 +6,33 @@ synthetic engineering, inherited prediction/controller, and blocked historical c
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
 import csv
 import hashlib
 import io
 import json
 import math
+from collections.abc import Callable, Iterable
+from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Callable, Iterable
 
 import numpy as np
 
 from robust_execution.rl.ppo import (
     ACTION_LABELS,
-    RLEngineeringConfig,
-    Regime,
-    SyntheticExecutionEnv,
     TRAIN_REGIMES,
+    Regime,
+    RLEngineeringConfig,
+    SyntheticExecutionEnv,
     canonical_json,
     greedy_policy,
     immediate_policy,
     liquidity_aware_policy,
-    load_config as load_rl_config,
     load_policy_artifact,
     reconstruct_reward,
     twap_policy,
+)
+from robust_execution.rl.ppo import (
+    load_config as load_rl_config,
 )
 
 
@@ -88,12 +90,8 @@ def load_config(path: Path) -> Step28Config:
         seed=int(raw["seed"]),
         ppo_seeds=tuple(int(value) for value in raw["ppo_seeds"]),
         compute_budgets_ms=tuple(float(value) for value in raw["compute_budgets_ms"]),
-        formal_statistics_deferred_to_step29=bool(
-            raw["formal_statistics_deferred_to_step29"]
-        ),
-        formal_performance_deferred_to_step30=bool(
-            raw["formal_performance_deferred_to_step30"]
-        ),
+        formal_statistics_deferred_to_step29=bool(raw["formal_statistics_deferred_to_step29"]),
+        formal_performance_deferred_to_step30=bool(raw["formal_performance_deferred_to_step30"]),
     )
     validate_config(config)
     return config
@@ -257,9 +255,7 @@ def _regime_for_case(case: StressCase) -> Regime:
         fee_bps=case.fee_bps if case.fee_bps is not None else base.fee_bps,
         impact_bps=case.impact_bps if case.impact_bps is not None else base.impact_bps,
         passive_fill_base=(
-            case.passive_fill_base
-            if case.passive_fill_base is not None
-            else base.passive_fill_base
+            case.passive_fill_base if case.passive_fill_base is not None else base.passive_fill_base
         ),
         persistence=case.persistence if case.persistence is not None else base.persistence,
     )
@@ -302,7 +298,7 @@ def run_stress_episode(
     dropped = 0
     delayed = 0
     invalid = 0
-    actions = {label: 0 for label in ACTION_LABELS}
+    actions = dict.fromkeys(ACTION_LABELS, 0)
     corruption_rng = np.random.default_rng(_corruption_seed(case, episode_seed))
     done = False
     while not done:
@@ -345,7 +341,7 @@ def _metrics(rows: list[dict[str, object]]) -> dict[str, object]:
     costs = np.asarray([float(row["cost_bps"]) for row in rows], dtype=float)
     threshold = float(np.quantile(costs, 0.95))
     steps = sum(int(row["steps"]) for row in rows)
-    action_totals = {label: 0 for label in ACTION_LABELS}
+    action_totals = dict.fromkeys(ACTION_LABELS, 0)
     for row in rows:
         for label, count in dict(row["actions"]).items():
             action_totals[str(label)] += int(count)
@@ -436,10 +432,7 @@ def _case_policy_rows(
 def _ppo_family(metrics: dict[str, object], seeds: tuple[int, ...]) -> dict[str, object]:
     seed_metrics = [metrics[f"ppo_seed_{seed}"] for seed in seeds]
     keys = ("mean_cost_bps", "median_cost_bps", "p95_cost_bps", "cvar95_cost_bps")
-    output = {
-        key: float(np.mean([float(row[key]) for row in seed_metrics]))
-        for key in keys
-    }
+    output = {key: float(np.mean([float(row[key]) for row in seed_metrics])) for key in keys}
     output["completion_rate"] = float(
         np.mean([float(row["completion_rate"]) for row in seed_metrics])
     )
@@ -453,10 +446,7 @@ def _ranking_summary(
     seeds: tuple[int, ...],
 ) -> tuple[list[dict[str, object]], dict[str, object]]:
     ranking_rows: list[dict[str, object]] = []
-    win_counts = {
-        name: 0
-        for name in ("ppo_aggregate", "immediate", "twap_like", "liquidity_aware")
-    }
+    win_counts = dict.fromkeys(("ppo_aggregate", "immediate", "twap_like", "liquidity_aware"), 0)
     central: dict[str, float] = {}
     for case in cases:
         metrics = metrics_by_case[case.case_id]
@@ -476,9 +466,7 @@ def _ranking_summary(
                 "dimension": case.dimension,
                 "setting": case.setting,
                 "ranking_best_to_worst": ordered,
-                "mean_cost_bps": {
-                    name: float(family[name]["mean_cost_bps"]) for name in family
-                },
+                "mean_cost_bps": {name: float(family[name]["mean_cost_bps"]) for name in family},
             }
         )
     if not central:
@@ -493,7 +481,7 @@ def _ranking_summary(
         for row in ranking_rows
         if row["case_id"] != "central_reference"
     )
-    worst_deltas: dict[str, float] = {name: -math.inf for name in central}
+    worst_deltas: dict[str, float] = dict.fromkeys(central, -math.inf)
     for row in ranking_rows:
         for name, value in dict(row["mean_cost_bps"]).items():
             worst_deltas[name] = max(worst_deltas[name], float(value) - central[name])
@@ -565,9 +553,7 @@ def _compute_panel(root: Path, budgets_ms: tuple[float, ...]) -> dict[str, objec
     components["imitation_student"] = (
         float(step26["student_numpy_batch_one"]["p95_ns"]) / 1_000_000.0
     )
-    components["mpc_teacher"] = (
-        float(step26["teacher_cpp_shared_mpc"]["p95_ns"]) / 1_000_000.0
-    )
+    components["mpc_teacher"] = float(step26["teacher_cpp_shared_mpc"]["p95_ns"]) / 1_000_000.0
     for seed, row in step27["policies"].items():
         components[f"ppo_seed_{seed}"] = float(row["p95_ns"]) / 1_000_000.0
     feasibility = {
@@ -624,9 +610,7 @@ def _dimension_registry() -> dict[str, object]:
         "prediction": {
             "engineering_status": "required_modes_inherited_and_revalidated_from_step25"
         },
-        "data_quality": {
-            "engineering_status": "dropped_and_delayed_observation_updates_executed"
-        },
+        "data_quality": {"engineering_status": "dropped_and_delayed_observation_updates_executed"},
         "distribution": {
             "engineering_status": (
                 "temporal_instrument_and_unseen_combined_synthetic_shifts_executed"

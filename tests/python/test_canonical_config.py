@@ -10,7 +10,6 @@ from robust_execution.canonical_data.config import (
     load_canonical_data_config,
 )
 
-
 CONFIG = Path("configs/data/binance_canonical_sample.json")
 
 

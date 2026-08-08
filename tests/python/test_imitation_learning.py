@@ -105,9 +105,10 @@ def test_committed_report_passes_semantic_validation() -> None:
 def test_dagger_improves_validation_rollout_agreement() -> None:
     report = json.loads(REPORT.read_text(encoding="utf-8"))
     shift = report["covariate_shift"]
-    assert shift["final_validation_raw_action_agreement"] > shift[
-        "initial_validation_raw_action_agreement"
-    ]
+    assert (
+        shift["final_validation_raw_action_agreement"]
+        > shift["initial_validation_raw_action_agreement"]
+    )
 
 
 def test_engineering_holdout_retains_teacher_quality() -> None:

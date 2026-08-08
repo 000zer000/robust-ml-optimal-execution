@@ -5,8 +5,8 @@ from __future__ import annotations
 
 import gzip
 import json
-from pathlib import Path
 import tempfile
+from pathlib import Path
 
 import jsonschema
 
@@ -23,7 +23,9 @@ def main() -> int:
     config_path = root / "configs/data/binance_canonical_sample.json"
     manifest_path = root / "data/sample/canonical/step14-canonical-fixture/dataset-manifest.json"
     config_schema = json.loads((schema_root / "canonical-data-config-v1.schema.json").read_text())
-    manifest_schema = json.loads((schema_root / "canonical-dataset-manifest-v1.schema.json").read_text())
+    manifest_schema = json.loads(
+        (schema_root / "canonical-dataset-manifest-v1.schema.json").read_text()
+    )
     table_schema = json.loads((schema_root / "canonical-columnar-table-v1.schema.json").read_text())
     jsonschema.Draft202012Validator.check_schema(config_schema)
     jsonschema.Draft202012Validator.check_schema(manifest_schema)

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -93,9 +93,7 @@ def load_prediction_feature_config(path: Path) -> PredictionFeatureConfig:
         research_admissible_input_required=bool(
             _required(raw, "research_admissible_input_required", bool)
         ),
-        exact_historical_queue_allowed=bool(
-            _required(raw, "exact_historical_queue_allowed", bool)
-        ),
+        exact_historical_queue_allowed=bool(_required(raw, "exact_historical_queue_allowed", bool)),
     )
     if config.schema_version != "prediction-feature-config-v1" or not config.dataset_id:
         raise PredictionConfigError("unsupported schema or empty dataset_id")

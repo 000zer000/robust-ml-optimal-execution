@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import csv
 import hashlib
 import io
 import json
 import math
-from pathlib import Path
 import subprocess
 import tempfile
+from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 from sklearn.metrics import accuracy_score, log_loss
@@ -198,7 +198,7 @@ def _oracle(executable: Path, rows: list[dict[str, object]]) -> list[dict[str, o
 def _quantity(remaining: int, fraction: float) -> int:
     if fraction <= 0:
         return 0
-    quantity = int(math.floor(remaining * fraction))
+    quantity = math.floor(remaining * fraction)
     return remaining if quantity == 0 else min(quantity, remaining)
 
 
@@ -214,9 +214,7 @@ def _apply_action(action: str, remaining: int, bid: int, ask: int) -> tuple[int,
     return 0, 0.0
 
 
-def _prediction_probability(
-    market: dict[str, int], filled: int, step: int, steps: int
-) -> float:
+def _prediction_probability(market: dict[str, int], filled: int, step: int, steps: int) -> float:
     depth_total = max(1, market["bid_quantity"] + market["ask_quantity"])
     depth_signal = (market["ask_quantity"] - market["bid_quantity"]) / depth_total
     flow_signal = -1.0 if market["favorable"] else 1.0
@@ -258,8 +256,6 @@ def _features(row: dict[str, object]) -> np.ndarray:
     return np.asarray([float(row[name]) for name in FEATURES], dtype=np.float64)
 
 
-
-
 def _write_teacher_table(path: Path, rows: list[dict[str, object]]) -> str:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
@@ -281,6 +277,7 @@ def _teacher_state_dataset(
             filled = (episode_index * 31 + step * 19 + (episode_index % 5) * 11) % 100
             inputs.append(_state_row(episode_id, step, market, filled, steps))
     return _oracle(executable, inputs)
+
 
 def _teacher_rollout(
     executable: Path, paths: list[dict[str, object]], steps: int
@@ -469,8 +466,7 @@ def _student_rollout(
             teacher_action = str(output["action_label"])
             z = np.abs((vector[0] - model.scaler_mean) / model.scaler_scale)
             uncertain = (
-                float(probabilities.max()) < confidence_threshold
-                or float(z.max()) > z_threshold
+                float(probabilities.max()) < confidence_threshold or float(z.max()) > z_threshold
             )
             final_action = teacher_action if use_fallback and uncertain else raw_action
             fallback += int(use_fallback and uncertain)
@@ -609,16 +605,16 @@ def generate_step26_artifacts(
     )
     model, candidate_records = _select_model(train_rows, validation_rows, config)
 
-    train_z = np.max(
-        np.abs((_matrix(train_rows) - model.scaler_mean) / model.scaler_scale), axis=1
-    )
+    train_z = np.max(np.abs((_matrix(train_rows) - model.scaler_mean) / model.scaler_scale), axis=1)
     z_threshold = float(np.quantile(train_z, config.training_z_quantile) + config.z_margin)
     confidence = _choose_fallback_threshold(model, validation_rows, config, z_threshold)
     validation_raw = _student_rollout(
         executable, paths["validation"], config.steps_per_episode, model, 0.0, z_threshold, False
     )
     validation_shift = _shift(
-        model, validation_rows, validation_raw["rows"]  # type: ignore[arg-type]
+        model,
+        validation_rows,
+        validation_raw["rows"],  # type: ignore[arg-type]
     )
     trigger = (
         float(validation_raw["raw_action_agreement"]) < config.validation_dagger_agreement_floor
@@ -642,9 +638,7 @@ def generate_step26_artifacts(
             train_rows + dagger_rows, initial_model.hidden_units, initial_model.alpha, config.seed
         )
         combined_x = _matrix(train_rows + dagger_rows)
-        train_z = np.max(
-            np.abs((combined_x - model.scaler_mean) / model.scaler_scale), axis=1
-        )
+        train_z = np.max(np.abs((combined_x - model.scaler_mean) / model.scaler_scale), axis=1)
         z_threshold = float(np.quantile(train_z, config.training_z_quantile) + config.z_margin)
         confidence = _choose_fallback_threshold(model, validation_rows, config, z_threshold)
 
@@ -672,17 +666,14 @@ def generate_step26_artifacts(
         "teacher_base_mpc_configuration": "step20-non-ml-mpc-v1",
         "teacher_prediction_input": "causal_synthetic_engineering_risk_non_research",
         "episode_ids": {
-            name: [str(path["episode_id"]) for path in paths[name]]
-            for name in sorted(paths)
+            name: [str(path["episode_id"]) for path in paths[name]] for name in sorted(paths)
         },
         "tables": table_manifest,
         "dagger_triggered": trigger,
         "dagger_rounds": 1 if trigger else 0,
     }
     split_manifest_path = output_dir / "teacher-dataset-manifest.json"
-    split_manifest_path.write_text(
-        canonical_json(split_manifest) + "\n", encoding="utf-8"
-    )
+    split_manifest_path.write_text(canonical_json(split_manifest) + "\n", encoding="utf-8")
 
     final_validation = _student_rollout(
         executable, paths["validation"], config.steps_per_episode, model, 0.0, z_threshold, False
@@ -716,7 +707,9 @@ def generate_step26_artifacts(
             "student_raw": raw_summary,
             "student_with_teacher_fallback": fallback_summary,
             "state_shift_max_abs_standardized_mean": _shift(
-                model, teacher[name][0], raw["rows"]  # type: ignore[arg-type]
+                model,
+                teacher[name][0],
+                raw["rows"],  # type: ignore[arg-type]
             ),
         }
 

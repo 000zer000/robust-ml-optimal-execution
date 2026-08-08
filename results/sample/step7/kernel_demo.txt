@@ -1,0 +1,12 @@
+step=7
+maker_exchange_receive_ns=1007
+maker_ack_available_ns=1020
+taker_exchange_receive_ns=2007
+taker_ack_available_ns=2020
+exchange_received_events=2
+delivered_events=6
+failures=0
+trace_records=20
+active_orders=1
+replay_sha256=84be4acd530e7a694530f8bc9c219a74bb54b7167ad7d22dfd421f3485d12689
+state_sha256=ec9b1fbc2d1a9c620015fc6b18046c89a1daabf1e0cf27876425fb310e928ff5

@@ -6,10 +6,12 @@ import json
 import subprocess
 from pathlib import Path
 
+from native_executable import native_executable
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data/sample/controller/step24-ml-mpc-validation"
 MODELS = ROOT / "data/sample/models/step23-temporal-deep-validation/models"
-REPORT_EXE = ROOT / "build/gcc-debug/robust_execution_ml_mpc_demo"
+REPORT_EXE = native_executable(ROOT, "robust_execution_ml_mpc_demo")
 HORIZONS = ("250ms", "1s", "5s")
 ENDPOINT_TIMES = (1000, 1250, 1500, 1750)
 
@@ -35,9 +37,7 @@ def build_tape() -> dict[str, object]:
     )
     for horizon in HORIZONS:
         columns = load_prediction_columns(horizon)
-        card = json.loads(
-            (MODELS / horizon / "causal_conv1d_lstm/model-card.json").read_text()
-        )
+        card = json.loads((MODELS / horizon / "causal_conv1d_lstm/model-card.json").read_text())
         records = []
         for index, endpoint_time in enumerate(ENDPOINT_TIMES):
             records.append(
@@ -54,9 +54,7 @@ def build_tape() -> dict[str, object]:
             )
         horizons[horizon] = {
             "training_base_rate": card["training_prevalence"],
-            "prediction_table_sha256": step23_report["models"][horizon][
-                "prediction_data_sha256"
-            ],
+            "prediction_table_sha256": step23_report["models"][horizon]["prediction_data_sha256"],
             "records": records,
         }
     return {

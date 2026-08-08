@@ -5,26 +5,26 @@ Timing artifacts are machine-specific evidence. Scientific model/strategy artifa
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import csv
 import hashlib
 import importlib.metadata
 import importlib.util
 import json
 import math
-from pathlib import Path
 import platform
 import shutil
-import subprocess
 import statistics
+import subprocess
 import time
-from typing import Callable, Iterable
+from collections.abc import Callable, Iterable
+from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import psutil
 import torch
-from torch import nn
 from threadpoolctl import threadpool_limits
+from torch import nn
 
 from robust_execution.imitation.learning import _reconstruct_model
 from robust_execution.prediction.temporal_model_artifacts import FAMILY
@@ -164,12 +164,8 @@ class TemporalWrapper(nn.Module):
     def __init__(self, fitted: object) -> None:
         super().__init__()
         self.network = fitted.network  # type: ignore[attr-defined]
-        self.register_buffer(
-            "mean", torch.tensor(fitted.scaler.mean, dtype=torch.float32)
-        )  # type: ignore[attr-defined]
-        self.register_buffer(
-            "scale", torch.tensor(fitted.scaler.scale, dtype=torch.float32)
-        )  # type: ignore[attr-defined]
+        self.register_buffer("mean", torch.tensor(fitted.scaler.mean, dtype=torch.float32))  # type: ignore[attr-defined]
+        self.register_buffer("scale", torch.tensor(fitted.scaler.scale, dtype=torch.float32))  # type: ignore[attr-defined]
         self.intercept = float(fitted.calibrator.intercept)  # type: ignore[attr-defined]
         self.slope = float(fitted.calibrator.slope)  # type: ignore[attr-defined]
 
@@ -200,18 +196,10 @@ class ImitationTorchWrapper(nn.Module):
         intercepts = payload["intercepts"]
         self.register_buffer("mean", mean)
         self.register_buffer("scale", scale)
-        self.register_buffer(
-            "w0", torch.tensor(coefs[0], dtype=torch.float64)
-        )  # type: ignore[index]
-        self.register_buffer(
-            "w1", torch.tensor(coefs[1], dtype=torch.float64)
-        )  # type: ignore[index]
-        self.register_buffer(
-            "b0", torch.tensor(intercepts[0], dtype=torch.float64)
-        )  # type: ignore[index]
-        self.register_buffer(
-            "b1", torch.tensor(intercepts[1], dtype=torch.float64)
-        )  # type: ignore[index]
+        self.register_buffer("w0", torch.tensor(coefs[0], dtype=torch.float64))  # type: ignore[index]
+        self.register_buffer("w1", torch.tensor(coefs[1], dtype=torch.float64))  # type: ignore[index]
+        self.register_buffer("b0", torch.tensor(intercepts[0], dtype=torch.float64))  # type: ignore[index]
+        self.register_buffer("b1", torch.tensor(intercepts[1], dtype=torch.float64))  # type: ignore[index]
 
     def forward(self, raw: torch.Tensor) -> torch.Tensor:
         z = (raw - self.mean) / self.scale
@@ -317,7 +305,7 @@ def benchmark_models(root: Path, config: PerformanceConfig) -> dict[str, object]
         for batch in config.batch_sizes:
             raw = torch.from_numpy(np.asarray(temporal_rows[:batch], dtype=np.float32))
             if raw.shape[0] < batch:
-                repeats = int(math.ceil(batch / raw.shape[0]))
+                repeats = math.ceil(batch / raw.shape[0])
                 raw = raw.repeat((repeats, 1, 1))[:batch]
             traced = torch.jit.trace(temporal, raw, check_trace=True)
             eager_out = temporal(raw)
@@ -390,7 +378,7 @@ def benchmark_models(root: Path, config: PerformanceConfig) -> dict[str, object]
             raise PerformanceError("imitation traced inference changed decisions")
         with threadpool_limits(limits=1):
             numpy_timing = timed_callable(
-                lambda: imitation_numpy.predict(raw_np),
+                lambda batch_rows=raw_np: imitation_numpy.predict(batch_rows),
                 warmups=config.warmup_repetitions,
                 repetitions=config.timing_repetitions,
                 iterations=config.iterations_per_repetition,
@@ -442,12 +430,8 @@ def benchmark_pybind(extension_path: Path, config: PerformanceConfig) -> dict[st
 def latency_injection_panel(
     model_results: dict[str, object], intervals_us: tuple[float, ...]
 ) -> dict[str, object]:
-    temporal = model_results["temporal_5s"]["torchscript_trace_cpu"]["1"][
-        "1"
-    ]  # type: ignore[index]
-    ppo = model_results["ppo_seed_27"]["cpu"]["1"]["1"][
-        "torchscript_trace"
-    ]  # type: ignore[index]
+    temporal = model_results["temporal_5s"]["torchscript_trace_cpu"]["1"]["1"]  # type: ignore[index]
+    ppo = model_results["ppo_seed_27"]["cpu"]["1"]["1"]["torchscript_trace"]  # type: ignore[index]
     imitation = model_results["imitation"]["1"]["numpy"]  # type: ignore[index]
     p95_us = {
         "temporal_5s_trace": float(temporal["p95_ns"]) / 1000.0,  # type: ignore[index]

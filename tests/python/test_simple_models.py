@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import replace
 import json
+from dataclasses import replace
 from pathlib import Path
-import tempfile
 
 import numpy as np
 import pytest
@@ -17,7 +16,6 @@ from robust_execution.prediction.simple_models import (
     FittedSimpleModel,
     SimpleModelError,
     TrainOnlyScaledEstimator,
-    TrainingRow,
     fit_selected_model,
     generate_engineering_training_rows,
     load_serialized_model,
@@ -292,8 +290,7 @@ def test_fixture_write_verify_rerun_and_tamper(tmp_path: Path) -> None:
     ).read_bytes()
     assert verify_simple_model_fixture(second, config)["models"] == 12
     prediction = (
-        first.parent
-        / "models/1s/logistic/tables/engineering_holdout_predictions/columns.json.gz"
+        first.parent / "models/1s/logistic/tables/engineering_holdout_predictions/columns.json.gz"
     )
     original = prediction.read_bytes()
     prediction.write_bytes(original + b"x")
@@ -336,9 +333,7 @@ def test_hyperparameter_and_split_failure_paths() -> None:
     with pytest.raises(SimpleModelError, match="day_index"):
         split_for_day(100, config.split_days)
     with pytest.raises(SimpleModelError, match="unknown prediction horizon"):
-        select_hyperparameters(
-            "logistic", "bad", split["train"], split["validation"], config
-        )
+        select_hyperparameters("logistic", "bad", split["train"], split["validation"], config)
     with pytest.raises(SimpleModelError, match="unsupported model family"):
         select_hyperparameters(
             "unsupported",  # type: ignore[arg-type]

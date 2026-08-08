@@ -47,14 +47,13 @@ def write_parquet_table(
     }
     columns = rows_to_columns(rows, column_order)
     arrays = {
-        name: pa.array(columns[name], type=_arrow_type(pa, logical[name]))
-        for name in column_order
+        name: pa.array(columns[name], type=_arrow_type(pa, logical[name])) for name in column_order
     }
     table = pa.table(arrays)
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         raise ParquetExportError(f"refusing to overwrite Parquet artifact: {path}")
-    pq.write_table(
+    pq.write_table(  # type: ignore[no-untyped-call]
         table,
         path,
         compression="zstd",

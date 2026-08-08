@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import platform
+from pathlib import Path
 
 from robust_execution.prediction.temporal_model_artifacts import FAMILY
 from robust_execution.prediction.temporal_models import (

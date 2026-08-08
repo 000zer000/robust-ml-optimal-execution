@@ -44,7 +44,9 @@ def verify_queue_model_report(manifest_path: Path) -> dict[str, Any]:
     if manifest["schema_version"] != "queue-model-evidence-manifest-v1" or manifest["step"] != 16:
         raise QueueModelVerificationError("queue-model manifest identity is invalid")
     if manifest["research_status"] != "synthetic_validation_only_non_research":
-        raise QueueModelVerificationError("queue-model evidence cannot claim historical research status")
+        raise QueueModelVerificationError(
+            "queue-model evidence cannot claim historical research status"
+        )
     root = manifest_path.parent
     artifacts = manifest["artifacts"]
     if not isinstance(artifacts, list) or len(artifacts) != 3:
@@ -54,12 +56,23 @@ def verify_queue_model_report(manifest_path: Path) -> dict[str, Any]:
         if not isinstance(item, dict) or set(item) != {"path", "sha256", "bytes"}:
             raise QueueModelVerificationError("queue-model artifact entry is invalid")
         relative = item["path"]
-        if not isinstance(relative, str) or relative in seen or relative.startswith("/") or ".." in Path(relative).parts:
+        if (
+            not isinstance(relative, str)
+            or relative in seen
+            or relative.startswith("/")
+            or ".." in Path(relative).parts
+        ):
             raise QueueModelVerificationError("queue-model artifact path is invalid")
         seen.add(relative)
         path = root / relative
-        if not path.is_file() or path.stat().st_size != item["bytes"] or _sha256(path) != item["sha256"]:
-            raise QueueModelVerificationError(f"queue-model artifact verification failed: {relative}")
+        if (
+            not path.is_file()
+            or path.stat().st_size != item["bytes"]
+            or _sha256(path) != item["sha256"]
+        ):
+            raise QueueModelVerificationError(
+                f"queue-model artifact verification failed: {relative}"
+            )
     if seen != {"report.json", "scenario-comparison.csv", "sensitivity.csv"}:
         raise QueueModelVerificationError("queue-model artifact set differs")
 
@@ -73,7 +86,11 @@ def verify_queue_model_report(manifest_path: Path) -> dict[str, Any]:
         raise QueueModelVerificationError("historical exact FIFO claim is forbidden")
     if report.get("ghost_small_agent_assumption") is not True:
         raise QueueModelVerificationError("ghost small-agent boundary must be explicit")
-    for key in ("trade_through_rule_passed", "no_fill_from_cancellation_only_passed", "deterministic"):
+    for key in (
+        "trade_through_rule_passed",
+        "no_fill_from_cancellation_only_passed",
+        "deterministic",
+    ):
         if report.get(key) is not True:
             raise QueueModelVerificationError(f"queue-model gate failed: {key}")
     scenarios = report.get("scenarios")
@@ -100,14 +117,25 @@ def verify_queue_model_report(manifest_path: Path) -> dict[str, Any]:
             row.get("pessimistic_fill_lots"),
             row.get("exact_fifo_fill_lots"),
         ]
-        if any(not isinstance(value, int) or isinstance(value, bool) or value < 0 for value in values):
-            raise QueueModelVerificationError("queue-model fill values must be non-negative integers")
+        if any(
+            not isinstance(value, int) or isinstance(value, bool) or value < 0 for value in values
+        ):
+            raise QueueModelVerificationError(
+                "queue-model fill values must be non-negative integers"
+            )
         optimistic, central, pessimistic, exact = values
+        assert isinstance(optimistic, int)
+        assert isinstance(central, int)
+        assert isinstance(pessimistic, int)
+        assert isinstance(exact, int)
         if not optimistic >= central >= pessimistic:
             raise QueueModelVerificationError("queue-model ordering is violated")
         if not optimistic >= exact >= pessimistic:
             raise QueueModelVerificationError("exact FIFO result is outside model bounds")
-        if row.get("exact_within_model_bounds") is not True or row.get("model_ordering_valid") is not True:
+        if (
+            row.get("exact_within_model_bounds") is not True
+            or row.get("model_ordering_valid") is not True
+        ):
             raise QueueModelVerificationError("queue-model scenario gate flag is false")
     if scenario_ids != required_scenarios:
         raise QueueModelVerificationError("queue-model required scenarios differ")
@@ -121,7 +149,11 @@ def verify_queue_model_report(manifest_path: Path) -> dict[str, Any]:
             raise QueueModelVerificationError("queue-model sensitivity row is invalid")
         assumption = row.get("assumption")
         buffer = row.get("additional_initial_ahead_bps")
-        if assumption not in {"optimistic", "central", "pessimistic"} or buffer not in {0, 2500, 5000}:
+        if assumption not in {"optimistic", "central", "pessimistic"} or buffer not in {
+            0,
+            2500,
+            5000,
+        }:
             raise QueueModelVerificationError("queue-model sensitivity coordinates differ")
         if (assumption, buffer) in combinations:
             raise QueueModelVerificationError("duplicate queue-model sensitivity coordinate")

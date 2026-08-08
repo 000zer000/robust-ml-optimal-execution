@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from pathlib import Path
 
 import numpy as np
 import pytest
 
+import robust_execution.analysis.prediction_decision_value as pdv
 from robust_execution.analysis.prediction_decision_value import (
     PredictionDecisionValueError,
     Step25Config,
@@ -133,10 +135,6 @@ def test_probability_metrics_are_finite_for_constant_base_rate() -> None:
     assert np.isfinite(result["brier"])
     assert result["roc_auc"] == 0.5
 
-from pathlib import Path
-
-import robust_execution.analysis.prediction_decision_value as pdv
-
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -161,9 +159,7 @@ def _fake_controller_report(weight: float, *, locked: bool = False) -> dict[str,
             "shuffled_within_day_instrument_ablation": _episode(baseline_actions, -10),
             "stale_ablation": _episode(baseline_actions, -10),
             "uncalibrated_ablation": _episode(baseline_actions, -10),
-            "perfect_event_oracle_ablation": _episode(
-                oracle_actions, -10 if weight < 1000 else 0
-            ),
+            "perfect_event_oracle_ablation": _episode(oracle_actions, -10 if weight < 1000 else 0),
             "prediction_weight_zero_ablation": _episode(baseline_actions, -10),
         }
     return {"payload": payload}
@@ -255,9 +251,7 @@ def test_load_decision_sweep_rejects_locked_test(monkeypatch: pytest.MonkeyPatch
 def test_load_decision_sweep_rejects_broken_zero_weight(monkeypatch: pytest.MonkeyPatch) -> None:
     config = replace(valid_config(), weight_grid_bps=(0.0,))
     report = _fake_controller_report(0.0)
-    report["payload"]["horizons"]["250ms"]["prediction_weight_zero_ablation"][
-        "actions"
-    ] = ["wrong"]
+    report["payload"]["horizons"]["250ms"]["prediction_weight_zero_ablation"]["actions"] = ["wrong"]
     monkeypatch.setattr(pdv, "_controller_report", lambda _exe, _weight: report)
     with pytest.raises(PredictionDecisionValueError, match="zero-weight"):
         pdv.load_decision_sweep(Path("unused"), config)

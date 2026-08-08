@@ -92,9 +92,7 @@ def _validate_schema_version(value: object) -> None:
     major = _require_integer(version, "major", minimum=1)
     _require_integer(version, "minor", minimum=0)
     if major != EVENT_SCHEMA_MAJOR:
-        raise EventModelError(
-            f"unsupported schema major {major}; expected {EVENT_SCHEMA_MAJOR}"
-        )
+        raise EventModelError(f"unsupported schema major {major}; expected {EVENT_SCHEMA_MAJOR}")
 
 
 def _validate_timestamp(value: object, field: str) -> tuple[str, int]:
@@ -105,9 +103,7 @@ def _validate_timestamp(value: object, field: str) -> tuple[str, int]:
     return domain, _require_integer(timestamp, "ns")
 
 
-def _validate_optional_timestamp(
-    document: Mapping[str, Any], field: str
-) -> tuple[str, int] | None:
+def _validate_optional_timestamp(document: Mapping[str, Any], field: str) -> tuple[str, int] | None:
     value = document.get(field)
     if value is None:
         return None
@@ -270,9 +266,7 @@ def _validate_payload(kind: str, value: object) -> None:
             _positive_int(payload, field)
         new_price = payload.get("new_limit_price_ticks")
         if new_price is not None and (
-            isinstance(new_price, bool)
-            or not isinstance(new_price, int)
-            or new_price <= 0
+            isinstance(new_price, bool) or not isinstance(new_price, int) or new_price <= 0
         ):
             raise EventModelError("new_limit_price_ticks must be null or a positive integer")
         _validate_action_times(payload)

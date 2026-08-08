@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
 
 import jsonschema
+
+from native_executable import native_executable
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "python"))
@@ -47,9 +49,11 @@ def main() -> int:
         jsonschema.Draft202012Validator(schema).validate(instance)
 
     committed = verify_queue_model_report(manifest_path)
-    executable = ROOT / "build/gcc-debug/robust_execution_queue_demo"
+    executable = native_executable(ROOT, "robust_execution_queue_demo")
     completed = subprocess.run([str(executable)], check=True, capture_output=True)
-    if json.loads(completed.stdout) != json.loads((manifest_path.parent / "report.json").read_text(encoding="utf-8")):
+    if json.loads(completed.stdout) != json.loads(
+        (manifest_path.parent / "report.json").read_text(encoding="utf-8")
+    ):
         raise SystemExit("Step 16 queue demo differs from committed report")
     with tempfile.TemporaryDirectory() as temporary:
         subprocess.run(
@@ -66,8 +70,15 @@ def main() -> int:
         )
         regenerated = Path(temporary) / "step16-queue-model-validation/manifest.json"
         regenerated_result = verify_queue_model_report(regenerated)
-        for relative in ("manifest.json", "report.json", "scenario-comparison.csv", "sensitivity.csv"):
-            if (manifest_path.parent / relative).read_bytes() != (regenerated.parent / relative).read_bytes():
+        for relative in (
+            "manifest.json",
+            "report.json",
+            "scenario-comparison.csv",
+            "sensitivity.csv",
+        ):
+            if (manifest_path.parent / relative).read_bytes() != (
+                regenerated.parent / relative
+            ).read_bytes():
                 raise SystemExit(f"Step 16 artifact is not deterministic: {relative}")
         if committed != regenerated_result:
             raise SystemExit("Step 16 verification result changed on regeneration")

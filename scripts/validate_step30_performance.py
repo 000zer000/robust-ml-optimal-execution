@@ -4,7 +4,6 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-import sys
 
 import jsonschema
 
@@ -13,6 +12,8 @@ REPORT = ROOT / "results/validation/step30/performance_report.json"
 CONFIG = ROOT / "configs/performance/step30_performance_engineering.json"
 HASHES = ROOT / "results/validation/step30/artifact_hashes.json"
 RELEASE_MANIFEST = ROOT / "STEP30_MANIFEST.json"
+CUDA_SUPPLEMENT = ROOT / "evidence/performance/STEP30_CUDA_GATE.json"
+PYBIND_SUPPLEMENT = ROOT / "evidence/performance/STEP30_PYBIND_BOUNDARY_SUPPLEMENT.json"
 
 
 def fail(message: str) -> None:
@@ -41,9 +42,11 @@ def main() -> None:
         if report["gate_j_status"].startswith("pass"):
             fail("Step 30 passed Gate J without GPU evidence")
     boundary = report["python_cpp_boundary"]
-    if boundary.get("status") == "blocked_missing_pybind11_build_dependency":
-        if boundary.get("numeric_comparison_available") is not False:
-            fail("Step 30 fabricated a Python/C++ boundary number")
+    if (
+        boundary.get("status") == "blocked_missing_pybind11_build_dependency"
+        and boundary.get("numeric_comparison_available") is not False
+    ):
+        fail("Step 30 fabricated a Python/C++ boundary number")
     for threads, row in report["cpp_matching"].items():
         baseline = row["baseline"]
         optimized = row["optimized"]
@@ -54,14 +57,34 @@ def main() -> None:
         if row["speedup"] <= 0:
             fail("Step 30 invalid C++ speedup")
     compiled = json.loads(
-        (ROOT / "results/validation/step30/raw/compiled_inference.json").read_text(
-            encoding="utf-8"
-        )
+        (ROOT / "results/validation/step30/raw/compiled_inference.json").read_text(encoding="utf-8")
     )
     if compiled["temporal_5s"]["torch_export_status"] != "captured":
         fail("Step 30 temporal export capture failed")
     if not compiled["temporal_5s"]["fullgraph_status"].startswith("unsupported:"):
         fail("Step 30 temporal fullgraph oracle changed")
+
+    cuda_supplement = json.loads(CUDA_SUPPLEMENT.read_text(encoding="utf-8"))
+    if (
+        cuda_supplement.get("status") != "complete"
+        or cuda_supplement.get("gate_j_cuda_closed") is not True
+        or cuda_supplement.get("decision")
+        != "gpu_transfer_launch_overhead_inferior_for_registered_batch_one_workloads"
+    ):
+        fail("Step 30 CUDA supplement does not close its Gate J measurement")
+    for model in ("imitation", "ppo_seed_27", "temporal_5s"):
+        batch_one = cuda_supplement["models"][model]["1"]
+        if batch_one["transfer_inclusive_gpu_faster"] is not False:
+            fail(f"Step 30 batch-one CUDA decision changed: {model}")
+        if batch_one["output_equivalence_max_abs_error"] > 2e-6:
+            fail(f"Step 30 CPU/CUDA numeric equivalence failed: {model}")
+
+    pybind_supplement = json.loads(PYBIND_SUPPLEMENT.read_text(encoding="utf-8"))
+    if (
+        pybind_supplement.get("status") != "pass_numeric_boundary_measurement"
+        or pybind_supplement.get("extension_semantics") != "diagnostic_sequence_exact_match"
+    ):
+        fail("Step 30 pybind supplement does not close its numeric boundary measurement")
     if not HASHES.is_file():
         fail("Step 30 artifact hash manifest missing")
     hashes = json.loads(HASHES.read_text(encoding="utf-8"))
@@ -75,13 +98,18 @@ def main() -> None:
             path = ROOT / relative
             if not path.is_file() or sha256(path) != expected:
                 fail(f"Step 30 release manifest hash mismatch: {relative}")
-    print(json.dumps({
-        "status": "ok",
-        "step": 30,
-        "gate_j": report["gate_j_status"],
-        "cuda_available": cuda["torch_cuda_available"],
-        "cpp_threads": sorted(report["cpp_matching"]),
-    }, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "status": "ok",
+                "step": 30,
+                "gate_j": "pass_with_cuda_and_pybind_supplements",
+                "cuda_available": cuda["torch_cuda_available"],
+                "cpp_threads": sorted(report["cpp_matching"]),
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

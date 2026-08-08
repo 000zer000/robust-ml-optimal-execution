@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import shutil
-from typing import Any, Callable
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -33,7 +34,9 @@ def test_verify_queue_model_report() -> None:
 def rewrite_json(path: Path, mutation: Callable[[dict[str, Any]], None]) -> None:
     value = json.loads(path.read_text(encoding="utf-8"))
     mutation(value)
-    path.write_text(json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8"
+    )
 
 
 @pytest.mark.parametrize(
@@ -48,7 +51,9 @@ def rewrite_json(path: Path, mutation: Callable[[dict[str, Any]], None]) -> None
         lambda value: value["artifacts"][0].update(bytes=0),
     ],
 )
-def test_manifest_tampering_is_rejected(tmp_path: Path, mutation: Callable[[dict[str, Any]], None]) -> None:
+def test_manifest_tampering_is_rejected(
+    tmp_path: Path, mutation: Callable[[dict[str, Any]], None]
+) -> None:
     manifest = copy_fixture(tmp_path)
     rewrite_json(manifest, mutation)
     with pytest.raises(QueueModelVerificationError):
@@ -81,7 +86,9 @@ def test_artifact_tampering_is_rejected(tmp_path: Path) -> None:
         lambda value: value["sensitivity"][0].update(additional_initial_ahead_bps=5000),
     ],
 )
-def test_report_semantic_tampering_is_rejected(tmp_path: Path, mutation: Callable[[dict[str, Any]], None]) -> None:
+def test_report_semantic_tampering_is_rejected(
+    tmp_path: Path, mutation: Callable[[dict[str, Any]], None]
+) -> None:
     manifest = copy_fixture(tmp_path)
     report = manifest.parent / "report.json"
     rewrite_json(report, mutation)
@@ -94,7 +101,9 @@ def test_report_semantic_tampering_is_rejected(tmp_path: Path, mutation: Callabl
         if item["path"] == "report.json":
             item["sha256"] = digest
             item["bytes"] = report.stat().st_size
-    manifest.write_text(json.dumps(metadata, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
+    manifest.write_text(
+        json.dumps(metadata, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8"
+    )
     with pytest.raises(QueueModelVerificationError):
         verify_queue_model_report(manifest)
 
@@ -112,6 +121,8 @@ def test_csv_row_count_tampering_is_rejected(tmp_path: Path) -> None:
         if item["path"] == "sensitivity.csv":
             item["sha256"] = digest
             item["bytes"] = csv_path.stat().st_size
-    manifest.write_text(json.dumps(metadata, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
+    manifest.write_text(
+        json.dumps(metadata, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8"
+    )
     with pytest.raises(QueueModelVerificationError):
         verify_queue_model_report(manifest)

@@ -3,10 +3,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
+import platform
 import shutil
 import sys
 import tempfile
+from pathlib import Path
 
 import jsonschema
 
@@ -35,6 +36,14 @@ def fail(message: str) -> None:
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def canonical_artifact_platform() -> bool:
+    return (
+        platform.system() == "Linux"
+        and platform.machine().lower() in {"amd64", "x86_64"}
+        and sys.version_info[:2] == (3, 13)
+    )
 
 
 def load_schema(name: str) -> dict[str, object]:
@@ -102,19 +111,33 @@ def main() -> None:
     if benchmark["status"] != "engineering_machine_specific_not_step30_performance_claim":
         fail("Step 27 inference benchmark claim boundary changed")
     with tempfile.TemporaryDirectory() as directory:
-        rerun_root = Path(directory) / "repo"
-        (rerun_root / "configs/rl").mkdir(parents=True)
-        shutil.copy2(CONFIG, rerun_root / "configs/rl/step27_ppo_engineering.json")
-        generate_step27_artifacts(rerun_root)
-        rerun_output = rerun_root / "data/sample/rl/step27-ppo-engineering"
-        if (rerun_output / "report.json").read_bytes() != REPORT.read_bytes():
-            fail("Step 27 deterministic report regeneration mismatch")
-        if (rerun_output / "manifest.json").read_bytes() != MANIFEST.read_bytes():
-            fail("Step 27 deterministic artifact manifest regeneration mismatch")
-        for seed in report["training_seeds"]:
-            name = f"policy_seed_{seed}.json"
-            if (rerun_output / name).read_bytes() != (OUTPUT / name).read_bytes():
-                fail(f"Step 27 deterministic policy regeneration mismatch: {seed}")
+        rerun_roots = [Path(directory) / name for name in ("first", "second")]
+        for rerun_root in rerun_roots:
+            (rerun_root / "configs/rl").mkdir(parents=True)
+            shutil.copy2(CONFIG, rerun_root / "configs/rl/step27_ppo_engineering.json")
+            generate_step27_artifacts(rerun_root)
+        rerun_outputs = [root / "data/sample/rl/step27-ppo-engineering" for root in rerun_roots]
+        artifact_names = ["report.json", "manifest.json"] + [
+            f"policy_seed_{seed}.json" for seed in report["training_seeds"]
+        ]
+        for name in artifact_names:
+            if (rerun_outputs[0] / name).read_bytes() != (rerun_outputs[1] / name).read_bytes():
+                fail(f"Step 27 same-host deterministic regeneration mismatch: {name}")
+            if canonical_artifact_platform() and (
+                (rerun_outputs[0] / name).read_bytes() != (OUTPUT / name).read_bytes()
+            ):
+                fail(f"Step 27 canonical Linux artifact mismatch: {name}")
+        if not canonical_artifact_platform():
+            regenerated = json.loads((rerun_outputs[0] / "report.json").read_text(encoding="utf-8"))
+            for key in (
+                "aggregate",
+                "baselines",
+                "environment_contract",
+                "reward_audit",
+                "seed_results",
+            ):
+                if regenerated[key] != report[key]:
+                    fail(f"Step 27 cross-platform semantic mismatch: {key}")
     if not RELEASE_MANIFEST.is_file():
         fail("Step 27 release manifest is missing")
     release = json.loads(RELEASE_MANIFEST.read_text(encoding="utf-8"))

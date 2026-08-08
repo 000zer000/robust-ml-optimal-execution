@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
 
 import jsonschema
+
+from native_executable import native_executable
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "python"))
@@ -21,7 +23,10 @@ def main() -> int:
     manifest_path = fixture / "manifest.json"
     schema_pairs = [
         (ROOT / "schemas/metrics/metrics-contract-v1.schema.json", contract_path),
-        (ROOT / "schemas/metrics/metrics-validation-report-v1.schema.json", fixture / "report.json"),
+        (
+            ROOT / "schemas/metrics/metrics-validation-report-v1.schema.json",
+            fixture / "report.json",
+        ),
         (ROOT / "schemas/metrics/metrics-evidence-manifest-v1.schema.json", manifest_path),
     ]
     for schema_path, instance_path in schema_pairs:
@@ -39,9 +44,11 @@ def main() -> int:
         raise SystemExit("Step 17 synthetic fixture cannot make performance claims")
 
     committed = verify_metrics_evidence(manifest_path)
-    executable = ROOT / "build/gcc-debug/robust_execution_metrics_demo"
+    executable = native_executable(ROOT, "robust_execution_metrics_demo")
     completed = subprocess.run([str(executable)], check=True, capture_output=True, text=True)
-    if json.loads(completed.stdout) != json.loads((fixture / "report.json").read_text(encoding="utf-8")):
+    if json.loads(completed.stdout) != json.loads(
+        (fixture / "report.json").read_text(encoding="utf-8")
+    ):
         raise SystemExit("Step 17 C++ metrics demo differs from committed report")
 
     with tempfile.TemporaryDirectory(prefix="step17-metrics-") as temporary:

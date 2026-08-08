@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from decimal import Decimal
 import gzip
 import json
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -124,14 +124,17 @@ def test_duplicate_policy() -> None:
     assert duplicates[0]["disposition"] == "exact_duplicate_dropped"
     conflict_payload = '{"stream":"btcusdt@trade","data":{"e":"trade","s":"BTCUSDT","t":1,"p":"1"}}'
     with pytest.raises(CanonicalDataError, match="conflicting duplicate"):
-        _deduplicate([
-            base,
-            base | {
-                "raw_payload_utf8": conflict_payload,
-                "raw_payload_sha256": "b" * 64,
-                "_source_record_index": 1,
-            },
-        ])
+        _deduplicate(
+            [
+                base,
+                base
+                | {
+                    "raw_payload_utf8": conflict_payload,
+                    "raw_payload_sha256": "b" * 64,
+                    "_source_record_index": 1,
+                },
+            ]
+        )
 
 
 def test_rows_to_columns_rejects_shape_mismatch() -> None:

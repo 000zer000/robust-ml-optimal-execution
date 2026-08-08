@@ -4,7 +4,6 @@ from pathlib import Path
 
 from robust_execution.cli import main
 
-
 ROOT = Path(__file__).resolve().parents[2]
 
 

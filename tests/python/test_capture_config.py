@@ -7,7 +7,6 @@ import pytest
 
 from robust_execution.data_capture.config import CaptureConfigurationError, load_capture_config
 
-
 ROOT = Path(__file__).resolve().parents[2]
 
 

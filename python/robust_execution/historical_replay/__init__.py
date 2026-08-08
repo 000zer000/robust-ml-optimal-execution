@@ -1,6 +1,9 @@
 """Deterministic aggregate-L2 historical replay from Step 14 canonical datasets."""
 
-from robust_execution.historical_replay.builder import HistoricalReplayError, build_historical_replay
+from robust_execution.historical_replay.builder import (
+    HistoricalReplayError,
+    build_historical_replay,
+)
 from robust_execution.historical_replay.config import (
     HistoricalReplayConfig,
     HistoricalReplayConfigurationError,

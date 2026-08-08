@@ -47,8 +47,7 @@ def main() -> None:
             },
         )
         for raw in raw_rows
-        if split_for_day(int(raw["day_index"]), config.split_days)
-        == "engineering_holdout"
+        if split_for_day(int(raw["day_index"]), config.split_days) == "engineering_holdout"
     ]
     results: dict[str, object] = {}
     with threadpool_limits(limits=1):

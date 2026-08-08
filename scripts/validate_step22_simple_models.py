@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+import platform
+import sys
 import tempfile
+from pathlib import Path
 
 import jsonschema
 
@@ -56,27 +58,41 @@ def main() -> None:
     for horizon in report["models"].values():
         if set(horizon) != set(FAMILIES):
             fail("Step 22 model-family set changed")
-    with tempfile.TemporaryDirectory(prefix="step22-rerun-") as temporary:
-        rerun = write_simple_model_fixture(config, Path(temporary))
-        verify_simple_model_fixture(rerun, config)
-        if (rerun.parent / "report.json").read_bytes() != (
-            MANIFEST.parent / "report.json"
-        ).read_bytes():
-            fail("Step 22 semantic report is not deterministic")
-        committed_manifest = json.loads(MANIFEST.read_text())
-        rerun_manifest = json.loads(rerun.read_text())
-        committed = {
-            item["relative_path"]: item["sha256"]
-            for item in committed_manifest["artifacts"]
-            if item["kind"] != "trusted_pickle_model"
-        }
-        repeated = {
-            item["relative_path"]: item["sha256"]
-            for item in rerun_manifest["artifacts"]
-            if item["kind"] != "trusted_pickle_model"
-        }
-        if committed != repeated:
-            fail("Step 22 deterministic non-binary artifacts changed")
+    with (
+        tempfile.TemporaryDirectory(prefix="step22-rerun-a-") as first_directory,
+        tempfile.TemporaryDirectory(prefix="step22-rerun-b-") as second_directory,
+    ):
+        first = write_simple_model_fixture(config, Path(first_directory))
+        second = write_simple_model_fixture(config, Path(second_directory))
+        verify_simple_model_fixture(first, config)
+        verify_simple_model_fixture(second, config)
+
+        def nonbinary_hashes(manifest_path: Path) -> dict[str, str]:
+            fixture_manifest = json.loads(manifest_path.read_text())
+            return {
+                item["relative_path"]: item["sha256"]
+                for item in fixture_manifest["artifacts"]
+                if item["kind"] != "trusted_pickle_model"
+            }
+
+        first_report = (first.parent / "report.json").read_bytes()
+        if first_report != (second.parent / "report.json").read_bytes():
+            fail("Step 22 semantic report is not deterministic within this environment")
+        if nonbinary_hashes(first) != nonbinary_hashes(second):
+            fail("Step 22 non-binary artifacts are not deterministic within this environment")
+
+        # The committed sklearn fixtures are canonicalized on Linux x86-64. Floating-point model
+        # fitting can differ across BLAS implementations, so other platforms prove repeatability
+        # locally while CI performs the byte-for-byte canonical comparison.
+        canonical_platform = (
+            platform.system() == "Linux"
+            and platform.machine() == "x86_64"
+            and sys.version_info[:2] == (3, 13)
+        )
+        if canonical_platform and first_report != (MANIFEST.parent / "report.json").read_bytes():
+            fail("Step 22 canonical semantic report changed")
+        if canonical_platform and nonbinary_hashes(first) != nonbinary_hashes(MANIFEST):
+            fail("Step 22 canonical deterministic non-binary artifacts changed")
     print(json.dumps({"status": "ok", "step": 22, **result}, sort_keys=True))
 
 

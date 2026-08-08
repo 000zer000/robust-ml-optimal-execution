@@ -47,12 +47,16 @@ def test_prediction_labels_and_timestamp_contract() -> None:
     assert [first_bid.label[f"quote_depletion_{h}"] for h in ("250ms", "1s", "5s")] == [0, 0, 1]
     assert [second_ask.label[f"quote_depletion_{h}"] for h in ("250ms", "1s", "5s")] == [0, 0, 1]
     assert [second_bid.label[f"quote_depletion_{h}"] for h in ("250ms", "1s", "5s")] == [1, 1, 1]
-    assert [
-        eth_second_ask.label[f"quote_depletion_{h}"] for h in ("250ms", "1s", "5s")
-    ] == [0, 0, 0]
-    assert [
-        eth_second_bid.label[f"quote_depletion_{h}"] for h in ("250ms", "1s", "5s")
-    ] == [0, 0, 0]
+    assert [eth_second_ask.label[f"quote_depletion_{h}"] for h in ("250ms", "1s", "5s")] == [
+        0,
+        0,
+        0,
+    ]
+    assert [eth_second_bid.label[f"quote_depletion_{h}"] for h in ("250ms", "1s", "5s")] == [
+        0,
+        0,
+        0,
+    ]
     for row in rows:
         assert row.feature["maximum_source_event_time_ns"] <= row.feature["source_cutoff_ns"]
         assert row.feature["maximum_source_available_time_ns"] <= row.feature["decision_time_ns"]
@@ -65,9 +69,7 @@ def test_future_label_mutation_cannot_change_same_decision_features() -> None:
     target = next(
         e
         for e in events
-        if e.symbol == "BTCUSDT"
-        and e.kind == "depth"
-        and e.event_time_ns == 6_050_000_000
+        if e.symbol == "BTCUSDT" and e.kind == "depth" and e.event_time_ns == 6_050_000_000
     )
     mutated = [
         replace(e, updates=(BookUpdate("ask", 101, 70),)) if e.sequence == target.sequence else e
@@ -108,9 +110,10 @@ def test_past_mutation_changes_feature_but_not_other_symbol() -> None:
     changed = build_feature_label_rows(mutated, decisions, coverage, _config())
     before = _row(baseline, "BTCUSDT", "bid", 6 * NS)
     after = _row(changed, "BTCUSDT", "bid", 6 * NS)
-    assert before.feature["toward_quote_trade_flow_250ms_lots"] != after.feature[
-        "toward_quote_trade_flow_250ms_lots"
-    ]
+    assert (
+        before.feature["toward_quote_trade_flow_250ms_lots"]
+        != after.feature["toward_quote_trade_flow_250ms_lots"]
+    )
     eth_before = _row(baseline, "ETHUSDT", "bid", 6 * NS)
     eth_after = _row(changed, "ETHUSDT", "bid", 6 * NS)
     assert eth_before == eth_after
@@ -145,7 +148,7 @@ def test_reject_snapshot_inside_label_horizon() -> None:
     )
     with pytest.raises(PredictionDataError, match="snapshot/reconnect"):
         build_feature_label_rows(
-            sorted(events + [reset], key=lambda e: (e.event_time_ns, e.sequence)),
+            sorted([*events, reset], key=lambda e: (e.event_time_ns, e.sequence)),
             [DecisionPoint("BTCUSDT", 6 * NS, "bid")],
             coverage,
             _config(),
@@ -155,20 +158,17 @@ def test_reject_snapshot_inside_label_horizon() -> None:
 def test_reject_bad_stream_order_duplicate_and_availability_inversion() -> None:
     events, decisions, coverage = validation_fixture()
     with pytest.raises(PredictionDataError, match="globally unique"):
-        build_feature_label_rows(events + [events[0]], decisions, coverage, _config())
+        build_feature_label_rows([*events, events[0]], decisions, coverage, _config())
     first_btc = next(e for e in events if e.symbol == "BTCUSDT" and e.kind == "snapshot")
     inverted = [
-        replace(e, available_time_ns=1_000_000_000)
-        if e.sequence == first_btc.sequence
-        else e
+        replace(e, available_time_ns=1_000_000_000) if e.sequence == first_btc.sequence else e
         for e in events
     ]
     with pytest.raises(PredictionDataError, match="availability"):
         build_feature_label_rows(inverted, decisions, coverage, _config())
     late = next(e for e in events if e.symbol == "BTCUSDT" and e.event_time_ns == 6_050_000_000)
     disordered = [
-        replace(e, event_time_ns=100_000_000) if e.sequence == late.sequence else e
-        for e in events
+        replace(e, event_time_ns=100_000_000) if e.sequence == late.sequence else e for e in events
     ]
     with pytest.raises(PredictionDataError, match="strictly ordered"):
         build_feature_label_rows(disordered, decisions, coverage, _config())

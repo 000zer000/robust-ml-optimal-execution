@@ -13,7 +13,6 @@ from robust_execution.rl.ppo import (
     ACTION_LABELS,
     OOD_REGIMES,
     TRAIN_REGIMES,
-    ActorCritic,
     RLEngineeringConfig,
     RLEngineeringError,
     SyntheticExecutionEnv,

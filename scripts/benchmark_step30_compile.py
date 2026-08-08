@@ -2,9 +2,9 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import sys
 import time
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -95,12 +95,12 @@ def main() -> None:
         try:
             torch.compile(temporal, backend="inductor", fullgraph=True)(temporal_input)
             fullgraph_status = "unexpectedly_supported"
-        except Exception as error:  # noqa: BLE001
+        except Exception as error:
             fullgraph_status = f"unsupported:{type(error).__name__}"
         try:
             torch.export.export(temporal, (temporal_input,))
             export_status = "captured"
-        except Exception as error:  # noqa: BLE001
+        except Exception as error:
             export_status = f"failed:{type(error).__name__}"
     result["temporal_5s"] = {
         "eager": eager_temporal,

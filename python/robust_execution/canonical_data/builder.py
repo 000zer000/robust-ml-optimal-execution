@@ -2,21 +2,20 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
-from datetime import datetime, timezone
-from decimal import Decimal, InvalidOperation
 import gzip
 import hashlib
 import importlib.util
 import json
+from collections import defaultdict
+from datetime import UTC, datetime
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
 from robust_execution import __version__
-from robust_execution.canonical_data.config import CanonicalDataConfig, InstrumentScale
+from robust_execution.canonical_data.config import CanonicalDataConfig
 from robust_execution.canonical_data.models import TableArtifact, write_columnar_table
 from robust_execution.canonical_data.parquet import ParquetExportError, write_parquet_table
-from robust_execution.data_capture.models import canonical_json_bytes
 from robust_execution.data_capture.storage import write_immutable_json
 from robust_execution.data_capture.verify import verify_capture_manifest
 from robust_execution.data_validation.verify import verify_data_validation_report
@@ -107,7 +106,9 @@ def _raw_records(manifest_path: Path, selected_days: set[str]) -> list[dict[str,
                 for line_number, line in enumerate(handle, 1):
                     value = json.loads(line)
                     if not isinstance(value, dict):
-                        raise CanonicalDataError(f"record is not an object: {relative}:{line_number}")
+                        raise CanonicalDataError(
+                            f"record is not an object: {relative}:{line_number}"
+                        )
                     value["_source_record_index"] = source_index
                     value["_source_relative_path"] = relative
                     value["_source_line_number"] = line_number
@@ -118,7 +119,9 @@ def _raw_records(manifest_path: Path, selected_days: set[str]) -> list[dict[str,
     return records
 
 
-def _deduplicate(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def _deduplicate(
+    records: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     unique: list[dict[str, Any]] = []
     duplicates: list[dict[str, Any]] = []
     seen: dict[tuple[object, ...], str] = {}
@@ -129,6 +132,7 @@ def _deduplicate(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
         except (KeyError, TypeError, json.JSONDecodeError) as exc:
             raise CanonicalDataError("validated raw record cannot be parsed") from exc
         event_type = payload.get("e")
+        key: tuple[object, ...]
         if event_type == "trade":
             key = ("trade", payload.get("s"), payload.get("t"))
         elif event_type == "depthUpdate":
@@ -159,6 +163,7 @@ def _deduplicate(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], l
 
 def _schemas() -> dict[str, tuple[tuple[str, ...], dict[str, object]]]:
     definitions: dict[str, tuple[tuple[str, ...], dict[str, object]]] = {}
+
     def add(name: str, columns: tuple[tuple[str, str, bool], ...]) -> None:
         order = tuple(item[0] for item in columns)
         definitions[name] = (
@@ -172,6 +177,7 @@ def _schemas() -> dict[str, tuple[tuple[str, ...], dict[str, object]]]:
                 ],
             },
         )
+
     provenance = (
         ("dataset_id", "utf8", False),
         ("venue_id", "utf8", False),
@@ -182,74 +188,95 @@ def _schemas() -> dict[str, tuple[tuple[str, ...], dict[str, object]]]:
         ("source_line_number", "int64", False),
         ("raw_payload_sha256", "sha256_hex", False),
     )
-    add("source_records", provenance + (
-        ("canonical_message_sequence", "int64", False),
-        ("connection_id", "utf8", False),
-        ("message_index", "int64", False),
-        ("stream", "utf8", False),
-        ("event_type", "utf8", False),
-        ("event_time_ns", "timestamp_ns_utc", False),
-        ("received_utc_ns", "timestamp_ns_utc", False),
-        ("received_monotonic_ns", "duration_ns", False),
-    ))
-    add("book_deltas", provenance + (
-        ("canonical_message_sequence", "int64", False),
-        ("canonical_row_sequence", "int64", False),
-        ("level_index", "int64", False),
-        ("event_time_ns", "timestamp_ns_utc", False),
-        ("received_utc_ns", "timestamp_ns_utc", False),
-        ("first_update_id", "int64", False),
-        ("final_update_id", "int64", False),
-        ("side", "enum:bid|ask", False),
-        ("price_ticks", "int64", False),
-        ("quantity_lots", "int64", False),
-        ("is_delete", "bool", False),
-    ))
-    add("trades", provenance + (
-        ("canonical_message_sequence", "int64", False),
-        ("canonical_row_sequence", "int64", False),
-        ("event_time_ns", "timestamp_ns_utc", False),
-        ("trade_time_ns", "timestamp_ns_utc", False),
-        ("received_utc_ns", "timestamp_ns_utc", False),
-        ("trade_id", "int64", False),
-        ("price_ticks", "int64", False),
-        ("quantity_lots", "int64", False),
-        ("buyer_is_maker", "bool", False),
-        ("best_price_match", "bool", False),
-    ))
-    add("book_snapshots", (
-        ("dataset_id", "utf8", False),
-        ("venue_id", "utf8", False),
-        ("symbol", "utf8", False),
-        ("source_run_id", "utf8", False),
-        ("snapshot_relative_path", "utf8", False),
-        ("connection_id", "utf8", False),
-        ("connection_started_utc_ns", "timestamp_ns_utc", False),
-        ("last_update_id", "int64", False),
-        ("canonical_row_sequence", "int64", False),
-        ("level_index", "int64", False),
-        ("side", "enum:bid|ask", False),
-        ("price_ticks", "int64", False),
-        ("quantity_lots", "int64", False),
-    ))
-    add("duplicate_records", (
-        ("duplicate_sequence", "int64", False),
-        ("event_kind", "utf8", False),
-        ("symbol", "utf8", False),
-        ("natural_key", "utf8", False),
-        ("raw_payload_sha256", "sha256_hex", False),
-        ("source_record_index", "int64", False),
-        ("disposition", "enum:exact_duplicate_dropped", False),
-    ))
-    add("instrument_definitions", (
-        ("venue_id", "utf8", False),
-        ("symbol", "utf8", False),
-        ("price_increment_decimal", "decimal_string", False),
-        ("quantity_increment_decimal", "decimal_string", False),
-        ("price_unit_name", "utf8", False),
-        ("quantity_unit_name", "utf8", False),
-        ("definition_source", "utf8", False),
-    ))
+    add(
+        "source_records",
+        (
+            *provenance,
+            ("canonical_message_sequence", "int64", False),
+            ("connection_id", "utf8", False),
+            ("message_index", "int64", False),
+            ("stream", "utf8", False),
+            ("event_type", "utf8", False),
+            ("event_time_ns", "timestamp_ns_utc", False),
+            ("received_utc_ns", "timestamp_ns_utc", False),
+            ("received_monotonic_ns", "duration_ns", False),
+        ),
+    )
+    add(
+        "book_deltas",
+        (
+            *provenance,
+            ("canonical_message_sequence", "int64", False),
+            ("canonical_row_sequence", "int64", False),
+            ("level_index", "int64", False),
+            ("event_time_ns", "timestamp_ns_utc", False),
+            ("received_utc_ns", "timestamp_ns_utc", False),
+            ("first_update_id", "int64", False),
+            ("final_update_id", "int64", False),
+            ("side", "enum:bid|ask", False),
+            ("price_ticks", "int64", False),
+            ("quantity_lots", "int64", False),
+            ("is_delete", "bool", False),
+        ),
+    )
+    add(
+        "trades",
+        (
+            *provenance,
+            ("canonical_message_sequence", "int64", False),
+            ("canonical_row_sequence", "int64", False),
+            ("event_time_ns", "timestamp_ns_utc", False),
+            ("trade_time_ns", "timestamp_ns_utc", False),
+            ("received_utc_ns", "timestamp_ns_utc", False),
+            ("trade_id", "int64", False),
+            ("price_ticks", "int64", False),
+            ("quantity_lots", "int64", False),
+            ("buyer_is_maker", "bool", False),
+            ("best_price_match", "bool", False),
+        ),
+    )
+    add(
+        "book_snapshots",
+        (
+            ("dataset_id", "utf8", False),
+            ("venue_id", "utf8", False),
+            ("symbol", "utf8", False),
+            ("source_run_id", "utf8", False),
+            ("snapshot_relative_path", "utf8", False),
+            ("connection_id", "utf8", False),
+            ("connection_started_utc_ns", "timestamp_ns_utc", False),
+            ("last_update_id", "int64", False),
+            ("canonical_row_sequence", "int64", False),
+            ("level_index", "int64", False),
+            ("side", "enum:bid|ask", False),
+            ("price_ticks", "int64", False),
+            ("quantity_lots", "int64", False),
+        ),
+    )
+    add(
+        "duplicate_records",
+        (
+            ("duplicate_sequence", "int64", False),
+            ("event_kind", "utf8", False),
+            ("symbol", "utf8", False),
+            ("natural_key", "utf8", False),
+            ("raw_payload_sha256", "sha256_hex", False),
+            ("source_record_index", "int64", False),
+            ("disposition", "enum:exact_duplicate_dropped", False),
+        ),
+    )
+    add(
+        "instrument_definitions",
+        (
+            ("venue_id", "utf8", False),
+            ("symbol", "utf8", False),
+            ("price_increment_decimal", "decimal_string", False),
+            ("quantity_increment_decimal", "decimal_string", False),
+            ("price_unit_name", "utf8", False),
+            ("quantity_unit_name", "utf8", False),
+            ("definition_source", "utf8", False),
+        ),
+    )
     return definitions
 
 
@@ -376,9 +403,9 @@ def _snapshot_rows(
         connection_id = stem.rsplit("-", 1)[0]
         if connection_id not in starts:
             raise CanonicalDataError(f"snapshot connection not in manifest: {connection_id}")
-        connection_day = datetime.fromtimestamp(
-            starts[connection_id] / 1_000_000_000, tz=timezone.utc
-        ).date().isoformat()
+        connection_day = (
+            datetime.fromtimestamp(starts[connection_id] / 1_000_000_000, tz=UTC).date().isoformat()
+        )
         if connection_day not in selected_days:
             continue
         snapshot = _read_gzip_json(root / relative)
@@ -418,11 +445,19 @@ def _parquet_status(config: CanonicalDataConfig) -> dict[str, object]:
             raise CanonicalDataError(
                 "processed research output requires pyarrow==25.0.0/Parquet; engine is unavailable"
             )
-        return {"required": True, "engine": "pyarrow", "available": True, "written": False, "artifacts": []}
+        return {
+            "required": True,
+            "engine": "pyarrow",
+            "available": True,
+            "written": False,
+            "artifacts": [],
+        }
     return {
         "required": False,
-        "engine": "pyarrow" if available else None,
-        "available": available,
+        # Optional host packages must not change the deterministic sample manifest. PyArrow
+        # availability is evaluated only for the processed research tier above.
+        "engine": None,
+        "available": False,
         "written": False,
         "reason": "sample fixture uses deterministic base layer; not a research dataset",
     }
@@ -448,7 +483,10 @@ def build_canonical_dataset(
     if config.input_policy.require_verified_capture and not validation_verification:
         raise CanonicalDataError("source validation could not be verified")
     selected_days, classification = _selected_days(report, config)
-    if config.output_tier == "sample" and capture_manifest.get("data_origin") != "synthetic_transport_fixture":
+    if (
+        config.output_tier == "sample"
+        and capture_manifest.get("data_origin") != "synthetic_transport_fixture"
+    ):
         raise CanonicalDataError("sample tier is reserved for the deterministic fixture")
     identifier = dataset_id or f"{capture_manifest['run_id']}-canonical-v1"
     target = output_root / identifier

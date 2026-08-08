@@ -9,11 +9,13 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from native_executable import native_executable
+
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = ROOT / "schemas" / "synthetic"
 FIXTURE_DIR = ROOT / "data" / "sample" / "synthetic"
 CONFIG_DIR = ROOT / "configs" / "stress_tests"
-BINARY = ROOT / "build" / "gcc-debug" / "robust_execution_synthetic_demo"
+BINARY = native_executable(ROOT, "robust_execution_synthetic_demo")
 
 
 def sha256(path: Path) -> str:
@@ -54,8 +56,6 @@ def main() -> int:
     if not required_summary.issubset(set(summary.splitlines())):
         raise RuntimeError("synthetic summary is missing required provenance fields")
 
-    if not BINARY.exists():
-        raise RuntimeError("synthetic demo binary is missing; build gcc-debug first")
     with tempfile.TemporaryDirectory(prefix="re-step9-") as temp:
         output_dir = Path(temp)
         result = subprocess.run(
@@ -77,7 +77,8 @@ def main() -> int:
 
     print(
         "synthetic market: PASS "
-        f"({len(config_paths)} configs, 2 schemas, deterministic tape {manifest['tape_sha256'][:12]}...)"
+        f"({len(config_paths)} configs, 2 schemas, deterministic tape "
+        f"{manifest['tape_sha256'][:12]}...)"
     )
     return 0
 

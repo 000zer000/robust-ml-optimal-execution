@@ -35,7 +35,11 @@ def sha256(path: Path) -> str:
 
 
 def main() -> int:
-    missing = [path for path in REQUIRED if not (ROOT / path).is_file() or (ROOT / path).stat().st_size == 0]
+    missing = [
+        path
+        for path in REQUIRED
+        if not (ROOT / path).is_file() or (ROOT / path).stat().st_size == 0
+    ]
     if missing:
         print("missing release files:", *missing, sep="\n- ")
         return 1
@@ -49,8 +53,21 @@ def main() -> int:
     if cuda.get("gate_j_cuda_closed") is not True or cuda.get("status") != "complete":
         print("CUDA gate evidence not closed")
         return 1
-    if cuda.get("decision") != "gpu_transfer_launch_overhead_inferior_for_registered_batch_one_workloads":
+    if (
+        cuda.get("decision")
+        != "gpu_transfer_launch_overhead_inferior_for_registered_batch_one_workloads"
+    ):
         print("unexpected CUDA decision")
+        return 1
+
+    pybind = json.loads(
+        (ROOT / "evidence/performance/STEP30_PYBIND_BOUNDARY_SUPPLEMENT.json").read_text()
+    )
+    if (
+        pybind.get("status") != "pass_numeric_boundary_measurement"
+        or pybind.get("extension_semantics") != "diagnostic_sequence_exact_match"
+    ):
+        print("Python/C++ boundary supplement is incomplete")
         return 1
 
     tardis = json.loads((ROOT / "evidence/data/TARDIS_SAMPLE_COMPATIBILITY.json").read_text())

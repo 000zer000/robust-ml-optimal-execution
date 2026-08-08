@@ -7,13 +7,13 @@ frozen research protocol.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import json
 import math
-from pathlib import Path
 import random
-from typing import Callable, Iterable
+from collections.abc import Callable, Iterable
+from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -142,9 +142,8 @@ def validate_config(config: RLEngineeringConfig) -> None:
         raise RLEngineeringError("Step 27 engineering algorithm must be categorical PPO")
     if config.algorithm_status != "engineering_candidate_not_frozen_research_field":
         raise RLEngineeringError("Step 27 algorithm status changed")
-    if (
-        len(config.training_seeds) < 5
-        or len(set(config.training_seeds)) != len(config.training_seeds)
+    if len(config.training_seeds) < 5 or len(set(config.training_seeds)) != len(
+        config.training_seeds
     ):
         raise RLEngineeringError("at least five unique engineering seeds are required")
     if config.train_episodes_per_update < 4 or config.updates < 2:
@@ -224,7 +223,7 @@ class SyntheticExecutionEnv:
         if self.impact_exponent <= 0:
             raise RLEngineeringError("impact exponent must be positive")
         self._rng = np.random.default_rng(self.seed)
-        self._arrival_ticks = int(round(10_000 * self.instrument_scale))
+        self._arrival_ticks = round(10_000 * self.instrument_scale)
         self._state: EnvState | None = None
         self._done = False
         self._cumulative_cost_bps = 0.0
@@ -248,9 +247,9 @@ class SyntheticExecutionEnv:
 
     def reset(self) -> np.ndarray:
         self._rng = np.random.default_rng(self.seed)
-        spread = max(2, int(round(self.regime.spread_ticks * self.instrument_scale)))
+        spread = max(2, round(self.regime.spread_ticks * self.instrument_scale))
         center = self._arrival_ticks
-        depth_base = max(10, int(round(self.regime.depth_lots * self.instrument_scale)))
+        depth_base = max(10, round(self.regime.depth_lots * self.instrument_scale))
         bid_depth = depth_base + int(self._rng.integers(-depth_base // 5, depth_base // 5 + 1))
         ask_depth = depth_base + int(self._rng.integers(-depth_base // 5, depth_base // 5 + 1))
         self._state = EnvState(
@@ -320,7 +319,7 @@ class SyntheticExecutionEnv:
             fraction = 1.0
         else:
             raise RLEngineeringError(f"unknown RL action {label}")
-        return min(remaining, max(1, int(math.ceil(remaining * fraction))))
+        return min(remaining, max(1, math.ceil(remaining * fraction)))
 
     def _passive_fill(self, requested: int) -> int:
         if requested <= 0:
@@ -339,7 +338,7 @@ class SyntheticExecutionEnv:
         stochastic_fraction = float(self._rng.beta(2.5, 2.0))
         if float(self._rng.random()) > probability:
             stochastic_fraction *= 0.15
-        return min(requested, capacity, int(round(requested * stochastic_fraction)))
+        return min(requested, capacity, round(requested * stochastic_fraction))
 
     def _cost_for_fill(self, fill_lots: int, price_ticks: float, aggressive: bool) -> float:
         if fill_lots <= 0:
@@ -360,25 +359,21 @@ class SyntheticExecutionEnv:
         state = self.state
         shock = int(self._rng.choice([-1, 0, 1], p=[0.25, 0.50, 0.25]))
         persistence = (
-            1
-            if state.adverse_momentum_ticks > 0
-            else -1 if state.adverse_momentum_ticks < 0 else 0
+            1 if state.adverse_momentum_ticks > 0 else -1 if state.adverse_momentum_ticks < 0 else 0
         )
         if float(self._rng.random()) < self.regime.persistence:
             shock += persistence
         shock = int(np.clip(shock, -2, 2)) * self.regime.volatility_ticks
         if self.market_time_scale != 1.0:
-            shock = int(round(shock * math.sqrt(self.market_time_scale)))
-        agent_impact = int(
-            round(self.regime.impact_bps * aggressive_fill / max(1, state.ask_depth))
-        )
+            shock = round(shock * math.sqrt(self.market_time_scale))
+        agent_impact = round(self.regime.impact_bps * aggressive_fill / max(1, state.ask_depth))
         next_reference = max(100, state.reference_ticks + shock + agent_impact)
         spread_jitter = int(self._rng.integers(0, 2)) * 2
         spread = max(
             2,
-            int(round(self.regime.spread_ticks * self.instrument_scale)) + spread_jitter,
+            round(self.regime.spread_ticks * self.instrument_scale) + spread_jitter,
         )
-        depth_base = max(8, int(round(self.regime.depth_lots * self.instrument_scale)))
+        depth_base = max(8, round(self.regime.depth_lots * self.instrument_scale))
         bid_depth = depth_base + int(self._rng.integers(-depth_base // 3, depth_base // 3 + 1))
         ask_depth = depth_base + int(self._rng.integers(-depth_base // 3, depth_base // 3 + 1))
         self._state = EnvState(
@@ -526,15 +521,11 @@ def _independent_fill_cost(
         impact = float(row["regime_impact_bps"]) * participation * participation
     else:
         impact = float(row["regime_impact_bps"]) * participation**impact_exponent
-    latency = float(row["regime_latency_bps"]) * (
-        1.0 + float(row["regime_volatility_ticks"]) / 4.0
-    )
+    latency = float(row["regime_latency_bps"]) * (1.0 + float(row["regime_volatility_ticks"]) / 4.0)
     fee_bps = float(row["regime_fee_bps"])
     fee = fee_bps if aggressive else -0.20 * fee_bps
     adverse = max(0.0, adverse_momentum_ticks) * (0.35 if aggressive else 0.75)
-    return (price_cost + impact + latency + fee + adverse) * fill_lots / float(
-        row["parent_lots"]
-    )
+    return (price_cost + impact + latency + fee + adverse) * fill_lots / float(row["parent_lots"])
 
 
 def reconstruct_reward(row: dict[str, object]) -> float:
@@ -630,7 +621,7 @@ def _collect_rollout(
     dones: list[bool] = []
     masks: list[np.ndarray] = []
     rng = np.random.default_rng(seed)
-    for episode in range(episodes):
+    for _episode in range(episodes):
         regime = _sample_regime(rng)
         env_seed = int(rng.integers(0, 2**31 - 1))
         env = SyntheticExecutionEnv(config, regime=regime, seed=env_seed)
@@ -695,9 +686,9 @@ def _ppo_update(
         log_probs = distribution.log_prob(batch.actions)
         ratio = torch.exp(log_probs - batch.old_log_probs)
         unclipped = ratio * batch.advantages
-        clipped = torch.clamp(
-            ratio, 1.0 - config.clip_ratio, 1.0 + config.clip_ratio
-        ) * batch.advantages
+        clipped = (
+            torch.clamp(ratio, 1.0 - config.clip_ratio, 1.0 + config.clip_ratio) * batch.advantages
+        )
         policy_loss = -torch.min(unclipped, clipped).mean()
         value_loss = torch.mean((values - batch.returns) ** 2)
         entropy = distribution.entropy().mean()
@@ -786,9 +777,7 @@ def liquidity_aware_policy(observation: np.ndarray, mask: np.ndarray) -> int:
     volatility = float(observation[5])
     if time_remaining < 0.25 or remaining > time_remaining + 0.35:
         label = "aggressive_50" if remaining < 0.65 else "aggressive_100"
-    elif spread <= 0.4 and imbalance < -0.15:
-        label = "aggressive_25"
-    elif volatility > 0.35:
+    elif (spread <= 0.4 and imbalance < -0.15) or volatility > 0.35:
         label = "aggressive_25"
     elif imbalance > 0.10:
         label = "passive_50"
@@ -822,7 +811,7 @@ def run_policy_episode(
     observation = env.reset()
     done = False
     invalid = 0
-    action_counts = {label: 0 for label in ACTION_LABELS}
+    action_counts = dict.fromkeys(ACTION_LABELS, 0)
     while not done:
         mask = env.valid_action_mask()
         action = int(policy(observation, mask))
@@ -989,10 +978,7 @@ def historical_zero_shot_gate(
     return "eligible_zero_shot_only"
 
 
-
-def _aggregate_seed_metrics(
-    seed_rows: list[dict[str, object]], key: str
-) -> dict[str, float]:
+def _aggregate_seed_metrics(seed_rows: list[dict[str, object]], key: str) -> dict[str, float]:
     values = np.asarray([float(row[key]) for row in seed_rows], dtype=float)
     return {
         "mean": float(values.mean()),

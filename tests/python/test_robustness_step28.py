@@ -1,34 +1,33 @@
 from __future__ import annotations
 
-from dataclasses import replace
 import json
-from pathlib import Path
 import shutil
+from dataclasses import replace
+from pathlib import Path
 
 import numpy as np
 import pytest
 
+import robust_execution.robustness.matrix as robustness_matrix
 from robust_execution.rl.ppo import (
     TRAIN_REGIMES,
     SyntheticExecutionEnv,
-    immediate_policy,
-    load_config as load_rl,
     twap_policy,
 )
-import robust_execution.robustness.matrix as robustness_matrix
-
+from robust_execution.rl.ppo import (
+    load_config as load_rl,
+)
 from robust_execution.robustness.matrix import (
     RobustnessError,
-    Step28Config,
     StressCase,
     _compute_panel,
     _dimension_registry,
     _load_policies,
     _metrics,
+    _paired_seeds,
     _prediction_panel,
     _queue_panel,
     _ranking_summary,
-    _paired_seeds,
     _regime_for_case,
     _rl_config_for_case,
     generate_step28_artifacts,
@@ -48,9 +47,21 @@ def test_config_and_registered_dimensions() -> None:
     assert config.step == 28
     assert len(config.ppo_seeds) == 5
     required = {
-        "latency", "decision_grid", "liquidity", "spread", "volatility", "queue",
-        "fees_rebates", "parent_size", "horizon", "impact", "prediction", "data_quality",
-        "distribution", "compute", "simulator_mismatch",
+        "latency",
+        "decision_grid",
+        "liquidity",
+        "spread",
+        "volatility",
+        "queue",
+        "fees_rebates",
+        "parent_size",
+        "horizon",
+        "impact",
+        "prediction",
+        "data_quality",
+        "distribution",
+        "compute",
+        "simulator_mismatch",
     }
     assert set(_dimension_registry()) == required
     assert len(stress_cases()) == 43
@@ -82,10 +93,10 @@ def test_default_step28_environment_extension_preserves_step27_path() -> None:
     )
     assert np.array_equal(left.reset(), right.reset())
     for _ in range(3):
-        l = left.step(5)
-        r = right.step(5)
-        assert l[1:] == r[1:]
-        if l[2]:
+        left_result = left.step(5)
+        right_result = right.step(5)
+        assert left_result[1:] == right_result[1:]
+        if left_result[2]:
             break
 
 
@@ -102,9 +113,7 @@ def test_stress_extensions_change_market_economics() -> None:
 
 def test_data_loss_is_deterministic_and_recorded() -> None:
     cfg = load_rl(RL_CONFIG)
-    case = StressCase(
-        "drop", "data_quality", "drop", observation_drop_probability=0.5
-    )
+    case = StressCase("drop", "data_quality", "drop", observation_drop_probability=0.5)
     first = run_stress_episode(cfg, case=case, episode_seed=99, policy=twap_policy)
     second = run_stress_episode(cfg, case=case, episode_seed=99, policy=twap_policy)
     assert first == second
@@ -138,17 +147,17 @@ def test_metrics_require_completed_episode_rows() -> None:
             "invalid_actions": 0,
             "dropped_observations": 1,
             "delayed_observations": 0,
-            "actions": {
-                label: 0
-                for label in (
+            "actions": dict.fromkeys(
+                (
                     "wait",
                     "passive_25",
                     "passive_50",
                     "aggressive_25",
                     "aggressive_50",
                     "aggressive_100",
-                )
-            },
+                ),
+                0,
+            ),
         },
         {
             "cost_bps": 3.0,
@@ -157,17 +166,17 @@ def test_metrics_require_completed_episode_rows() -> None:
             "invalid_actions": 0,
             "dropped_observations": 0,
             "delayed_observations": 1,
-            "actions": {
-                label: 0
-                for label in (
+            "actions": dict.fromkeys(
+                (
                     "wait",
                     "passive_25",
                     "passive_50",
                     "aggressive_25",
                     "aggressive_50",
                     "aggressive_100",
-                )
-            },
+                ),
+                0,
+            ),
         },
     ]
     result = _metrics(rows)
@@ -198,13 +207,18 @@ def test_report_artifact_has_required_negative_result() -> None:
     assert report["historical_cells"]["locked_test_opened"] is False
 
 
-
 def test_inherited_panels_and_policy_loading() -> None:
     cfg = load_config(CONFIG)
     policies = _load_policies(ROOT, cfg)
     assert set(policies) == {
-        "immediate", "twap_like", "liquidity_aware",
-        "ppo_seed_27", "ppo_seed_127", "ppo_seed_227", "ppo_seed_327", "ppo_seed_427",
+        "immediate",
+        "twap_like",
+        "liquidity_aware",
+        "ppo_seed_27",
+        "ppo_seed_127",
+        "ppo_seed_227",
+        "ppo_seed_327",
+        "ppo_seed_427",
     }
     prediction = _prediction_panel(ROOT)
     queue = _queue_panel(ROOT)
@@ -219,24 +233,29 @@ def test_ranking_summary_tracks_switches() -> None:
         StressCase("stress", "volatility", "shock"),
     )
     seeds = (27, 127, 227, 327, 427)
+
     def metric(value: float) -> dict[str, object]:
         return {
-            "mean_cost_bps": value, "median_cost_bps": value, "p95_cost_bps": value,
-            "cvar95_cost_bps": value, "completion_rate": 1.0,
+            "mean_cost_bps": value,
+            "median_cost_bps": value,
+            "p95_cost_bps": value,
+            "cvar95_cost_bps": value,
+            "completion_rate": 1.0,
         }
+
     central = {
-        "immediate": metric(4.0), "twap_like": metric(3.0),
+        "immediate": metric(4.0),
+        "twap_like": metric(3.0),
         "liquidity_aware": metric(1.0),
         **{f"ppo_seed_{seed}": metric(2.0) for seed in seeds},
     }
     stress = {
-        "immediate": metric(4.0), "twap_like": metric(1.0),
+        "immediate": metric(4.0),
+        "twap_like": metric(1.0),
         "liquidity_aware": metric(3.0),
         **{f"ppo_seed_{seed}": metric(2.0) for seed in seeds},
     }
-    rows, summary = _ranking_summary(
-        {"central_reference": central, "stress": stress}, cases, seeds
-    )
+    rows, summary = _ranking_summary({"central_reference": central, "stress": stress}, cases, seeds)
     assert len(rows) == 2
     assert summary["rank_switch_case_count"] == 1
     assert summary["win_counts"]["liquidity_aware"] == 1
@@ -255,34 +274,55 @@ def test_fast_generator_path_with_stubbed_matrix(
         StressCase("stress", "volatility", "shock"),
     )
     seeds = (27, 127, 227, 327, 427)
+
     def metric(value: float) -> dict[str, object]:
         return {
-            "episodes": 2, "mean_cost_bps": value, "median_cost_bps": value,
-            "p95_cost_bps": value, "cvar95_cost_bps": value,
-            "completion_rate": 1.0, "invalid_action_rate": 0.0,
-            "dropped_observation_rate": 0.0, "delayed_observation_rate": 0.0,
-            "action_counts": {}, "episode_costs_bps": [value, value],
+            "episodes": 2,
+            "mean_cost_bps": value,
+            "median_cost_bps": value,
+            "p95_cost_bps": value,
+            "cvar95_cost_bps": value,
+            "completion_rate": 1.0,
+            "invalid_action_rate": 0.0,
+            "dropped_observation_rate": 0.0,
+            "delayed_observation_rate": 0.0,
+            "action_counts": {},
+            "episode_costs_bps": [value, value],
         }
+
     central = {
-        "immediate": metric(4.0), "twap_like": metric(3.0),
+        "immediate": metric(4.0),
+        "twap_like": metric(3.0),
         "liquidity_aware": metric(1.0),
         **{f"ppo_seed_{seed}": metric(2.0) for seed in seeds},
     }
     stress = {
-        "immediate": metric(4.0), "twap_like": metric(1.0),
+        "immediate": metric(4.0),
+        "twap_like": metric(1.0),
         "liquidity_aware": metric(3.0),
         **{f"ppo_seed_{seed}": metric(2.0) for seed in seeds},
     }
-    detail = [{
-        "case_id": "central_reference", "dimension": "central", "setting": "central",
-        "evidence_class": "synthetic_engineering", "policy": "immediate", "episodes": 2,
-        "mean_cost_bps": 4.0, "median_cost_bps": 4.0, "p95_cost_bps": 4.0,
-        "cvar95_cost_bps": 4.0, "completion_rate": 1.0, "invalid_action_rate": 0.0,
-    }]
+    detail = [
+        {
+            "case_id": "central_reference",
+            "dimension": "central",
+            "setting": "central",
+            "evidence_class": "synthetic_engineering",
+            "policy": "immediate",
+            "episodes": 2,
+            "mean_cost_bps": 4.0,
+            "median_cost_bps": 4.0,
+            "p95_cost_bps": 4.0,
+            "cvar95_cost_bps": 4.0,
+            "completion_rate": 1.0,
+            "invalid_action_rate": 0.0,
+        }
+    ]
     monkeypatch.setattr(robustness_matrix, "stress_cases", lambda: cases)
     monkeypatch.setattr(robustness_matrix, "_load_policies", lambda root, config: {})
     monkeypatch.setattr(
-        robustness_matrix, "_case_policy_rows",
+        robustness_matrix,
+        "_case_policy_rows",
         lambda *args, **kwargs: (detail, {"central_reference": central, "stress": stress}),
     )
     monkeypatch.setattr(robustness_matrix, "_prediction_panel", lambda root: {"stub": True})
@@ -296,6 +336,7 @@ def test_fast_generator_path_with_stubbed_matrix(
     assert (output / "report.json").is_file()
     assert (output / "stress-results.csv").is_file()
     assert (output / "manifest.json").is_file()
+
 
 def test_full_artifact_regeneration_is_byte_deterministic(tmp_path: Path) -> None:
     rerun = tmp_path / "repo"

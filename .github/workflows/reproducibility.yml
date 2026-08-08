@@ -11,12 +11,12 @@ jobs:
   sample-rerun:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - run: python scripts/verify_specification_lock.py
-      - run: python -m pip install jsonschema==4.26.0 websockets==16.0
+      - run: python -m pip install -r requirements/test.lock
       - run: python scripts/validate_policy_contracts.py
       - name: Generate twice
         env:
@@ -35,13 +35,24 @@ jobs:
           python scripts/check_queue_demo.py
           PYTHONPATH=python python scripts/validate_step17_metrics.py
           python scripts/check_metrics_demo.py
+          python scripts/validate_step18_baselines.py
+          python scripts/validate_step19_almgren_chriss.py
+          python scripts/validate_step20_adaptive.py
+          PYTHONPATH=python python scripts/validate_step21_prediction.py
+          PYTHONPATH=python python scripts/validate_step22_simple_models.py
+          PYTHONPATH=python python scripts/validate_step23_temporal_model.py
+          PYTHONPATH=python python scripts/validate_step24_ml_mpc.py
+          PYTHONPATH=python python scripts/validate_step25_prediction_decision_value.py
+          PYTHONPATH=python python scripts/validate_step26_imitation.py
+          PYTHONPATH=python python scripts/validate_step27_rl.py
+          PYTHONPATH=python python scripts/validate_step28_robustness.py
+          PYTHONPATH=python python scripts/validate_step29_statistics.py
+          PYTHONPATH=python python scripts/validate_step30_performance.py
+          python scripts/validate_release.py
       - name: Reproduce Step 12 offline capture fixture
         env:
           PYTHONPATH: python
-        run: |
-          python scripts/validate_step12_capture.py
-          python scripts/generate_step12_fixture.py --output-root /tmp/step12-capture
-          diff -qr data/sample/capture/step12-offline-fixture /tmp/step12-capture/step12-offline-fixture
+        run: python scripts/validate_step12_capture.py
       - name: Reproduce Step 13 validation and Step 14 canonical dataset
         env:
           PYTHONPATH: python
@@ -49,7 +60,7 @@ jobs:
           python scripts/validate_step13_data.py
           python scripts/validate_step14_data.py
       - name: Store sample artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: deterministic-bootstrap-sample
           path: |

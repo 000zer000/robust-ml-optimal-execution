@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
 import shutil
-from typing import Any, Callable
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -23,7 +24,9 @@ def copy_fixture(tmp_path: Path) -> Path:
 def rewrite_json(path: Path, mutation: Callable[[dict[str, Any]], None]) -> None:
     value = json.loads(path.read_text(encoding="utf-8"))
     mutation(value)
-    path.write_text(json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8"
+    )
 
 
 def rehash_report(manifest_path: Path) -> None:
@@ -183,7 +186,9 @@ def test_aggregate_tampering_is_rejected(
         verify_metrics_evidence(manifest)
 
 
-@pytest.mark.parametrize("relative", ["report.json", "episode-metrics.csv", "inventory-trajectory.csv", "tail-risk.csv"])
+@pytest.mark.parametrize(
+    "relative", ["report.json", "episode-metrics.csv", "inventory-trajectory.csv", "tail-risk.csv"]
+)
 def test_unrehash_artifact_tampering_is_rejected(tmp_path: Path, relative: str) -> None:
     manifest = copy_fixture(tmp_path)
     path = manifest.parent / relative

@@ -4,14 +4,17 @@ import argparse
 import csv
 import io
 import json
-from pathlib import Path
 import subprocess
 import tempfile
 import time
+from pathlib import Path
 
 import numpy as np
 
+from native_executable import native_executable
 from robust_execution.imitation.learning import _episode_paths, _reconstruct_model, _state_row
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> None:
@@ -19,7 +22,7 @@ def main() -> None:
     parser.add_argument(
         "--oracle",
         type=Path,
-        default=Path("build/gcc-debug/robust_execution_imitation_oracle"),
+        default=None,
     )
     parser.add_argument(
         "--policy",
@@ -32,12 +35,24 @@ def main() -> None:
         default=Path("results/validation/step26/inference_benchmark.json"),
     )
     args = parser.parse_args()
+    oracle = args.oracle or native_executable(ROOT, "robust_execution_imitation_oracle")
     model = _reconstruct_model(json.loads(args.policy.read_text(encoding="utf-8")))
     paths = _episode_paths("benchmark", 25, 6, False)
     fields = [
-        "episode_id", "step", "now", "start", "deadline", "arrival",
-        "bid", "ask", "bid_quantity", "ask_quantity",
-        "favorable_passive_flow", "filled", "total", "decision_id",
+        "episode_id",
+        "step",
+        "now",
+        "start",
+        "deadline",
+        "arrival",
+        "bid",
+        "ask",
+        "bid_quantity",
+        "ask_quantity",
+        "favorable_passive_flow",
+        "filled",
+        "total",
+        "decision_id",
         "prediction_probability",
     ]
     rows = [
@@ -53,9 +68,11 @@ def main() -> None:
     ]
     with tempfile.NamedTemporaryFile("w", encoding="utf-8", newline="", suffix=".csv") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
-        writer.writeheader(); writer.writerows(rows); handle.flush()
+        writer.writeheader()
+        writer.writerows(rows)
+        handle.flush()
         completed = subprocess.run(
-            [str(args.oracle), handle.name],
+            [str(oracle), handle.name],
             check=True,
             text=True,
             capture_output=True,
@@ -95,6 +112,7 @@ def main() -> None:
 
 def model_feature_names() -> tuple[str, ...]:
     from robust_execution.imitation.learning import FEATURES
+
     return FEATURES
 
 

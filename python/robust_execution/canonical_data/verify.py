@@ -26,7 +26,11 @@ def _digest(path: Path) -> str:
 
 def verify_canonical_dataset(manifest_path: Path) -> dict[str, object]:
     manifest = _read_json(manifest_path)
-    if not isinstance(manifest, dict) or manifest.get("schema_version") != 1 or manifest.get("step") != 14:
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema_version") != 1
+        or manifest.get("step") != 14
+    ):
         raise CanonicalDataVerificationError("unsupported Step 14 manifest")
     if manifest.get("research_specification_changed") is not False:
         raise CanonicalDataVerificationError("manifest claims the research specification changed")
@@ -49,7 +53,9 @@ def verify_canonical_dataset(manifest_path: Path) -> dict[str, object]:
             raise CanonicalDataVerificationError("table names must be unique strings")
         schema_path = root / str(item.get("schema_relative_path"))
         data_path = root / str(item.get("data_relative_path"))
-        if _digest(schema_path) != item.get("schema_sha256") or _digest(data_path) != item.get("data_sha256"):
+        if _digest(schema_path) != item.get("schema_sha256") or _digest(data_path) != item.get(
+            "data_sha256"
+        ):
             raise CanonicalDataVerificationError(f"artifact digest mismatch for {name}")
         schema = _read_json(schema_path)
         try:
@@ -64,15 +70,23 @@ def verify_canonical_dataset(manifest_path: Path) -> dict[str, object]:
         columns = data.get("columns")
         order = data.get("column_order")
         row_count = data.get("row_count")
-        if not isinstance(columns, dict) or not isinstance(order, list) or not isinstance(row_count, int):
+        if (
+            not isinstance(columns, dict)
+            or not isinstance(order, list)
+            or not isinstance(row_count, int)
+        ):
             raise CanonicalDataVerificationError(f"malformed columnar table {name}")
         if set(columns) != set(order) or len(order) != len(set(order)):
             raise CanonicalDataVerificationError(f"column order mismatch for {name}")
-        if any(not isinstance(values, list) or len(values) != row_count for values in columns.values()):
+        if any(
+            not isinstance(values, list) or len(values) != row_count for values in columns.values()
+        ):
             raise CanonicalDataVerificationError(f"column lengths differ for {name}")
         if row_count != item.get("row_count"):
             raise CanonicalDataVerificationError(f"row count mismatch for {name}")
-        schema_columns = [entry.get("name") for entry in schema.get("columns", []) if isinstance(entry, dict)]
+        schema_columns = [
+            entry.get("name") for entry in schema.get("columns", []) if isinstance(entry, dict)
+        ]
         if schema_columns != order:
             raise CanonicalDataVerificationError(f"schema columns differ for {name}")
         table_rows[name] = row_count

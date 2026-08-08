@@ -14,7 +14,10 @@ def test_canonical_research_paper_and_sources_exist():
 def test_cuda_gate_is_closed_and_batch_one_cpu_selected():
     data = json.loads((ROOT / "evidence/performance/STEP30_CUDA_GATE.json").read_text())
     assert data["gate_j_cuda_closed"] is True
-    assert data["decision"] == "gpu_transfer_launch_overhead_inferior_for_registered_batch_one_workloads"
+    assert (
+        data["decision"]
+        == "gpu_transfer_launch_overhead_inferior_for_registered_batch_one_workloads"
+    )
     for model in data["models"].values():
         assert model["1"]["transfer_inclusive_gpu_faster"] is False
 

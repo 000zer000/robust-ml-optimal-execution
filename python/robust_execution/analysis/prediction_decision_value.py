@@ -2,20 +2,19 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
 import json
 import math
 import os
-from pathlib import Path
 import subprocess
-from typing import Any, Iterable
+from collections.abc import Iterable
+from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 from sklearn.metrics import average_precision_score, log_loss, roc_auc_score
 
 from robust_execution.historical_replay.tables import read_table
-
 
 HORIZONS = ("250ms", "1s", "5s")
 ABLATIONS = (
@@ -127,8 +126,10 @@ def _ece(target: np.ndarray, probability: np.ndarray, bins: int) -> float:
         )
         count = int(mask.sum())
         if count:
-            result += count / len(target) * abs(
-                float(probability[mask].mean()) - float(target[mask].mean())
+            result += (
+                count
+                / len(target)
+                * abs(float(probability[mask].mean()) - float(target[mask].mean()))
             )
     return result
 
@@ -140,9 +141,9 @@ def probability_metrics(
     p = _clip(np.asarray(tuple(probability), dtype=np.float64))
     if len(y) == 0 or len(y) != len(p):
         raise PredictionDecisionValueError("metric vectors must be non-empty and aligned")
-    classes = set(int(value) for value in y)
+    classes = {int(value) for value in y}
     return {
-        "rows": int(len(y)),
+        "rows": len(y),
         "positives": int(y.sum()),
         "prevalence": float(y.mean()),
         "log_loss": float(log_loss(y, p, labels=[0, 1])),
@@ -233,9 +234,7 @@ def load_prediction_analysis(
             "metrics": metrics,
             "log_loss_ranking_best_to_worst": ranking,
         }
-        prediction_data = (
-            model_root / "tables/engineering_holdout_predictions/columns.json.gz"
-        )
+        prediction_data = model_root / "tables/engineering_holdout_predictions/columns.json.gz"
         expected_data_hash = step23_report["models"][horizon]["prediction_data_sha256"]
         if sha256_path(prediction_data) != expected_data_hash:
             raise PredictionDecisionValueError(
@@ -263,14 +262,10 @@ def _controller_report(executable: Path, weight: float) -> dict[str, object]:
 
 def action_distance(left: list[str], right: list[str]) -> int:
     shared = min(len(left), len(right))
-    return sum(left[index] != right[index] for index in range(shared)) + abs(
-        len(left) - len(right)
-    )
+    return sum(left[index] != right[index] for index in range(shared)) + abs(len(left) - len(right))
 
 
-def load_decision_sweep(
-    executable: Path, config: Step25Config
-) -> dict[str, object]:
+def load_decision_sweep(executable: Path, config: Step25Config) -> dict[str, object]:
     reports = [_controller_report(executable, weight) for weight in config.weight_grid_bps]
     if any(report["payload"]["locked_research_test_opened"] for report in reports):
         raise PredictionDecisionValueError("controller sweep opened locked research test")
@@ -331,9 +326,9 @@ def relation_label(
     reference_decision: dict[str, object],
     candidate_decision: dict[str, object],
 ) -> str:
-    prediction_better = float(candidate_metrics["log_loss"]) < float(
-        reference_metrics["log_loss"]
-    ) - 1e-12
+    prediction_better = (
+        float(candidate_metrics["log_loss"]) < float(reference_metrics["log_loss"]) - 1e-12
+    )
     decision_changed = candidate_decision["actions"] != reference_decision["actions"]
     if prediction_better and not decision_changed:
         return "prediction_improved_decision_unchanged"
@@ -389,7 +384,6 @@ def build_relationships(
     return output
 
 
-
 def build_engineering_summary(
     prediction: dict[str, object],
     decision: dict[str, object],
@@ -422,19 +416,17 @@ def build_engineering_summary(
                     if ablation == "perfect_event_oracle" and delta > 0:
                         oracle_worsened = True
         horizon_summary[horizon] = {
-            "calibrated_minus_uncalibrated_log_loss": float(
-                metrics["calibrated_model"]["log_loss"]
-            )
+            "calibrated_minus_uncalibrated_log_loss": float(metrics["calibrated_model"]["log_loss"])
             - float(metrics["uncalibrated_model"]["log_loss"]),
-            "calibrated_first_grid_weight_with_action_change_bps": sweeps[
-                "calibrated_model"
-            ]["first_grid_weight_with_action_change_bps"],
-            "uncalibrated_first_grid_weight_with_action_change_bps": sweeps[
-                "uncalibrated_model"
-            ]["first_grid_weight_with_action_change_bps"],
-            "oracle_first_grid_weight_with_action_change_bps": sweeps[
-                "perfect_event_oracle"
-            ]["first_grid_weight_with_action_change_bps"],
+            "calibrated_first_grid_weight_with_action_change_bps": sweeps["calibrated_model"][
+                "first_grid_weight_with_action_change_bps"
+            ],
+            "uncalibrated_first_grid_weight_with_action_change_bps": sweeps["uncalibrated_model"][
+                "first_grid_weight_with_action_change_bps"
+            ],
+            "oracle_first_grid_weight_with_action_change_bps": sweeps["perfect_event_oracle"][
+                "first_grid_weight_with_action_change_bps"
+            ],
             "changed_action_shortfall_delta_min_bps": min(changed_deltas)
             if changed_deltas
             else None,
@@ -455,6 +447,7 @@ def build_engineering_summary(
         "lower_implementation_shortfall_is_better": True,
         "horizons": horizon_summary,
     }
+
 
 def build_report(root: Path, config: Step25Config, executable: Path) -> dict[str, object]:
     prediction, sources = load_prediction_analysis(root, config)

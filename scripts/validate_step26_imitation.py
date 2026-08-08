@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
+import platform
+import sys
 import tempfile
+from pathlib import Path
 
 import jsonschema
 
+from native_executable import native_executable
 from robust_execution.imitation.learning import generate_step26_artifacts, validate_step26_report
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,7 +17,7 @@ OUTPUT = ROOT / "data/sample/imitation/step26-imitation-validation"
 REPORT = OUTPUT / "report.json"
 POLICY = OUTPUT / "policy.json"
 CONFIG = ROOT / "configs/imitation/step26_imitation_engineering.json"
-ORACLE = ROOT / "build/gcc-debug/robust_execution_imitation_oracle"
+ORACLE = native_executable(ROOT, "robust_execution_imitation_oracle")
 BENCHMARK = ROOT / "results/validation/step26/inference_benchmark.json"
 MANIFEST = ROOT / "STEP26_MANIFEST.json"
 
@@ -25,6 +28,14 @@ def fail(message: str) -> None:
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def canonical_artifact_platform() -> bool:
+    return (
+        platform.system() == "Linux"
+        and platform.machine().lower() in {"amd64", "x86_64"}
+        and sys.version_info[:2] == (3, 13)
+    )
 
 
 def main() -> None:
@@ -57,14 +68,11 @@ def main() -> None:
         dataset_manifest,
         json.loads(
             (
-                ROOT
-                / "schemas/imitation/imitation-teacher-dataset-manifest-v1.schema.json"
+                ROOT / "schemas/imitation/imitation-teacher-dataset-manifest-v1.schema.json"
             ).read_text(encoding="utf-8")
         ),
     )
-    if sha256(dataset_manifest_path) != report["artifact"][
-        "teacher_dataset_manifest_sha256"
-    ]:
+    if sha256(dataset_manifest_path) != report["artifact"]["teacher_dataset_manifest_sha256"]:
         fail("Step 26 teacher dataset manifest hash mismatch")
     for table in dataset_manifest["tables"].values():
         path = OUTPUT / table["path"]
@@ -108,22 +116,40 @@ def main() -> None:
         fail("Step 26 benchmark claim boundary changed")
 
     with tempfile.TemporaryDirectory() as directory:
-        out = Path(directory) / "rerun"
-        generate_step26_artifacts(ROOT, ORACLE, CONFIG, out)
-        if (out / "report.json").read_bytes() != REPORT.read_bytes():
-            fail("Step 26 deterministic report regeneration mismatch")
-        if (out / "policy.json").read_bytes() != POLICY.read_bytes():
-            fail("Step 26 deterministic policy regeneration mismatch")
-        for name in (
+        first = Path(directory) / "first"
+        second = Path(directory) / "second"
+        generate_step26_artifacts(ROOT, ORACLE, CONFIG, first)
+        generate_step26_artifacts(ROOT, ORACLE, CONFIG, second)
+        artifact_names = (
+            "report.json",
+            "policy.json",
             "teacher-dataset-manifest.json",
             "teacher_train.csv",
             "teacher_validation.csv",
             "teacher_correction.csv",
             "teacher_engineering_holdout.csv",
             "teacher_ood.csv",
-        ):
-            if (out / name).read_bytes() != (OUTPUT / name).read_bytes():
-                fail(f"Step 26 deterministic teacher dataset mismatch: {name}")
+        )
+        for name in artifact_names:
+            if (first / name).read_bytes() != (second / name).read_bytes():
+                fail(f"Step 26 same-host deterministic regeneration mismatch: {name}")
+            if canonical_artifact_platform() and (
+                (first / name).read_bytes() != (OUTPUT / name).read_bytes()
+            ):
+                fail(f"Step 26 canonical Linux artifact mismatch: {name}")
+        if not canonical_artifact_platform():
+            regenerated = json.loads((first / "report.json").read_text(encoding="utf-8"))
+            for key in ("teacher", "data", "covariate_shift", "evaluation", "fallback"):
+                if regenerated[key] != report[key]:
+                    fail(f"Step 26 cross-platform semantic mismatch: {key}")
+            regenerated_selection = regenerated["model_selection"]
+            if (
+                regenerated_selection["selected_alpha"]
+                != report["model_selection"]["selected_alpha"]
+                or regenerated_selection["selected_hidden_units"]
+                != report["model_selection"]["selected_hidden_units"]
+            ):
+                fail("Step 26 cross-platform model selection mismatch")
 
     if not MANIFEST.is_file():
         fail("Step 26 release manifest is missing")

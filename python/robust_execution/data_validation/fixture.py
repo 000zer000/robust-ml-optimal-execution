@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
-from datetime import datetime, timezone
 import hashlib
 import json
+from dataclasses import asdict
+from datetime import UTC, datetime
 from pathlib import Path
 
 from robust_execution import __version__
@@ -35,7 +35,7 @@ def generate_step13_capture_fixture(output_root: Path) -> Path:
         raise FileExistsError(f"fixture already exists: {root}")
     root.mkdir(parents=True)
     day = "2027-01-15"
-    day_start_ns = int(datetime(2027, 1, 15, tzinfo=timezone.utc).timestamp() * 1_000_000_000)
+    day_start_ns = int(datetime(2027, 1, 15, tzinfo=UTC).timestamp() * 1_000_000_000)
     day_end_ns = day_start_ns + 86_400_000_000_000
     connection_id = "connection-0000"
 
@@ -82,18 +82,43 @@ def generate_step13_capture_fixture(output_root: Path) -> Path:
             "ETHUSDT": {"status": "TRADING", "baseAsset": "ETH", "quoteAsset": "USDT"},
         },
     }
-    runtime = {"python": "fixture", "implementation": "deterministic", "platform": "fixture", "byteorder": "little"}
+    runtime = {
+        "python": "fixture",
+        "implementation": "deterministic",
+        "platform": "fixture",
+        "byteorder": "little",
+    }
     artifacts: list[dict[str, object]] = []
     for relative, data, content_type in (
-        ("metadata/exchange-info.json.gz", canonical_json_bytes(exchange_info) + b"\n", "application/json; profile=binance-exchange-info"),
-        ("metadata/symbol-contract.json.gz", canonical_json_bytes(contract) + b"\n", "application/json; profile=binance-symbol-contract-v1"),
-        ("metadata/capture-config.json.gz", config_bytes, "application/json; profile=raw-capture-config-v1"),
-        ("metadata/runtime.json.gz", canonical_json_bytes(runtime) + b"\n", "application/json; profile=capture-runtime-v1"),
+        (
+            "metadata/exchange-info.json.gz",
+            canonical_json_bytes(exchange_info) + b"\n",
+            "application/json; profile=binance-exchange-info",
+        ),
+        (
+            "metadata/symbol-contract.json.gz",
+            canonical_json_bytes(contract) + b"\n",
+            "application/json; profile=binance-symbol-contract-v1",
+        ),
+        (
+            "metadata/capture-config.json.gz",
+            config_bytes,
+            "application/json; profile=raw-capture-config-v1",
+        ),
+        (
+            "metadata/runtime.json.gz",
+            canonical_json_bytes(runtime) + b"\n",
+            "application/json; profile=capture-runtime-v1",
+        ),
     ):
         artifact = write_immutable_gzip_blob(root / relative, data, content_type=content_type)
         artifacts.append(artifact_as_dict(artifact, root))
 
-    snapshot = {"lastUpdateId": 100, "bids": [["100.00", "5.00000"]], "asks": [["101.00", "5.00000"]]}
+    snapshot = {
+        "lastUpdateId": 100,
+        "bids": [["100.00", "5.00000"]],
+        "asks": [["101.00", "5.00000"]],
+    }
     for symbol in ("BTCUSDT", "ETHUSDT"):
         artifact = write_immutable_gzip_blob(
             root / "snapshots" / symbol / f"{connection_id}-100.json.gz",
@@ -103,14 +128,118 @@ def generate_step13_capture_fixture(output_root: Path) -> Path:
         artifacts.append(artifact_as_dict(artifact, root))
 
     schedule: list[tuple[int, str, dict[str, object]]] = [
-        (day_start_ns + 1_000_000_000, "btcusdt@depth@100ms", {"e": "depthUpdate", "E": (day_start_ns + 900_000_000) // 1000, "s": "BTCUSDT", "U": 100, "u": 101, "b": [["100.00", "6.00000"]], "a": [["101.00", "5.00000"]]}),
-        (day_start_ns + 2_000_000_000, "btcusdt@trade", {"e": "trade", "E": (day_start_ns + 1_900_000_000) // 1000, "s": "BTCUSDT", "t": 1001, "p": "100.50", "q": "0.10000", "T": (day_start_ns + 1_900_000_000) // 1000, "m": False, "M": True}),
-        (day_start_ns + 3_000_000_000, "ethusdt@depth@100ms", {"e": "depthUpdate", "E": (day_start_ns + 2_900_000_000) // 1000, "s": "ETHUSDT", "U": 100, "u": 101, "b": [["100.00", "7.00000"]], "a": [["101.00", "5.00000"]]}),
-        (day_start_ns + 4_000_000_000, "ethusdt@trade", {"e": "trade", "E": (day_start_ns + 3_900_000_000) // 1000, "s": "ETHUSDT", "t": 2001, "p": "100.50", "q": "0.20000", "T": (day_start_ns + 3_900_000_000) // 1000, "m": True, "M": True}),
-        (day_start_ns + 43_200_000_000_000, "btcusdt@depth@100ms", {"e": "depthUpdate", "E": (day_start_ns + 43_199_900_000_000) // 1000, "s": "BTCUSDT", "U": 102, "u": 102, "b": [["100.00", "5.50000"]], "a": []}),
-        (day_start_ns + 43_201_000_000_000, "ethusdt@depth@100ms", {"e": "depthUpdate", "E": (day_start_ns + 43_200_900_000_000) // 1000, "s": "ETHUSDT", "U": 102, "u": 102, "b": [], "a": [["101.00", "6.00000"]]}),
-        (day_end_ns - 2_000_000_000, "btcusdt@trade", {"e": "trade", "E": (day_end_ns - 2_100_000_000) // 1000, "s": "BTCUSDT", "t": 1002, "p": "100.60", "q": "0.15000", "T": (day_end_ns - 2_100_000_000) // 1000, "m": False, "M": True}),
-        (day_end_ns - 1_000_000_000, "ethusdt@trade", {"e": "trade", "E": (day_end_ns - 1_100_000_000) // 1000, "s": "ETHUSDT", "t": 2002, "p": "100.40", "q": "0.25000", "T": (day_end_ns - 1_100_000_000) // 1000, "m": True, "M": True}),
+        (
+            day_start_ns + 1_000_000_000,
+            "btcusdt@depth@100ms",
+            {
+                "e": "depthUpdate",
+                "E": (day_start_ns + 900_000_000) // 1000,
+                "s": "BTCUSDT",
+                "U": 100,
+                "u": 101,
+                "b": [["100.00", "6.00000"]],
+                "a": [["101.00", "5.00000"]],
+            },
+        ),
+        (
+            day_start_ns + 2_000_000_000,
+            "btcusdt@trade",
+            {
+                "e": "trade",
+                "E": (day_start_ns + 1_900_000_000) // 1000,
+                "s": "BTCUSDT",
+                "t": 1001,
+                "p": "100.50",
+                "q": "0.10000",
+                "T": (day_start_ns + 1_900_000_000) // 1000,
+                "m": False,
+                "M": True,
+            },
+        ),
+        (
+            day_start_ns + 3_000_000_000,
+            "ethusdt@depth@100ms",
+            {
+                "e": "depthUpdate",
+                "E": (day_start_ns + 2_900_000_000) // 1000,
+                "s": "ETHUSDT",
+                "U": 100,
+                "u": 101,
+                "b": [["100.00", "7.00000"]],
+                "a": [["101.00", "5.00000"]],
+            },
+        ),
+        (
+            day_start_ns + 4_000_000_000,
+            "ethusdt@trade",
+            {
+                "e": "trade",
+                "E": (day_start_ns + 3_900_000_000) // 1000,
+                "s": "ETHUSDT",
+                "t": 2001,
+                "p": "100.50",
+                "q": "0.20000",
+                "T": (day_start_ns + 3_900_000_000) // 1000,
+                "m": True,
+                "M": True,
+            },
+        ),
+        (
+            day_start_ns + 43_200_000_000_000,
+            "btcusdt@depth@100ms",
+            {
+                "e": "depthUpdate",
+                "E": (day_start_ns + 43_199_900_000_000) // 1000,
+                "s": "BTCUSDT",
+                "U": 102,
+                "u": 102,
+                "b": [["100.00", "5.50000"]],
+                "a": [],
+            },
+        ),
+        (
+            day_start_ns + 43_201_000_000_000,
+            "ethusdt@depth@100ms",
+            {
+                "e": "depthUpdate",
+                "E": (day_start_ns + 43_200_900_000_000) // 1000,
+                "s": "ETHUSDT",
+                "U": 102,
+                "u": 102,
+                "b": [],
+                "a": [["101.00", "6.00000"]],
+            },
+        ),
+        (
+            day_end_ns - 2_000_000_000,
+            "btcusdt@trade",
+            {
+                "e": "trade",
+                "E": (day_end_ns - 2_100_000_000) // 1000,
+                "s": "BTCUSDT",
+                "t": 1002,
+                "p": "100.60",
+                "q": "0.15000",
+                "T": (day_end_ns - 2_100_000_000) // 1000,
+                "m": False,
+                "M": True,
+            },
+        ),
+        (
+            day_end_ns - 1_000_000_000,
+            "ethusdt@trade",
+            {
+                "e": "trade",
+                "E": (day_end_ns - 1_100_000_000) // 1000,
+                "s": "ETHUSDT",
+                "t": 2002,
+                "p": "100.40",
+                "q": "0.25000",
+                "T": (day_end_ns - 1_100_000_000) // 1000,
+                "m": True,
+                "M": True,
+            },
+        ),
     ]
     writer = GzipJsonlSegmentWriter(root / "raw" / day / "segment-000000.jsonl.gz")
     total_raw = 0
@@ -145,8 +274,15 @@ def generate_step13_capture_fixture(output_root: Path) -> Path:
         messages=len(schedule),
         selected_remote="fixture",
     )
-    total_compressed = sum(int(item["compressed_bytes"]) for item in artifacts)
-    total_uncompressed = sum(int(item["uncompressed_bytes"]) for item in artifacts)
+
+    def artifact_size(item: dict[str, object], field: str) -> int:
+        value = item.get(field)
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            raise RuntimeError(f"fixture artifact {field} must be a non-negative integer")
+        return value
+
+    total_compressed = sum(artifact_size(item, "compressed_bytes") for item in artifacts)
+    total_uncompressed = sum(artifact_size(item, "uncompressed_bytes") for item in artifacts)
     manifest = CaptureManifest(
         schema_version=1,
         step=12,
@@ -177,8 +313,15 @@ def generate_step13_capture_fixture(output_root: Path) -> Path:
         artifacts=artifacts,
         symbol_diagnostics=[],
         errors=[],
-        publication={"raw_market_data_public": False, "credentials_stored": False, "redistribution_cleared": False},
+        publication={
+            "raw_market_data_public": False,
+            "credentials_stored": False,
+            "redistribution_cleared": False,
+        },
     )
     write_immutable_json(root / "manifest.json", manifest.to_dict())
-    write_immutable_json(root / "manifest.sha256.json", {"sha256": hashlib.sha256((root / "manifest.json").read_bytes()).hexdigest()})
+    write_immutable_json(
+        root / "manifest.sha256.json",
+        {"sha256": hashlib.sha256((root / "manifest.json").read_bytes()).hexdigest()},
+    )
     return root / "manifest.json"

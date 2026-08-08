@@ -53,7 +53,12 @@ def make_capture(tmp_path: Path) -> Path:
         "research_specification_changed": False,
         "paid_data_used": False,
         "software_version": "0.9.0",
-        "runtime": {"python": "3.13", "implementation": "CPython", "platform": "test", "byteorder": "little"},
+        "runtime": {
+            "python": "3.13",
+            "implementation": "CPython",
+            "platform": "test",
+            "byteorder": "little",
+        },
         "capture_config_sha256": hashlib.sha256(config_bytes).hexdigest(),
         "status": "pilot_incomplete",
         "actual_duration_seconds": 1.0,

@@ -7,9 +7,11 @@ import math
 import subprocess
 from pathlib import Path
 
+from native_executable import native_executable
+
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "data/sample/almgren_chriss/step19-validation/report.json"
-EXE = ROOT / "build/gcc-debug/robust_execution_almgren_chriss_demo"
+EXE = native_executable(ROOT, "robust_execution_almgren_chriss_demo")
 
 
 def fail(message: str) -> None:
@@ -33,7 +35,10 @@ def expected_continuous_inventory(record: dict) -> list[float]:
     kappa = math.acosh(1.0 + 0.5 * alpha) / tau
     total_horizon = n * tau
     denominator = math.sinh(kappa * total_horizon)
-    return [math.sinh(kappa * (total_horizon - j * tau)) / denominator if j < n else 0.0 for j in range(n + 1)]
+    return [
+        math.sinh(kappa * (total_horizon - j * tau)) / denominator if j < n else 0.0
+        for j in range(n + 1)
+    ]
 
 
 def main() -> None:
@@ -89,14 +94,19 @@ def main() -> None:
     if "synthetic_validation_only_non_research" not in text:
         fail("Step 19 report lost explicit non-research label")
 
-    print(json.dumps({
-        "status": "ok",
-        "step": 19,
-        "model": payload["model"],
-        "risk_neutral_matches_twap": True,
-        "front_loading_monotone": True,
-        "research_status": payload["evidence_status"],
-    }, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "status": "ok",
+                "step": 19,
+                "model": payload["model"],
+                "risk_neutral_matches_twap": True,
+                "front_loading_monotone": True,
+                "research_status": payload["evidence_status"],
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

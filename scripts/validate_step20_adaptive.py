@@ -6,10 +6,12 @@ import json
 import subprocess
 from pathlib import Path
 
+from native_executable import native_executable
+
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "data/sample/adaptive/step20-validation/report.json"
 CONFIG = ROOT / "configs/strategies/step20_non_ml_adaptive.json"
-EXE = ROOT / "build/gcc-debug/robust_execution_adaptive_demo"
+EXE = native_executable(ROOT, "robust_execution_adaptive_demo")
 
 
 def fail(message: str) -> None:
@@ -57,14 +59,19 @@ def main() -> None:
         fail("Step 20 passive participation cap changed")
     if "1/1" not in config["non_ml_mpc"]["action_fractions"]:
         fail("Step 20 MPC lost full-residual aggressive action capability")
-    print(json.dumps({
-        "status": "ok",
-        "step": 20,
-        "gate_d": payload["gate_d_status"],
-        "heuristic": True,
-        "mpc": True,
-        "research_status": payload["evidence_status"],
-    }, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "status": "ok",
+                "step": 20,
+                "gate_d": payload["gate_d_status"],
+                "heuristic": True,
+                "mpc": True,
+                "research_status": payload["evidence_status"],
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from bisect import bisect_right
-from dataclasses import dataclass
 import hashlib
-import json
-from typing import Iterable
+from bisect import bisect_right
+from collections.abc import Iterable
+from dataclasses import dataclass
 
 from robust_execution.data_capture.models import canonical_json_bytes
 from robust_execution.prediction.config import PredictionFeatureConfig
@@ -103,8 +102,8 @@ def _apply_event(
     if event.kind == "snapshot":
         bids.clear()
         asks.clear()
-        bids.update({price: quantity for price, quantity in event.bids})
-        asks.update({price: quantity for price, quantity in event.asks})
+        bids.update(dict(event.bids))
+        asks.update(dict(event.asks))
     elif event.kind == "depth":
         for update in event.updates:
             book = bids if update.side == "bid" else asks
@@ -217,9 +216,7 @@ def _feature_row(
             window_trades, point.passive_side
         )
         past = _past_summary(history, start)
-        features[f"side_mid_move_{suffix}_half_ticks"] = side_sign * (
-            current.mid2 - past.mid2
-        )
+        features[f"side_mid_move_{suffix}_half_ticks"] = side_sign * (current.mid2 - past.mid2)
     one_second_trades = _window_trades(trades, cutoff - 1_000_000_000, cutoff)
     five_second_trades = _window_trades(trades, cutoff - 5_000_000_000, cutoff)
     features["trade_count_1s"] = len(one_second_trades)
@@ -238,9 +235,7 @@ def _feature_row(
     features["quote_age_ns"] = max(0, cutoff - quote_since)
     last_trade = max((trade.time_ns for trade in trades if trade.time_ns <= cutoff), default=None)
     features["time_since_last_trade_ns"] = (
-        config.maximum_feature_window_ns + 1
-        if last_trade is None
-        else max(0, cutoff - last_trade)
+        config.maximum_feature_window_ns + 1 if last_trade is None else max(0, cutoff - last_trade)
     )
     lineage = {
         "symbol": point.symbol,
@@ -281,17 +276,20 @@ def _future_label(
     events: list[PredictionMarketEvent],
     coverage_end_ns: int,
 ) -> dict[str, object]:
-    cutoff = int(feature["source_cutoff_ns"])
+    def feature_int(name: str) -> int:
+        value = feature.get(name)
+        if not isinstance(value, int) or isinstance(value, bool):
+            raise PredictionDataError(f"feature {name} must be an integer")
+        return value
+
+    cutoff = feature_int("source_cutoff_ns")
     if coverage_end_ns < cutoff + config.maximum_horizon_ns:
         raise PredictionDataError("decision point lacks complete future label coverage")
     bids: dict[int, int] = {}
     asks: dict[int, int] = {}
-    current_mid2 = int(feature["mid_price_x2"])
-    initial_quote = int(
-        feature["best_bid_ticks"]
-        if point.passive_side == "bid"
-        else feature["best_ask_ticks"]
-    )
+    current_mid2 = feature_int("mid_price_x2")
+    quote_field = "best_bid_ticks" if point.passive_side == "bid" else "best_ask_ticks"
+    initial_quote = feature_int(quote_field)
     # Reconstruct the book exactly at the feature cutoff without using availability.
     for event in events:
         if event.symbol != point.symbol or event.event_time_ns > cutoff:
@@ -351,9 +349,7 @@ def _future_label(
             depletion_time is not None and depletion_time <= cutoff + horizon
         )
         future_mid2 = mid_at_horizon[horizon]
-        label[f"adverse_selection_{suffix}_half_ticks"] = side_sign * (
-            current_mid2 - future_mid2
-        )
+        label[f"adverse_selection_{suffix}_half_ticks"] = side_sign * (current_mid2 - future_mid2)
     return label
 
 

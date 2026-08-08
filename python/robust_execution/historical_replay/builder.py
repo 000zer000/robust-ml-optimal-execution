@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from collections import defaultdict, deque
 import hashlib
 import json
+from collections import defaultdict, deque
 from pathlib import Path
 from typing import Any
 
@@ -116,7 +116,6 @@ def _book_hash(bids: dict[int, int], asks: dict[int, int]) -> str:
     return _sha256_json({"bids": sorted(bids.items(), reverse=True), "asks": sorted(asks.items())})
 
 
-
 def _materialize_symbol_events(
     staged_events: list[dict[str, Any]],
     config: HistoricalReplayConfig,
@@ -179,7 +178,9 @@ def _materialize_symbol_events(
         top_bids = _top(bids, config.top_levels, True)
         top_asks = _top(asks, config.top_levels, False)
         if not top_bids or not top_asks or top_bids[0][0] >= top_asks[0][0]:
-            raise HistoricalReplayError("reconstructed historical book is empty, locked, or crossed")
+            raise HistoricalReplayError(
+                "reconstructed historical book is empty, locked, or crossed"
+            )
         lineage = {
             "symbol": symbol,
             "delivered_event_count": delivered,
@@ -207,6 +208,7 @@ def _materialize_symbol_events(
         observation_index += 1
     return event_rows, observation_rows, event_index, observation_index
 
+
 def build_historical_replay(
     canonical_manifest_path: Path,
     config: HistoricalReplayConfig,
@@ -216,7 +218,9 @@ def build_historical_replay(
     verification = verify_canonical_dataset(canonical_manifest_path)
     manifest = json.loads(canonical_manifest_path.read_text(encoding="utf-8"))
     if config.require_research_admissible_input and not bool(manifest.get("research_admissible")):
-        raise HistoricalReplayError("research replay requires a research-admissible canonical input")
+        raise HistoricalReplayError(
+            "research replay requires a research-admissible canonical input"
+        )
     if tuple(manifest.get("symbols", [])) != config.symbols:
         raise HistoricalReplayError("replay symbols must exactly match canonical symbols and order")
     classification = str(manifest.get("dataset_classification"))
@@ -288,7 +292,10 @@ def build_historical_replay(
                 raise HistoricalReplayError(f"missing snapshot for {symbol}/{connection_id}")
             snapshot_rows.sort(key=lambda item: (str(item["side"]), int(item["level_index"])))
             connection_start = int(snapshot_rows[0]["connection_started_utc_ns"])
-            if previous_connection_receive_end is not None and connection_start < previous_connection_receive_end:
+            if (
+                previous_connection_receive_end is not None
+                and connection_start < previous_connection_receive_end
+            ):
                 raise HistoricalReplayError("canonical replay connections overlap in receive time")
             staged_events.append(
                 {
@@ -314,12 +321,12 @@ def build_historical_replay(
             bridge_rows: list[dict[str, Any]] | None = None
             for message in messages:
                 sequence = int(message["canonical_message_sequence"])
-                rows = delta_by_sequence.get(sequence)
-                if rows and int(rows[0]["first_update_id"]) <= last_update_id + 1 <= int(
-                    rows[0]["final_update_id"]
-                ):
+                candidate_rows = delta_by_sequence.get(sequence)
+                if candidate_rows and int(
+                    candidate_rows[0]["first_update_id"]
+                ) <= last_update_id + 1 <= int(candidate_rows[0]["final_update_id"]):
                     bridge_source = message
-                    bridge_rows = rows
+                    bridge_rows = candidate_rows
                     break
             if bridge_source is None or bridge_rows is None:
                 raise HistoricalReplayError("connection has no snapshot-bridging depth batch")
@@ -432,7 +439,9 @@ def build_historical_replay(
                     trade_count += 1
                 else:
                     raise HistoricalReplayError("source message has no canonical event rows")
-            previous_connection_receive_end = max(int(message["received_utc_ns"]) for message in messages)
+            previous_connection_receive_end = max(
+                int(message["received_utc_ns"]) for message in messages
+            )
             integrity_rows.append(
                 {
                     "symbol": symbol,
@@ -458,10 +467,13 @@ def build_historical_replay(
                 int(item["canonical_message_sequence"]),
             )
         )
-        materialized_events, materialized_observations, global_event_index, global_observation_index = (
-            _materialize_symbol_events(
-                staged_events, config, symbol, global_event_index, global_observation_index
-            )
+        (
+            materialized_events,
+            materialized_observations,
+            global_event_index,
+            global_observation_index,
+        ) = _materialize_symbol_events(
+            staged_events, config, symbol, global_event_index, global_observation_index
         )
         event_rows.extend(materialized_events)
         observation_rows.extend(materialized_observations)
@@ -500,9 +512,7 @@ def build_historical_replay(
         "market_impact_semantics": config.market_impact_semantics,
         "endogenous_impact_modelled": False,
         "ghost_small_agent_assumption": True,
-        "snapshot_timestamp_semantics": (
-            "connection_start_proxy_suppressed_until_sequence_bridge"
-        ),
+        "snapshot_timestamp_semantics": ("connection_start_proxy_suppressed_until_sequence_bridge"),
         "research_admissible": research_admissible,
         "research_blockers": (
             ["synthetic_sample_input", "exact_snapshot_fetch_timestamp_unavailable"]

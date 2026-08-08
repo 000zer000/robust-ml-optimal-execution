@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
 import shutil
 import sys
 import tempfile
+from pathlib import Path
 
 import jsonschema
 
@@ -84,13 +84,18 @@ def main() -> None:
             path = ROOT / relative
             if not path.is_file() or sha256(path) != expected:
                 fail(f"Step 29 release manifest hash mismatch: {relative}")
-    print(json.dumps({
-        "status": "ok",
-        "step": 29,
-        "block_length": report["method"]["selected_engineering_block_length"],
-        "contrasts": report["engineering_contrast_count"],
-        "tier1": report["tier1_confirmatory"]["status"],
-    }, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "status": "ok",
+                "step": 29,
+                "block_length": report["method"]["selected_engineering_block_length"],
+                "contrasts": report["engineering_contrast_count"],
+                "tier1": report["tier1_confirmatory"]["status"],
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

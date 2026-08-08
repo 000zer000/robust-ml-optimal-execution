@@ -7,7 +7,7 @@ namespace historical = robust_execution::historical;
 namespace model = robust_execution::model;
 
 namespace {
-model::TimestampNs time(std::int64_t value) {
+model::TimestampNs simulation_time(std::int64_t value) {
   return model::TimestampNs{model::ClockDomain::Simulation, value};
 }
 
@@ -16,7 +16,7 @@ historical::AggregateL2QueueModel queue(historical::QueueAssumption assumption) 
       historical::QueueModelConfig{assumption, 0U, true, "test-v1"},
       historical::PassiveOrderSpec{
           model::ClientOrderId{1U}, model::Side::Buy, model::PriceTicks{100},
-          model::QuantityLots{20U}, model::QuantityLots{100U}, time(0)},
+          model::QuantityLots{20U}, model::QuantityLots{100U}, simulation_time(0)},
   };
 }
 }
@@ -26,14 +26,14 @@ int main() {
   auto central = queue(historical::QueueAssumption::Central);
   auto pessimistic = queue(historical::QueueAssumption::Pessimistic);
   for (auto* model_ptr : {&optimistic, &central, &pessimistic}) {
-    model_ptr->on_level_quantity(model::QuantityLots{200U}, time(1));
-    model_ptr->on_level_quantity(model::QuantityLots{120U}, time(2));
+    model_ptr->on_level_quantity(model::QuantityLots{200U}, simulation_time(1));
+    model_ptr->on_level_quantity(model::QuantityLots{120U}, simulation_time(2));
     const auto fills = model_ptr->on_trade(
         model::Trade{model::TradeId{1U}, std::nullopt, model::PriceTicks{100},
                      model::QuantityLots{70U}, model::AggressorSide::Sell},
-        time(3)
+        simulation_time(3)
     );
-    model_ptr->on_level_quantity(model::QuantityLots{50U}, time(4));
+    model_ptr->on_level_quantity(model::QuantityLots{50U}, simulation_time(4));
     if (fills.size() > 1U) {
       return EXIT_FAILURE;
     }
@@ -55,7 +55,7 @@ int main() {
   const auto through_fills = through.on_trade(
       model::Trade{model::TradeId{2U}, std::nullopt, model::PriceTicks{99},
                    model::QuantityLots{1U}, model::AggressorSide::Sell},
-      time(1)
+      simulation_time(1)
   );
   if (through_fills.size() != 1U || through_fills[0].quantity.value() != 20U ||
       through_fills[0].reason != historical::QueueFillReason::TradeThrough ||
@@ -66,22 +66,22 @@ int main() {
       historical::QueueModelConfig{historical::QueueAssumption::Central, 0U, true, "test-v1"},
       historical::PassiveOrderSpec{
           model::ClientOrderId{9U}, model::Side::Sell, model::PriceTicks{101},
-          model::QuantityLots{20U}, model::QuantityLots{100U}, time(0)},
+          model::QuantityLots{20U}, model::QuantityLots{100U}, simulation_time(0)},
   };
   const auto irrelevant = sell_model.on_trade(
       model::Trade{model::TradeId{3U}, std::nullopt, model::PriceTicks{101},
                    model::QuantityLots{200U}, model::AggressorSide::Sell},
-      time(1)
+      simulation_time(1)
   );
   const auto sell_at_price = sell_model.on_trade(
       model::Trade{model::TradeId{4U}, std::nullopt, model::PriceTicks{101},
                    model::QuantityLots{110U}, model::AggressorSide::Buy},
-      time(2)
+      simulation_time(2)
   );
   const auto sell_through = sell_model.on_trade(
       model::Trade{model::TradeId{5U}, std::nullopt, model::PriceTicks{102},
                    model::QuantityLots{1U}, model::AggressorSide::Buy},
-      time(3)
+      simulation_time(3)
   );
   if (!irrelevant.empty() || sell_at_price.size() != 1U ||
       sell_at_price[0].quantity.value() != 10U || sell_through.size() != 1U ||

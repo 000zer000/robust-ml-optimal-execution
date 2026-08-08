@@ -131,6 +131,8 @@ cmake --build --preset gcc-debug
 python3 scripts/validate_synthetic_market.py
 ```
 
+On macOS, use the `clang-debug` preset and executable path instead.
+
 ## Invariants and rejection controls
 
 Generation fails rather than silently repairing when:

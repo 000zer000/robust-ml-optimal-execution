@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import pytest
 
@@ -54,6 +55,8 @@ def write_config(tmp_path: Path, mutation: Callable[[dict[str, Any]], None]) -> 
         lambda value: value.update(ghost_small_agent_assumption=False),
     ],
 )
-def test_invalid_queue_model_contracts(tmp_path: Path, mutation: Callable[[dict[str, Any]], None]) -> None:
+def test_invalid_queue_model_contracts(
+    tmp_path: Path, mutation: Callable[[dict[str, Any]], None]
+) -> None:
     with pytest.raises(QueueModelConfigError):
         load_queue_model_contract(write_config(tmp_path, mutation))

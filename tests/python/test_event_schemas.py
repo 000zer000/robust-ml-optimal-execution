@@ -5,7 +5,6 @@ from pathlib import Path
 
 from robust_execution.event_model import validate_event_document
 
-
 SCHEMA_DIRECTORY = Path("schemas/event_model")
 SAMPLE_DIRECTORY = Path("data/sample/event_model")
 

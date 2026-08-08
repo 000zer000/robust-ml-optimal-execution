@@ -3,12 +3,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import subprocess
 from pathlib import Path
 
 import jsonschema
 
+from native_executable import native_executable
 from robust_execution.analysis.prediction_decision_value import (
     ABLATIONS,
     HORIZONS,
@@ -31,11 +31,10 @@ def fail(message: str) -> None:
 
 def main() -> None:
     config = load_config(CONFIG)
-    executable = Path(
-        os.environ.get(
-            "RE_STEP25_CONTROLLER_EXE",
-            ROOT / "build/gcc-debug/robust_execution_ml_mpc_demo",
-        )
+    executable = native_executable(
+        ROOT,
+        "robust_execution_ml_mpc_demo",
+        environment="RE_STEP25_CONTROLLER_EXE",
     )
     default_controller = subprocess.check_output([str(executable)], text=True)
     if default_controller != STEP24_REPORT.read_text(encoding="utf-8"):
@@ -69,9 +68,10 @@ def main() -> None:
     baseline = payload["decision_sensitivity"]["baseline_non_ml"]
     if baseline["actions"] != step24["payload"]["non_ml_mpc"]["actions"]:
         fail("Step 25 non-ML baseline actions drifted from Step 24")
-    if baseline["implementation_shortfall_bps"] != step24["payload"]["non_ml_mpc"][
-        "implementation_shortfall_bps"
-    ]:
+    if (
+        baseline["implementation_shortfall_bps"]
+        != step24["payload"]["non_ml_mpc"]["implementation_shortfall_bps"]
+    ):
         fail("Step 25 non-ML baseline accounting drifted from Step 24")
 
     weights = payload["decision_sensitivity"]["weight_grid_bps"]

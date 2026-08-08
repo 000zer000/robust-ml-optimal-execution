@@ -10,7 +10,6 @@ from robust_execution.historical_replay.config import (
     load_historical_replay_config,
 )
 
-
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "configs/data/binance_historical_replay_sample.json"
 

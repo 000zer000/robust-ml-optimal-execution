@@ -1,12 +1,11 @@
 # Dependency policy
 
-The Python runtime package intentionally has no third-party runtime dependency at
-bootstrap. `uv.lock` therefore locks the project itself and supported Python range.
-C++ binding build dependencies are exact pins in `pyproject.toml`; development tools
-are exact direct pins in `tool-versions.lock` and in CI invocations.
+The installable runtime package intentionally has no mandatory third-party dependency, so the CLI and C++ binding remain lightweight. Build-isolation dependencies are pinned in `pyproject.toml`.
 
-A fully resolved, hash-complete lock for later scientific dependencies will be created
-when those dependencies are introduced. No unneeded ML/data stack is installed at
-Step 4.
+- `test.lock` pins every direct dependency used by the full Python suite, static checks, and fresh-clone reproduction guide.
+- `tool-versions.lock` records standalone build and quality tools.
+- `capture.lock` isolates the live WebSocket capture dependency.
+- `canonical.lock` isolates PyArrow because Parquet byte layout is version-sensitive.
+- The optional dependency groups in `pyproject.toml` describe narrower runtime capabilities.
 
-Step 23 adds an optional `deep-models` extra pinned to NumPy 2.3.5, scikit-learn 1.8.0, and PyTorch 2.10.0. It is intentionally not imported by the core prediction package. The minimal bootstrap lock remains dependency-light; hosted deep-model validation installs the exact optional pins explicitly.
+CI repeats exact direct pins in workflow files so dependency changes are explicit in review. Transitive packages are constrained by those pinned top-level releases; the canonical published artifacts are additionally protected by schema and SHA-256 checks.

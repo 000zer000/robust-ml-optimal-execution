@@ -4,9 +4,9 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
-from pathlib import Path
 import sys
 import tempfile
+from pathlib import Path
 
 import jsonschema
 
@@ -25,6 +25,50 @@ def hashes(root: Path) -> dict[str, str]:
         for path in sorted(root.rglob("*"))
         if path.is_file()
     }
+
+
+def deterministic_payload_hashes(root: Path) -> dict[str, str]:
+    environment_specific = {
+        "manifest.json",
+        "manifest.sha256.json",
+        "metadata/runtime.json.gz",
+    }
+    return {
+        relative: digest
+        for relative, digest in hashes(root).items()
+        if relative not in environment_specific
+    }
+
+
+def normalized_manifest(path: Path) -> dict[str, object]:
+    """Remove only host provenance and its derived byte counts from a fixture manifest."""
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    runtime = manifest.get("runtime")
+    if not isinstance(runtime, dict) or set(runtime) != {
+        "python",
+        "implementation",
+        "platform",
+        "byteorder",
+    }:
+        raise RuntimeError("Step 12 runtime provenance is missing or malformed")
+    artifacts = manifest.get("artifacts")
+    if not isinstance(artifacts, list):
+        raise RuntimeError("Step 12 artifacts are missing")
+    runtime_artifacts = [
+        item
+        for item in artifacts
+        if isinstance(item, dict) and item.get("relative_path") == "metadata/runtime.json.gz"
+    ]
+    if len(runtime_artifacts) != 1:
+        raise RuntimeError("Step 12 runtime artifact must appear exactly once")
+    runtime_bytes = runtime_artifacts[0].get("compressed_bytes")
+    total_bytes = manifest.get("total_compressed_bytes")
+    if not isinstance(runtime_bytes, int) or not isinstance(total_bytes, int):
+        raise RuntimeError("Step 12 runtime byte accounting is malformed")
+    manifest["runtime"] = "host-specific-provenance-verified-separately"
+    manifest["artifacts"] = [item for item in artifacts if item not in runtime_artifacts]
+    manifest["total_compressed_bytes"] = total_bytes - runtime_bytes
+    return manifest
 
 
 def validate_schema(schema_path: Path, instance_path: Path) -> None:
@@ -50,8 +94,14 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory(prefix="step12-fixture-") as directory:
         regenerated_manifest = asyncio.run(write_offline_fixture(config, Path(directory)))
-        if hashes(sample_manifest.parent) != hashes(regenerated_manifest.parent):
-            raise RuntimeError("committed Step 12 fixture is not byte reproducible")
+        if deterministic_payload_hashes(sample_manifest.parent) != deterministic_payload_hashes(
+            regenerated_manifest.parent
+        ):
+            raise RuntimeError("committed Step 12 fixture payload is not byte reproducible")
+        if normalized_manifest(sample_manifest) != normalized_manifest(regenerated_manifest):
+            raise RuntimeError(
+                "committed Step 12 fixture manifest is not semantically reproducible"
+            )
 
     network_path = ROOT / "results/validation/step12/network_check.json"
     network = json.loads(network_path.read_text(encoding="utf-8"))
@@ -61,8 +111,7 @@ def main() -> int:
         raise RuntimeError("network evidence contains an invalid status")
 
     live_manifest = (
-        ROOT
-        / "results/validation/step12/live_attempt_data/live-smoke-20260806b/manifest.json"
+        ROOT / "results/validation/step12/live_attempt_data/live-smoke-20260806b/manifest.json"
     )
     live_result = verify_capture_manifest(live_manifest)
     live_payload = json.loads(live_manifest.read_text(encoding="utf-8"))

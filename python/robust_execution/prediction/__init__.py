@@ -19,9 +19,9 @@ from robust_execution.prediction.models import (
 from robust_execution.prediction.verify import verify_prediction_dataset
 
 __all__ = [
+    "FEATURE_NAMES",
     "BookUpdate",
     "DecisionPoint",
-    "FEATURE_NAMES",
     "PredictionDataError",
     "PredictionFeatureConfig",
     "PredictionMarketEvent",

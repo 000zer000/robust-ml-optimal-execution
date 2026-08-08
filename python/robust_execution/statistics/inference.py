@@ -7,15 +7,15 @@ keep all confirmatory historical fields explicitly unresolved.
 
 from __future__ import annotations
 
-from collections import defaultdict
-from dataclasses import dataclass
 import csv
 import hashlib
 import io
 import json
 import math
+from collections import defaultdict
+from collections.abc import Iterable, Mapping, Sequence
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
 
 import numpy as np
 
@@ -112,7 +112,10 @@ def autocorrelation(values: Sequence[float], lag: int) -> float:
     left, right = x[:-lag], x[lag:]
     if np.std(left) == 0.0 or np.std(right) == 0.0:
         return 0.0
-    return float(np.corrcoef(left, right)[0, 1])
+    correlation = float(np.corrcoef(left, right)[0, 1])
+    # BLAS implementations can differ in the final floating-point bits. Persist only 15
+    # significant digits so the research manifest is byte-stable across supported platforms.
+    return float(f"{correlation:.15g}")
 
 
 def select_block_length(
@@ -169,15 +172,13 @@ def paired_block_inference(
     median_ci = _percentile_interval(medians, alpha)
     centered = diff - diff.mean()
     null_means = centered[indices].mean(axis=1)
-    p_value = (1.0 + float(np.sum(np.abs(null_means) >= abs(diff.mean())))) / (
-        repetitions + 1.0
-    )
+    p_value = (1.0 + float(np.sum(np.abs(null_means) >= abs(diff.mean())))) / (repetitions + 1.0)
     comparator_mean = float(comparator.mean())
     relative = None if comparator_mean == 0.0 else 100.0 * float(diff.mean()) / abs(comparator_mean)
     sd = float(np.std(diff, ddof=1))
     standardized = 0.0 if sd == 0.0 else float(diff.mean()) / sd
     return {
-        "episodes": int(len(diff)),
+        "episodes": len(diff),
         "mean_difference_bps": float(diff.mean()),
         "median_difference_bps": float(np.median(diff)),
         "mean_ci95_bps": [mean_ci[0], mean_ci[1]],
@@ -241,7 +242,6 @@ def cvar95(values: Sequence[float]) -> float:
     return float(tail.mean())
 
 
-
 def bootstrap_tier1_guardrails(
     policy_costs: Sequence[float],
     comparator_costs: Sequence[float],
@@ -281,6 +281,7 @@ def bootstrap_tier1_guardrails(
         "cvar95_allowed_margin_bps": cvar_margin,
         "cvar95_pass": cvar_ci[1] <= cvar_margin,
     }
+
 
 def _ppo_aggregate(
     case_metrics: Mapping[str, Mapping[str, object]], seeds: Sequence[int]
@@ -331,9 +332,7 @@ def _ranking_stability(
     indices = moving_block_indices(n, block_length, repetitions, seed)
     boot_means = np.stack([arr[indices].mean(axis=1) for arr in arrays], axis=1)
     winners = np.argmin(boot_means, axis=1)
-    probs = {
-        policy: float(np.mean(winners == index)) for index, policy in enumerate(policies)
-    }
+    probs = {policy: float(np.mean(winners == index)) for index, policy in enumerate(policies)}
     point_means = arrays.mean(axis=1)
     point_index = int(np.argmin(point_means))
     point_winner = policies[point_index]
@@ -350,10 +349,20 @@ def _ranking_stability(
 
 def _csv_bytes(rows: Sequence[Mapping[str, object]]) -> bytes:
     fields = [
-        "case_id", "dimension", "setting", "policy", "comparator", "episodes",
-        "mean_difference_bps", "median_difference_bps", "mean_ci95_low_bps",
-        "mean_ci95_high_bps", "raw_two_sided_p_value", "holm_adjusted_p_value",
-        "relative_change_percent", "paired_standardized_effect",
+        "case_id",
+        "dimension",
+        "setting",
+        "policy",
+        "comparator",
+        "episodes",
+        "mean_difference_bps",
+        "median_difference_bps",
+        "mean_ci95_low_bps",
+        "mean_ci95_high_bps",
+        "raw_two_sided_p_value",
+        "holm_adjusted_p_value",
+        "relative_change_percent",
+        "paired_standardized_effect",
     ]
     buffer = io.StringIO(newline="")
     writer = csv.DictWriter(buffer, fieldnames=fields, lineterminator="\n")

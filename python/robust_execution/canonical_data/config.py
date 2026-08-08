@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import asdict, dataclass
 from decimal import Decimal, InvalidOperation
-import json
 from pathlib import Path
 from typing import Any
 
@@ -94,7 +94,12 @@ def _positive_increment(value: object, field: str) -> str:
         raise CanonicalDataConfigurationError(f"{field} is not a decimal") from exc
     if not parsed.is_finite() or parsed <= 0:
         raise CanonicalDataConfigurationError(f"{field} must be finite and positive")
-    if parsed.normalize().as_tuple().digits == (1,) and parsed.normalize().as_tuple().exponent > 0:
+    normalized = parsed.normalize().as_tuple()
+    if (
+        normalized.digits == (1,)
+        and isinstance(normalized.exponent, int)
+        and normalized.exponent > 0
+    ):
         raise CanonicalDataConfigurationError(f"{field} increment is too coarse")
     return value
 

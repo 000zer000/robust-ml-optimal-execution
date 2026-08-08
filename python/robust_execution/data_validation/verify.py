@@ -29,7 +29,11 @@ def _verify_digest(path: Path) -> str:
 
 def verify_data_validation_report(report_path: Path) -> dict[str, Any]:
     report = _read_json(report_path)
-    if not isinstance(report, dict) or report.get("schema_version") != 1 or report.get("step") != 13:
+    if (
+        not isinstance(report, dict)
+        or report.get("schema_version") != 1
+        or report.get("step") != 13
+    ):
         raise DataValidationVerificationError("unsupported Step 13 report")
     if report.get("research_specification_changed") is not False:
         raise DataValidationVerificationError("report claims the specification changed")
@@ -40,13 +44,19 @@ def verify_data_validation_report(report_path: Path) -> dict[str, Any]:
     report_digest = _verify_digest(report_path)
     quarantine_path = report_path.with_name("quarantine-manifest.json")
     quarantine = _read_json(quarantine_path)
-    if not isinstance(quarantine, dict) or quarantine.get("validation_id") != report.get("validation_id"):
+    if not isinstance(quarantine, dict) or quarantine.get("validation_id") != report.get(
+        "validation_id"
+    ):
         raise DataValidationVerificationError("quarantine manifest does not match report")
     quarantine_digest = _verify_digest(quarantine_path)
     days = report.get("days")
     if not isinstance(days, list):
         raise DataValidationVerificationError("days must be an array")
-    admitted = [item for item in days if isinstance(item, dict) and item.get("admission_status") == "admitted"]
+    admitted = [
+        item
+        for item in days
+        if isinstance(item, dict) and item.get("admission_status") == "admitted"
+    ]
     for item in admitted:
         if item.get("structural_status") != "valid" or item.get("reasons"):
             raise DataValidationVerificationError("admitted day has unresolved validation reasons")

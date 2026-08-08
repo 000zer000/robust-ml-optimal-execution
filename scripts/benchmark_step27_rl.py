@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import statistics
 import sys
 import time
+from pathlib import Path
 
 import numpy as np
 
@@ -23,7 +23,7 @@ from robust_execution.rl.ppo import (  # noqa: E402
 
 def percentile(values: list[int], q: float) -> float:
     ordered = sorted(values)
-    index = min(len(ordered) - 1, max(0, int(round((len(ordered) - 1) * q))))
+    index = min(len(ordered) - 1, max(0, round((len(ordered) - 1) * q)))
     return float(ordered[index])
 
 

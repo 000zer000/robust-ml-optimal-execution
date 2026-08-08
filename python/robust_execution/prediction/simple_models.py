@@ -7,16 +7,17 @@ historical research test. Research mode requires a previously frozen horizon.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
 import hashlib
 import json
 import math
-from pathlib import Path
 import pickle
 import random
 import statistics
 import time
-from typing import Any, Iterable, Literal
+from collections.abc import Iterable
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any, Literal
 
 import numpy as np
 from sklearn.ensemble import HistGradientBoostingClassifier
@@ -163,8 +164,8 @@ class FittedSimpleModel:
 def _strict_keys(raw: dict[str, Any], expected: set[str]) -> None:
     if set(raw) != expected:
         raise SimpleModelError(
-            f"Step 22 config keys differ; missing={sorted(expected-set(raw))}, "
-            f"extra={sorted(set(raw)-expected)}"
+            f"Step 22 config keys differ; missing={sorted(expected - set(raw))}, "
+            f"extra={sorted(set(raw) - expected)}"
         )
 
 
@@ -342,14 +343,10 @@ def generate_engineering_training_rows(config: SimpleModelConfig) -> list[Traini
                     same_top5 = same_top1 + 100 + rng.randrange(620)
                     opposite_top5 = opposite_top1 + 100 + rng.randrange(620)
                     imbalance1 = math.trunc(
-                        10000
-                        * (same_top1 - opposite_top1)
-                        / (same_top1 + opposite_top1)
+                        10000 * (same_top1 - opposite_top1) / (same_top1 + opposite_top1)
                     )
                     imbalance5 = math.trunc(
-                        10000
-                        * (same_top5 - opposite_top5)
-                        / (same_top5 + opposite_top5)
+                        10000 * (same_top5 - opposite_top5) / (same_top5 + opposite_top5)
                     )
                     flow250 = rng.randrange(-90, 91)
                     flow1 = flow250 + rng.randrange(-140, 141)
@@ -600,7 +597,7 @@ def _brier(y: np.ndarray, probabilities: np.ndarray) -> float:
 
 
 def _fit_platt(probabilities: np.ndarray, y: np.ndarray) -> PlattCalibrator:
-    if set(int(value) for value in y) != {0, 1}:
+    if {int(value) for value in y} != {0, 1}:
         raise SimpleModelError("calibration segment must contain both classes")
     p = _clip_probabilities(probabilities)
     z = np.log(p / (1.0 - p)).reshape(-1, 1)
@@ -629,7 +626,7 @@ def _ece(y: np.ndarray, probabilities: np.ndarray, bins: int) -> float:
 def _calibration_regression(
     y: np.ndarray, probabilities: np.ndarray
 ) -> tuple[float | None, float | None]:
-    if set(int(value) for value in y) != {0, 1}:
+    if {int(value) for value in y} != {0, 1}:
         return None, None
     clipped = _clip_probabilities(probabilities)
     z = np.log(clipped / (1.0 - clipped)).reshape(-1, 1)
@@ -656,7 +653,7 @@ def probability_metrics(
         precision = tp / (tp + fp) if tp + fp else 0.0
         recall = tp / (tp + fn) if tp + fn else 0.0
         threshold_metrics[f"{threshold:.2f}"] = {"precision": precision, "recall": recall}
-    classes = set(int(value) for value in y)
+    classes = {int(value) for value in y}
     return ProbabilityMetrics(
         rows=len(y),
         positives=int(y.sum()),
@@ -774,9 +771,7 @@ def model_card(
 ) -> dict[str, object]:
     estimator_name = None if model.estimator is None else type(model.estimator).__name__
     scaler_fitted_on = (
-        "train_only"
-        if model.family in {"logistic", "simple_mlp"}
-        else "not_applicable"
+        "train_only" if model.family in {"logistic", "simple_mlp"} else "not_applicable"
     )
     return {
         "schema_version": "simple-model-card-v1",
@@ -864,7 +859,7 @@ def serialize_model(model: FittedSimpleModel, path: Path) -> None:
 
 def load_serialized_model(path: Path) -> FittedSimpleModel:
     try:
-        value = pickle.loads(path.read_bytes())  # noqa: S301 - trusted local research artifact only
+        value = pickle.loads(path.read_bytes())
     except (OSError, pickle.UnpicklingError, EOFError) as exc:
         raise SimpleModelError(f"cannot load model artifact: {exc}") from exc
     if not isinstance(value, FittedSimpleModel):

@@ -9,10 +9,12 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from native_executable import native_executable
+
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "schemas" / "validation" / "simulator-validation-report-v1.schema.json"
 FIXTURE = ROOT / "data" / "sample" / "validation"
-BINARY = ROOT / "build" / "gcc-debug" / "robust_execution_validation_demo"
+BINARY = native_executable(ROOT, "robust_execution_validation_demo")
 
 
 def sha256(path: Path) -> str:
@@ -64,8 +66,6 @@ def main() -> int:
     if not required.issubset(summary_lines):
         raise RuntimeError("Gate B summary is missing required evidence fields")
 
-    if not BINARY.exists():
-        raise RuntimeError("validation demo binary is missing; build gcc-debug first")
     with tempfile.TemporaryDirectory(prefix="re-step10-") as temp:
         output_dir = Path(temp)
         result = subprocess.run(
@@ -84,10 +84,7 @@ def main() -> int:
     if not list(Draft202012Validator(schema).iter_errors(invalid)):
         raise RuntimeError("negative report-schema control unexpectedly passed")
 
-    print(
-        "simulator Gate B: PASS "
-        f"(7 checks, 4 sensitivities, report {expected_hash[:12]}...)"
-    )
+    print(f"simulator Gate B: PASS (7 checks, 4 sensitivities, report {expected_hash[:12]}...)")
     return 0
 
 

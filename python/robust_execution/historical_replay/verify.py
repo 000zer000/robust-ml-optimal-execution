@@ -36,6 +36,8 @@ def _table(root: Path, item: dict[str, Any]) -> dict[str, Any]:
             payload = json.load(handle)
     except (OSError, json.JSONDecodeError) as exc:
         raise HistoricalReplayVerificationError(f"cannot read replay table: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise HistoricalReplayVerificationError("replay table payload must be an object")
     if payload.get("row_count") != item.get("row_count"):
         raise HistoricalReplayVerificationError("replay table row count mismatch")
     return payload
@@ -43,7 +45,11 @@ def _table(root: Path, item: dict[str, Any]) -> dict[str, Any]:
 
 def verify_historical_replay(manifest_path: Path) -> dict[str, object]:
     manifest = _json(manifest_path)
-    if not isinstance(manifest, dict) or manifest.get("schema_version") != 1 or manifest.get("step") != 15:
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema_version") != 1
+        or manifest.get("step") != 15
+    ):
         raise HistoricalReplayVerificationError("unsupported Step 15 manifest")
     if manifest.get("research_specification_changed") is not False:
         raise HistoricalReplayVerificationError("replay claims a specification change")
@@ -96,7 +102,9 @@ def verify_historical_replay(manifest_path: Path) -> dict[str, object]:
         symbol = str(events["symbol"][index])
         prior_key = prior_keys.get(symbol)
         if prior_key is not None and key < prior_key:
-            raise HistoricalReplayVerificationError("replay events are not deterministically ordered")
+            raise HistoricalReplayVerificationError(
+                "replay events are not deterministically ordered"
+            )
         prior_keys[symbol] = key
     for index in range(observation_rows):
         decision = int(observations["decision_time_ns"][index])
@@ -104,13 +112,12 @@ def verify_historical_replay(manifest_path: Path) -> dict[str, object]:
         maximum_available = int(observations["maximum_available_time_ns"][index])
         if maximum_event > maximum_available or maximum_available > decision:
             raise HistoricalReplayVerificationError("observation contains unavailable information")
-        if int(observations["best_bid_ticks"][index]) >= int(
-            observations["best_ask_ticks"][index]
-        ):
+        if int(observations["best_bid_ticks"][index]) >= int(observations["best_ask_ticks"][index]):
             raise HistoricalReplayVerificationError("observation book is locked or crossed")
-    if manifest.get("source_dataset_classification") == "sample_only_non_research" and manifest.get(
-        "research_admissible"
-    ) is not False:
+    if (
+        manifest.get("source_dataset_classification") == "sample_only_non_research"
+        and manifest.get("research_admissible") is not False
+    ):
         raise HistoricalReplayVerificationError("sample replay cannot be research admissible")
     return {
         "status": "ok",

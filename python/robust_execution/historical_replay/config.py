@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -100,7 +100,10 @@ def load_historical_replay_config(path: Path) -> HistoricalReplayConfig:
         raise HistoricalReplayConfigurationError("Step 15 cannot claim queue reconstruction")
     if config.market_impact_semantics != "ghost_small_agent_no_endogenous_impact":
         raise HistoricalReplayConfigurationError("historical replay cannot claim endogenous impact")
-    if config.require_research_admissible_input and not config.require_exact_snapshot_fetch_time_for_research:
+    if (
+        config.require_research_admissible_input
+        and not config.require_exact_snapshot_fetch_time_for_research
+    ):
         raise HistoricalReplayConfigurationError(
             "research replay must require exact snapshot fetch timestamps"
         )

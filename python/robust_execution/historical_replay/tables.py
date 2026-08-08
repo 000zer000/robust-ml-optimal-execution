@@ -24,7 +24,11 @@ def read_table(dataset_root: Path, relative_path: str) -> list[dict[str, Any]]:
     columns = payload.get("columns")
     order = payload.get("column_order")
     row_count = payload.get("row_count")
-    if not isinstance(columns, dict) or not isinstance(order, list) or not isinstance(row_count, int):
+    if (
+        not isinstance(columns, dict)
+        or not isinstance(order, list)
+        or not isinstance(row_count, int)
+    ):
         raise HistoricalTableError("canonical table payload is malformed")
     if set(columns) != set(order):
         raise HistoricalTableError("canonical table columns do not match column_order")

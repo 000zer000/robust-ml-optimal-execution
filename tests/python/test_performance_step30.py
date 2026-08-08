@@ -4,12 +4,10 @@ import csv
 import json
 from pathlib import Path
 
-import numpy as np
 import pytest
 import torch
 
 from robust_execution.performance import engineering as perf
-
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -38,9 +36,7 @@ def test_config_and_sample_summary_contract(tmp_path: Path) -> None:
         perf.summarize_samples([])
     with pytest.raises(perf.PerformanceError):
         perf.summarize_samples([0.0])
-    bad = json.loads(
-        (ROOT / "configs/performance/step30_performance_engineering.json").read_text()
-    )
+    bad = json.loads((ROOT / "configs/performance/step30_performance_engineering.json").read_text())
     bad["step"] = 29
     path = tmp_path / "bad.json"
     path.write_text(json.dumps(bad))
@@ -56,16 +52,28 @@ def test_timing_and_cpp_csv_reader(tmp_path: Path) -> None:
         writer = csv.DictWriter(
             stream,
             fieldnames=[
-                "repetition", "threads", "pairs", "operations", "elapsed_ns",
-                "matches", "checksum",
+                "repetition",
+                "threads",
+                "pairs",
+                "operations",
+                "elapsed_ns",
+                "matches",
+                "checksum",
             ],
         )
         writer.writeheader()
         for index, elapsed in enumerate((1000, 1200, 1100)):
-            writer.writerow({
-                "repetition": index, "threads": 1, "pairs": 5, "operations": 10,
-                "elapsed_ns": elapsed, "matches": 5, "checksum": 15,
-            })
+            writer.writerow(
+                {
+                    "repetition": index,
+                    "threads": 1,
+                    "pairs": 5,
+                    "operations": 10,
+                    "elapsed_ns": elapsed,
+                    "matches": 5,
+                    "checksum": 15,
+                }
+            )
     row = perf.read_cpp_timings(path)
     assert row["threads"] == 1
     assert row["checksum"] == "15"

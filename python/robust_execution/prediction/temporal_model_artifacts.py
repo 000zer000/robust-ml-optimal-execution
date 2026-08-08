@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
 import hashlib
 import json
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
@@ -55,8 +55,7 @@ def _schema(name: str, columns: tuple[str, ...]) -> dict[str, object]:
         "schema_version": 1,
         "table_name": name,
         "columns": [
-            {"name": column, "logical_type": "json_scalar", "nullable": False}
-            for column in columns
+            {"name": column, "logical_type": "json_scalar", "nullable": False} for column in columns
         ],
     }
 
@@ -155,11 +154,7 @@ def write_temporal_model_fixture(config: TemporalModelConfig, output_root: Path)
             "days": asdict(config.split_days),
             "source_rows": {
                 name: len(
-                    [
-                        row
-                        for row in rows
-                        if split_for_day(row.day_index, config.split_days) == name
-                    ]
+                    [row for row in rows if split_for_day(row.day_index, config.split_days) == name]
                 )
                 for name in split
             },
@@ -239,9 +234,7 @@ def write_temporal_model_fixture(config: TemporalModelConfig, output_root: Path)
             slices_path, slice_metrics(model, split["engineering_holdout"], config)
         )
         ood_path = model_root / "ood-diagnostics.json"
-        write_immutable_json(
-            ood_path, ood_diagnostics(model, split["engineering_holdout"], config)
-        )
+        write_immutable_json(ood_path, ood_diagnostics(model, split["engineering_holdout"], config))
         decision_path = model_root / "decision-proxy.json"
         write_immutable_json(
             decision_path, _decision_report(model, split["engineering_holdout"], config)
@@ -378,12 +371,11 @@ def verify_temporal_model_fixture(
     rows = _reconstruct_training_rows(flat, config)
     sequences = build_sequences(rows, config)
     split = split_sequences(sequences, config)
-    if (
-        len(rows) != manifest.get("source_row_count")
-        or len(sequences) != manifest.get("sequence_count")
+    if len(rows) != manifest.get("source_row_count") or len(sequences) != manifest.get(
+        "sequence_count"
     ):
         raise TemporalModelError("Step 23 row/sequence count mismatch")
-    report = json.loads((root / "report.json").read_text())
+    json.loads((root / "report.json").read_text())
     for horizon in config.candidate_horizons:
         model_root = root / "models" / horizon / FAMILY
         card = json.loads((model_root / "model-card.json").read_text())
@@ -397,8 +389,14 @@ def verify_temporal_model_fixture(
         stored = np.asarray(
             [float(item["calibrated_probability"]) for item in predictions], dtype=np.float64
         )
-        if not np.array_equal(current, stored):
-            raise TemporalModelError(f"Step 23 semantic prediction mismatch for {horizon}")
+        # Reconstructed float32 Torch inference can differ by a few final bits across CPU
+        # kernels. The tolerance is far below the precision used by any decision threshold.
+        if not np.allclose(current, stored, rtol=1e-6, atol=2e-7):
+            maximum_error = float(np.max(np.abs(current - stored)))
+            raise TemporalModelError(
+                f"Step 23 semantic prediction mismatch for {horizon}: "
+                f"maximum absolute error {maximum_error}"
+            )
     return {
         "status": "ok",
         "source_rows": len(rows),

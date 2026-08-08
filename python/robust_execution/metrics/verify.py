@@ -285,9 +285,10 @@ def _verify_detailed_ledger(report: dict[str, Any]) -> dict[str, Any]:
             raise MetricsVerificationError("unexpected adverse-selection horizon")
         quantity, cost = by_horizon[horizon]
         denominator = _exact_notional(instrument, arrival_price, quantity)
-        if row.get("observed_quantity_lots") != quantity or row.get(
-            "directional_cost_quote_atoms"
-        ) != cost:
+        if (
+            row.get("observed_quantity_lots") != quantity
+            or row.get("directional_cost_quote_atoms") != cost
+        ):
             raise MetricsVerificationError("adverse-selection exact totals differ")
         if not _close(
             _require_number(row.get("coverage_fraction"), "markout coverage"), quantity / filled
@@ -300,7 +301,11 @@ def _verify_detailed_ledger(report: dict[str, Any]) -> dict[str, Any]:
     actions = ledger.get("actions")
     performance = ledger.get("performance")
     timings = ledger.get("decision_timings")
-    if not isinstance(actions, dict) or not isinstance(performance, dict) or not isinstance(timings, list):
+    if (
+        not isinstance(actions, dict)
+        or not isinstance(performance, dict)
+        or not isinstance(timings, list)
+    ):
         raise MetricsVerificationError("activity, performance and timing ledgers are required")
     if metrics.get("actions") != actions:
         raise MetricsVerificationError("action counters differ")
@@ -338,6 +343,7 @@ def _verify_detailed_ledger(report: dict[str, Any]) -> dict[str, Any]:
                 "p99_ns": 0.0,
             }
         else:
+
             def nearest_rank(probability: float) -> float:
                 rank = max(1, math.ceil(probability * len(ordered)))
                 return float(ordered[rank - 1])
@@ -414,9 +420,7 @@ def _verify_aggregate(report: dict[str, Any]) -> dict[str, float | int]:
         if not isinstance(episode_id, str) or not episode_id or episode_id in identifiers:
             raise MetricsVerificationError("tail episode IDs must be unique")
         identifiers.add(episode_id)
-        losses.append(
-            _require_number(row.get("implementation_shortfall_bps"), "tail loss")
-        )
+        losses.append(_require_number(row.get("implementation_shortfall_bps"), "tail loss"))
         terminal_fraction = _require_number(row.get("terminal_fraction"), "terminal fraction")
         if not 0.0 <= terminal_fraction <= 1.0:
             raise MetricsVerificationError("terminal fraction is outside [0, 1]")
@@ -445,11 +449,16 @@ def _verify_aggregate(report: dict[str, Any]) -> dict[str, float | int]:
                 raise MetricsVerificationError(f"aggregate mismatch: {key}")
         elif not _close(_require_number(actual, key), value):
             raise MetricsVerificationError(f"aggregate mismatch: {key}")
-    if aggregate.get("quantile_method") != "empirical_nearest_rank" or aggregate.get(
-        "cvar_method"
-    ) != "fractional_worst_tail_mean":
+    if (
+        aggregate.get("quantile_method") != "empirical_nearest_rank"
+        or aggregate.get("cvar_method") != "fractional_worst_tail_mean"
+    ):
         raise MetricsVerificationError("tail conventions differ")
-    return {"episode_count": len(losses), "var95_bps": expected["var95_bps"], "cvar95_bps": expected["cvar95_bps"]}
+    return {
+        "episode_count": len(losses),
+        "var95_bps": expected["var95_bps"],
+        "cvar95_bps": expected["cvar95_bps"],
+    }
 
 
 def _verify_csvs(root: Path, report: dict[str, Any]) -> None:
@@ -457,9 +466,10 @@ def _verify_csvs(root: Path, report: dict[str, Any]) -> None:
         rows = list(csv.DictReader(handle))
     if len(rows) != 1 or rows[0]["episode_id"] != report["detailed_episode"]["episode_id"]:
         raise MetricsVerificationError("episode metrics CSV differs")
-    if int(rows[0]["implementation_shortfall_quote_atoms"]) != report["detailed_episode"][
-        "implementation_shortfall_quote_atoms"
-    ]:
+    if (
+        int(rows[0]["implementation_shortfall_quote_atoms"])
+        != report["detailed_episode"]["implementation_shortfall_quote_atoms"]
+    ):
         raise MetricsVerificationError("episode metrics CSV shortfall differs")
 
     with (root / "inventory-trajectory.csv").open(newline="", encoding="utf-8") as handle:
@@ -468,9 +478,10 @@ def _verify_csvs(root: Path, report: dict[str, Any]) -> None:
     if len(inventory) != len(expected_inventory):
         raise MetricsVerificationError("inventory CSV row count differs")
     for csv_row, json_row in zip(inventory, expected_inventory, strict=True):
-        if int(csv_row["timestamp_ns"]) != json_row["timestamp_ns"] or int(
-            csv_row["remaining_lots"]
-        ) != json_row["remaining_lots"]:
+        if (
+            int(csv_row["timestamp_ns"]) != json_row["timestamp_ns"]
+            or int(csv_row["remaining_lots"]) != json_row["remaining_lots"]
+        ):
             raise MetricsVerificationError("inventory CSV differs")
 
     with (root / "tail-risk.csv").open(newline="", encoding="utf-8") as handle:
@@ -545,9 +556,10 @@ def verify_metrics_evidence(manifest_path: Path) -> dict[str, Any]:
     report = _load_object(report_path)
     if report.get("schema_version") != "metrics-validation-v1" or report.get("step") != 17:
         raise MetricsVerificationError("metrics report identity is invalid")
-    if report.get("research_status") != "synthetic_validation_only_non_research" or report.get(
-        "historical_results_claimed"
-    ) is not False:
+    if (
+        report.get("research_status") != "synthetic_validation_only_non_research"
+        or report.get("historical_results_claimed") is not False
+    ):
         raise MetricsVerificationError("metrics report overstates research evidence")
     for key in (
         "buy_sell_symmetry_passed",
@@ -560,7 +572,11 @@ def verify_metrics_evidence(manifest_path: Path) -> dict[str, Any]:
         if report.get(key) is not True:
             raise MetricsVerificationError(f"metrics validation gate failed: {key}")
     audit = report.get("detailed_audit")
-    if not isinstance(audit, dict) or audit.get("passed") is not True or audit.get("issue_count") != 0:
+    if (
+        not isinstance(audit, dict)
+        or audit.get("passed") is not True
+        or audit.get("issue_count") != 0
+    ):
         raise MetricsVerificationError("C++ independent audit did not pass")
 
     detailed = _verify_detailed_ledger(report)

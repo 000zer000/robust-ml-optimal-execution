@@ -37,5 +37,7 @@ def test_synthetic_fixture_hash_and_claim_boundary() -> None:
     Draft202012Validator(schema).validate(manifest)
     assert manifest["calibration_status"] == "not_calibrated_step9"
     assert manifest["scenario_class"] == "adversarial_stress"
-    assert manifest["tape_sha256"] == hashlib.sha256((fixture / "tape.txt").read_bytes()).hexdigest()
+    assert (
+        manifest["tape_sha256"] == hashlib.sha256((fixture / "tape.txt").read_bytes()).hexdigest()
+    )
     assert len(manifest["limitations"]) >= 4

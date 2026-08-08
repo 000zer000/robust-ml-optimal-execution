@@ -23,7 +23,15 @@ htmlcov/
 /experiments/runs/
 /results/raw/
 /results/processed/
-/results/sample/
+/results/sample/*
+!/results/sample/step7/
+!/results/sample/step7/kernel_demo.txt
+!/results/sample/step8/
+!/results/sample/step8/policy_demo.txt
+!/results/sample/step15/
+!/results/sample/step15/historical_demo.txt
+!/results/sample/step16/
+!/results/sample/step16/queue_demo.json
 
 # Editors and OS
 .DS_Store

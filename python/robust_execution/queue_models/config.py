@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -117,7 +117,9 @@ def load_queue_model_contract(path: Path) -> QueueModelContract:
     if raw["exact_fifo_reconstructed_historically"]:
         raise QueueModelConfigError("historical exact FIFO reconstruction claim is forbidden")
     if not raw["ghost_small_agent_assumption"]:
-        raise QueueModelConfigError("historical queue models require the ghost small-agent boundary")
+        raise QueueModelConfigError(
+            "historical queue models require the ghost small-agent boundary"
+        )
     return QueueModelContract(
         schema_version=raw["schema_version"],
         contract_id=raw["contract_id"],

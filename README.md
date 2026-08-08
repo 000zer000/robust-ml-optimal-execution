@@ -1,6 +1,7 @@
 # Robust ML-Assisted Optimal Execution in Limit Order Books
 
 [![CI](https://github.com/000zer000/robust-ml-optimal-execution/actions/workflows/ci.yml/badge.svg)](https://github.com/000zer000/robust-ml-optimal-execution/actions/workflows/ci.yml)
+[![Reproducibility](https://github.com/000zer000/robust-ml-optimal-execution/actions/workflows/reproducibility.yml/badge.svg)](https://github.com/000zer000/robust-ml-optimal-execution/actions/workflows/reproducibility.yml)
 [![Sanitizers](https://github.com/000zer000/robust-ml-optimal-execution/actions/workflows/sanitizers.yml/badge.svg)](https://github.com/000zer000/robust-ml-optimal-execution/actions/workflows/sanitizers.yml)
 [![Paper](https://img.shields.io/badge/research%20paper-PDF-b31b1b)](paper/Robust_ML_Optimal_Execution_Research_Paper.pdf)
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-blue)
@@ -118,16 +119,24 @@ Strategy results in the manuscript are controlled simulator experiments. Systems
 ### Native C++ core
 
 ```bash
+# Linux
 cmake --preset gcc-debug
 cmake --build --preset gcc-debug
 ctest --preset gcc-debug
+
+# macOS (use this preset instead)
+cmake --preset clang-debug
+cmake --build --preset clang-debug
+ctest --preset clang-debug
 ```
 
 ### Python research stack
 
 ```bash
-python -m pip install -e .
-PYTHONPATH=python python -m pytest -q tests/python
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements/test.lock
+PYTHONPATH=python python -m pytest --cov=robust_execution --cov-branch tests/python
 ```
 
 ### Release checks
@@ -166,7 +175,7 @@ STEP*_*.md/json      Immutable staged validation ledger and artifact hashes
 
 ## Verification
 
-The release has been exercised under fresh GCC Release and Clang builds plus ASan/UBSan, with **53/53 native tests passing** in each completed matrix. The final Python inventory contains **478 tests total**: 477 are represented in the branch-coverage partitions at **91% branch-aware repository coverage**, and the full Step-28 artifact-regeneration test is executed separately. Research artifacts use deterministic regeneration and hash verification where scientifically meaningful.
+The release is exercised under GCC and Clang builds plus ASan/UBSan and ThreadSanitizer, with **53/53 native tests** in each matrix. The Python suite contains **478 tests** and enforces at least **90% branch-aware repository coverage**. Research artifacts use byte regeneration on the canonical Linux x86-64/Python 3.13 environment. Other platforms require two byte-identical same-host regenerations plus the registered numeric or scientific-contract checks; model-training bytes are not claimed portable across ML/BLAS kernels.
 
 ## Citation
 

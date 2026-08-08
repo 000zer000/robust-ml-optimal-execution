@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -42,7 +42,9 @@ class DataValidationConfig:
             "venue_id": self.venue_id,
             "symbols": list(self.symbols),
             "allowed_data_origins": list(self.allowed_data_origins),
-            "primary_historical_study_repairs_missing_events": self.primary_historical_study_repairs_missing_events,
+            "primary_historical_study_repairs_missing_events": (
+                self.primary_historical_study_repairs_missing_events
+            ),
             "crossed_or_locked_books_allowed": self.crossed_or_locked_books_allowed,
             "negative_or_nonfinite_values_allowed": self.negative_or_nonfinite_values_allowed,
             "research_specification_changed": self.research_specification_changed,
@@ -52,8 +54,12 @@ class DataValidationConfig:
                 "require_72h_pilot": self.admission.require_72h_pilot,
                 "require_whole_utc_day": self.admission.require_whole_utc_day,
                 "boundary_tolerance_ns": self.admission.boundary_tolerance_ns,
-                "minimum_depth_messages_per_symbol": self.admission.minimum_depth_messages_per_symbol,
-                "minimum_trade_messages_per_symbol": self.admission.minimum_trade_messages_per_symbol,
+                "minimum_depth_messages_per_symbol": (
+                    self.admission.minimum_depth_messages_per_symbol
+                ),
+                "minimum_trade_messages_per_symbol": (
+                    self.admission.minimum_trade_messages_per_symbol
+                ),
                 "maximum_event_receive_delta_ns": self.admission.maximum_event_receive_delta_ns,
             },
         }
@@ -77,7 +83,9 @@ def load_data_validation_config(path: Path) -> DataValidationConfig:
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise DataValidationConfigurationError(f"cannot load data-validation config: {exc}") from exc
+        raise DataValidationConfigurationError(
+            f"cannot load data-validation config: {exc}"
+        ) from exc
     if not isinstance(raw, dict):
         raise DataValidationConfigurationError("configuration root must be an object")
     if raw.get("schema_version") != 1:
@@ -89,7 +97,9 @@ def load_data_validation_config(path: Path) -> DataValidationConfig:
         raise DataValidationConfigurationError("symbols must be exactly BTCUSDT then ETHUSDT")
     origins = raw.get("allowed_data_origins")
     if origins != ["live_binance", "synthetic_transport_fixture"]:
-        raise DataValidationConfigurationError("allowed_data_origins must preserve the Step 12 origins")
+        raise DataValidationConfigurationError(
+            "allowed_data_origins must preserve the Step 12 origins"
+        )
     admission = raw.get("admission")
     if not isinstance(admission, dict):
         raise DataValidationConfigurationError("admission must be an object")
@@ -128,7 +138,9 @@ def load_data_validation_config(path: Path) -> DataValidationConfig:
     if config.crossed_or_locked_books_allowed:
         raise DataValidationConfigurationError("crossed or locked books may not be admitted")
     if config.negative_or_nonfinite_values_allowed:
-        raise DataValidationConfigurationError("negative or non-finite market values may not be admitted")
+        raise DataValidationConfigurationError(
+            "negative or non-finite market values may not be admitted"
+        )
     if config.research_specification_changed:
         raise DataValidationConfigurationError("Step 13 must not change the frozen specification")
     if not (
@@ -137,5 +149,7 @@ def load_data_validation_config(path: Path) -> DataValidationConfig:
         and config.admission.require_72h_pilot
         and config.admission.require_whole_utc_day
     ):
-        raise DataValidationConfigurationError("all primary admission safeguards must remain enabled")
+        raise DataValidationConfigurationError(
+            "all primary admission safeguards must remain enabled"
+        )
     return config

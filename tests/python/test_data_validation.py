@@ -3,9 +3,9 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
-from pathlib import Path
 import shutil
-from typing import Callable
+from collections.abc import Callable
+from pathlib import Path
 
 import pytest
 
@@ -33,9 +33,11 @@ def _rewrite_segment(root: Path, mutate: Callable[[list[dict[str, object]]], Non
         json.dumps(record, sort_keys=True, separators=(",", ":")).encode("utf-8") + b"\n"
         for record in records
     )
-    with segment.open("wb") as raw_handle:
-        with gzip.GzipFile(fileobj=raw_handle, mode="wb", mtime=0) as compressed:
-            compressed.write(raw_lines)
+    with (
+        segment.open("wb") as raw_handle,
+        gzip.GzipFile(fileobj=raw_handle, mode="wb", mtime=0) as compressed,
+    ):
+        compressed.write(raw_lines)
     manifest_path = root / "manifest.json"
     manifest = json.loads(manifest_path.read_text())
     for artifact in manifest["artifacts"]:
@@ -50,7 +52,12 @@ def _rewrite_segment(root: Path, mutate: Callable[[list[dict[str, object]]], Non
         encoding="utf-8",
     )
     (root / "manifest.sha256.json").write_text(
-        json.dumps({"sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest()}, sort_keys=True, separators=(",", ":")) + "\n",
+        json.dumps(
+            {"sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest()},
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n",
         encoding="utf-8",
     )
 
@@ -93,7 +100,9 @@ def test_committed_validation_report_verifies() -> None:
     assert result["admitted_days"] == 0
 
 
-@pytest.mark.parametrize("variant", ["gap", "crossed", "negative_trade", "stream", "index", "utc_reverse"])
+@pytest.mark.parametrize(
+    "variant", ["gap", "crossed", "negative_trade", "stream", "index", "utc_reverse"]
+)
 def test_semantic_corruption_is_quarantined(tmp_path: Path, variant: str) -> None:
     root = _copy_fixture(tmp_path)
 
@@ -122,9 +131,7 @@ def test_semantic_corruption_is_quarantined(tmp_path: Path, variant: str) -> Non
     report = _run(root, tmp_path / "out", variant)
     assert report["days"][0]["admission_status"] == "quarantined"
     assert report["issue_counts"]["critical"] >= 1
-    quarantine = json.loads(
-        (tmp_path / "out" / variant / "quarantine-manifest.json").read_text()
-    )
+    quarantine = json.loads((tmp_path / "out" / variant / "quarantine-manifest.json").read_text())
     assert quarantine["issues"]
     assert quarantine["quarantined_days"] == ["2027-01-15"]
 
@@ -158,8 +165,8 @@ def test_report_tamper_is_detected(tmp_path: Path) -> None:
 
 
 def test_step13_fixture_generator_is_deterministic(tmp_path: Path) -> None:
-    from robust_execution.data_validation.fixture import generate_step13_capture_fixture
     from robust_execution.data_capture.verify import verify_capture_manifest
+    from robust_execution.data_validation.fixture import generate_step13_capture_fixture
 
     first = generate_step13_capture_fixture(tmp_path / "first")
     second = generate_step13_capture_fixture(tmp_path / "second")
@@ -180,7 +187,9 @@ def test_step13_fixture_generator_is_deterministic(tmp_path: Path) -> None:
         generate_step13_capture_fixture(tmp_path / "first")
 
 
-def _rewrite_validation_report(report_path: Path, mutate: Callable[[dict[str, object]], None]) -> None:
+def _rewrite_validation_report(
+    report_path: Path, mutate: Callable[[dict[str, object]], None]
+) -> None:
     payload = json.loads(report_path.read_text())
     mutate(payload)
     report_path.write_text(
@@ -236,6 +245,7 @@ def test_report_semantic_inconsistencies_are_rejected(tmp_path: Path, variant: s
             encoding="utf-8",
         )
     else:
+
         def mutate(payload: dict[str, object]) -> None:
             if variant == "unsupported":
                 payload["step"] = 12
@@ -253,6 +263,7 @@ def test_report_semantic_inconsistencies_are_rejected(tmp_path: Path, variant: s
                 payload["days"][0]["admission_status"] = "admitted"  # type: ignore[index]
                 payload["days"][0]["reasons"] = ["still_bad"]  # type: ignore[index]
                 payload["summary"]["admitted_days"] = 1  # type: ignore[index]
+
         _rewrite_validation_report(report_path, mutate)
     with pytest.raises(DataValidationVerificationError):
         verify_data_validation_report(report_path)

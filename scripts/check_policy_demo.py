@@ -17,12 +17,12 @@ def main() -> int:
     executable = next((path for path in CANDIDATES if path.is_file()), None)
     if executable is None:
         raise RuntimeError("policy demo executable not found; build a configured preset first")
+    if not EXPECTED.is_file():
+        raise RuntimeError(f"missing committed policy demo fixture: {EXPECTED}")
     actual = subprocess.check_output([str(executable)])
     expected = EXPECTED.read_bytes()
     if actual != expected:
-        raise RuntimeError(
-            f"deterministic Step 8 policy demo differs: executable={executable}"
-        )
+        raise RuntimeError(f"deterministic Step 8 policy demo differs: executable={executable}")
     print(f"policy demo: PASS ({executable.relative_to(ROOT)})")
     return 0
 

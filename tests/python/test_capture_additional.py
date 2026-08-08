@@ -4,20 +4,29 @@ import asyncio
 import hashlib
 import json
 from pathlib import Path
-from types import SimpleNamespace
 from typing import Any
 
 import pytest
 
 from robust_execution import cli
-from robust_execution.data_capture.collector import BinanceRawCollector, CaptureError, resolve_hostnames
+from robust_execution.data_capture.collector import (
+    BinanceRawCollector,
+    CaptureError,
+    resolve_hostnames,
+)
 from robust_execution.data_capture.config import CaptureConfigurationError, load_capture_config
 from robust_execution.data_capture.offline_fixture import write_offline_fixture
-from robust_execution.data_capture.sequence import DepthSynchronizer, SequenceError, parse_depth_update
+from robust_execution.data_capture.sequence import (
+    DepthSynchronizer,
+    SequenceError,
+    parse_depth_update,
+)
 from robust_execution.data_capture.storage import GzipJsonlSegmentWriter, StorageError
-from robust_execution.data_capture.transport import BinanceRestTransport, default_websocket_connector
+from robust_execution.data_capture.transport import (
+    BinanceRestTransport,
+    default_websocket_connector,
+)
 from robust_execution.data_capture.verify import CaptureVerificationError, verify_capture_manifest
-
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -177,7 +186,7 @@ def test_storage_abort_and_double_seal(tmp_path: Path) -> None:
 
 def test_rest_transport_and_websocket_factory(monkeypatch: pytest.MonkeyPatch) -> None:
     class Response:
-        def __enter__(self) -> "Response":
+        def __enter__(self) -> Response:
             return self
 
         def __exit__(self, *args: object) -> None:
@@ -201,7 +210,9 @@ def test_rest_transport_and_websocket_factory(monkeypatch: pytest.MonkeyPatch) -
     assert hasattr(context, "__aenter__")
 
 
-def test_resolve_hostnames_success_and_failure(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_resolve_hostnames_success_and_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
     config = load_capture_config(config_in(tmp_path))
     counter = {"calls": 0}
 
@@ -211,15 +222,23 @@ def test_resolve_hostnames_success_and_failure(monkeypatch: pytest.MonkeyPatch, 
             raise OSError("dns failed")
         return [(2, 1, 6, "", ("203.0.113.1", port))]
 
-    monkeypatch.setattr("robust_execution.data_capture.collector.socket.getaddrinfo", fake_getaddrinfo)
+    monkeypatch.setattr(
+        "robust_execution.data_capture.collector.socket.getaddrinfo", fake_getaddrinfo
+    )
     result = resolve_hostnames(config)
     assert result["rest"]["status"] == "resolved"
     assert result["websocket"]["status"] == "failed"
 
 
-def test_cli_new_commands(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def test_cli_new_commands(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     config_path = config_in(tmp_path)
-    monkeypatch.setattr(cli, "resolve_hostnames", lambda config: {"rest": {"status": "resolved"}, "websocket": {"status": "resolved"}})
+    monkeypatch.setattr(
+        cli,
+        "resolve_hostnames",
+        lambda config: {"rest": {"status": "resolved"}, "websocket": {"status": "resolved"}},
+    )
     assert cli.main(["capture-network-check", str(config_path)]) == 0
 
     class FakeCollector:
@@ -244,6 +263,15 @@ def test_verify_manifest_error_paths(tmp_path: Path) -> None:
     manifest.write_text("[]")
     with pytest.raises(CaptureVerificationError, match="unsupported"):
         verify_capture_manifest(manifest)
-    manifest.write_text(json.dumps({"schema_version": 1, "step": 11, "research_specification_changed": False, "paid_data_used": False}))
+    manifest.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "step": 11,
+                "research_specification_changed": False,
+                "paid_data_used": False,
+            }
+        )
+    )
     with pytest.raises(CaptureVerificationError, match="governance"):
         verify_capture_manifest(manifest)

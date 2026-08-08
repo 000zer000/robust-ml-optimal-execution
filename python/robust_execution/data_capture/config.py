@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -193,19 +193,13 @@ def load_capture_config(path: Path) -> CaptureConfig:
                 storage_raw, "segment_max_uncompressed_bytes", 1024
             ),
             fsync_each_record=_require_bool(storage_raw, "fsync_each_record"),
-            fsync_interval_messages=_require_int(
-                storage_raw, "fsync_interval_messages", 1
-            ),
+            fsync_interval_messages=_require_int(storage_raw, "fsync_interval_messages", 1),
         ),
         pilot=PilotConfig(
             required_duration_seconds=required_duration,
             rotate_before_seconds=rotate_before,
-            reconnect_backoff_seconds=_require_number(
-                pilot_raw, "reconnect_backoff_seconds", 0.0
-            ),
-            receive_timeout_seconds=_require_number(
-                pilot_raw, "receive_timeout_seconds", 0.1
-            ),
+            reconnect_backoff_seconds=_require_number(pilot_raw, "reconnect_backoff_seconds", 0.0),
+            receive_timeout_seconds=_require_number(pilot_raw, "receive_timeout_seconds", 0.1),
             max_reconnects=_require_int(pilot_raw, "max_reconnects", 0),
         ),
         research_specification_changed=_require_bool(raw, "research_specification_changed"),

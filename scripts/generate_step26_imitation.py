@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from native_executable import native_executable
 from robust_execution.imitation.learning import generate_step26_artifacts
 
 
@@ -12,7 +13,7 @@ def main() -> None:
     parser.add_argument(
         "--oracle",
         type=Path,
-        default=Path("build/gcc-debug/robust_execution_imitation_oracle"),
+        default=None,
     )
     parser.add_argument(
         "--config",
@@ -25,7 +26,9 @@ def main() -> None:
         default=Path("data/sample/imitation/step26-imitation-validation"),
     )
     args = parser.parse_args()
-    report = generate_step26_artifacts(args.root, args.oracle, args.config, args.output)
+    root = args.root.resolve()
+    oracle = args.oracle or native_executable(root, "robust_execution_imitation_oracle")
+    report = generate_step26_artifacts(root, oracle, args.config, args.output)
     print(report["payload_sha256"])
 
 

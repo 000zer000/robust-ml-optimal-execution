@@ -11,7 +11,6 @@ import jsonschema
 from robust_execution.data_capture.collector import BinanceRawCollector
 from robust_execution.data_capture.config import load_capture_config
 
-
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -20,7 +19,11 @@ class FakeRest:
         return json.dumps(
             {
                 "symbols": [
-                    {"symbol": symbol, "status": "TRADING", "filters": [{"filterType": "PRICE_FILTER"}]}
+                    {
+                        "symbol": symbol,
+                        "status": "TRADING",
+                        "filters": [{"filterType": "PRICE_FILTER"}],
+                    }
                     for symbol in symbols
                 ]
             },
@@ -141,9 +144,7 @@ def test_offline_capture_forced_reconnect_and_manifest(tmp_path: Path) -> None:
         collector.run(duration_seconds=259200, max_messages=6, run_id="offline-fixture")
     )
     manifest = json.loads(manifest_path.read_text())
-    schema = json.loads(
-        (ROOT / "schemas/data/raw-capture-manifest-v1.schema.json").read_text()
-    )
+    schema = json.loads((ROOT / "schemas/data/raw-capture-manifest-v1.schema.json").read_text())
     jsonschema.Draft202012Validator(schema).validate(manifest)
 
     assert manifest["status"] == "pilot_incomplete"
@@ -159,7 +160,9 @@ def test_offline_capture_forced_reconnect_and_manifest(tmp_path: Path) -> None:
     assert sum(item["record_count"] for item in segments) == 6
     restored: list[str] = []
     for segment in segments:
-        with gzip.open(manifest_path.parent / segment["relative_path"], "rt", encoding="utf-8") as handle:
+        with gzip.open(
+            manifest_path.parent / segment["relative_path"], "rt", encoding="utf-8"
+        ) as handle:
             restored.extend(json.loads(line)["raw_payload_utf8"] for line in handle)
     assert restored == first + second
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import replace
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +9,7 @@ import pytest
 
 pytest.importorskip("torch")
 
-from robust_execution.prediction.simple_models import HORIZON_TARGETS, TrainingRow
+from robust_execution.prediction.simple_models import HORIZON_TARGETS
 from robust_execution.prediction.temporal_model_artifacts import (
     verify_temporal_model_fixture,
     write_temporal_model_fixture,
@@ -63,7 +63,7 @@ def test_config_preserves_frozen_contract() -> None:
 
 
 def test_sequence_counts_and_chronological_splits() -> None:
-    config, rows, sequences, split = _fixture()
+    _config, rows, sequences, split = _fixture()
     assert len(rows) == 4800
     assert len(sequences) == 2000
     assert {name: len(values) for name, values in split.items()} == {
@@ -121,9 +121,7 @@ def test_causal_past_mutation_changes_sequence() -> None:
     mutated = list(rows)
     mutated[past_index] = replace(rows[past_index], feature=changed_feature)
     same = next(
-        item
-        for item in build_sequences(mutated, config)
-        if item.sequence_id == target.sequence_id
+        item for item in build_sequences(mutated, config) if item.sequence_id == target.sequence_id
     )
     x_original, _ = sequence_matrix([target], config, "1s")
     x_changed, _ = sequence_matrix([same], config, "1s")

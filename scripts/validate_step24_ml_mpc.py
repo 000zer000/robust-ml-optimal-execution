@@ -10,6 +10,8 @@ from pathlib import Path
 
 import jsonschema
 
+from native_executable import native_executable
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data/sample/controller/step24-ml-mpc-validation"
 REPORT = OUT / "report.json"
@@ -17,7 +19,7 @@ TAPE = OUT / "prediction-tapes.json"
 CONFIG = ROOT / "configs/strategies/step24_ml_mpc_engineering.json"
 REPORT_SCHEMA = ROOT / "schemas/controller/ml-mpc-controller-report-v1.schema.json"
 TAPE_SCHEMA = ROOT / "schemas/controller/ml-mpc-prediction-tape-v1.schema.json"
-EXE = ROOT / "build/gcc-debug/robust_execution_ml_mpc_demo"
+EXE = native_executable(ROOT, "robust_execution_ml_mpc_demo")
 MODELS = ROOT / "data/sample/models/step23-temporal-deep-validation/models"
 STEP23_REPORT = ROOT / "data/sample/models/step23-temporal-deep-validation/report.json"
 HORIZONS = ("250ms", "1s", "5s")
@@ -52,9 +54,7 @@ def validate_source_linkage(report: dict[str, object], tape: dict[str, object]) 
     source_ids = report["payload"]["source_endpoint_row_ids"]
     for horizon in HORIZONS:
         columns = load_columns(horizon)
-        card = json.loads(
-            (MODELS / horizon / "causal_conv1d_lstm/model-card.json").read_text()
-        )
+        card = json.loads((MODELS / horizon / "causal_conv1d_lstm/model-card.json").read_text())
         horizon_report = report["payload"]["horizons"][horizon]
         horizon_tape = tape["horizons"][horizon]
         expected_hash = step23["models"][horizon]["prediction_data_sha256"]
@@ -115,9 +115,10 @@ def validate_ablations(report: dict[str, object]) -> None:
         for neutral in ("training_base_rate_ablation", "prediction_weight_zero_ablation"):
             if record[neutral]["actions"] != non_ml["actions"]:
                 fail(f"{horizon}/{neutral}: neutral ablation changed actions")
-            if record[neutral]["implementation_shortfall_bps"] != non_ml[
-                "implementation_shortfall_bps"
-            ]:
+            if (
+                record[neutral]["implementation_shortfall_bps"]
+                != non_ml["implementation_shortfall_bps"]
+            ):
                 fail(f"{horizon}/{neutral}: neutral ablation changed accounting")
         if record["perfect_event_oracle_ablation"]["actions"] != non_ml["actions"]:
             oracle_changed = True

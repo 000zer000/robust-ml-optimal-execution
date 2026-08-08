@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
+
+from native_executable import native_executable
 
 ROOT = Path(__file__).resolve().parents[1]
-EXECUTABLE = ROOT / "build" / "gcc-debug" / "robust_execution_matching_demo"
+EXECUTABLE = native_executable(ROOT, "robust_execution_matching_demo")
 EXPECTED = ROOT / "data" / "sample" / "matching_engine" / "expected_state.txt"
 
-if not EXECUTABLE.is_file():
-    print(f"missing demo executable: {EXECUTABLE}")
-    raise SystemExit(1)
 if not EXPECTED.is_file():
     print(f"missing expected matching-engine state: {EXPECTED}")
     raise SystemExit(1)

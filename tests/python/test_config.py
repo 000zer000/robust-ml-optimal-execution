@@ -4,7 +4,6 @@ import pytest
 
 from robust_execution.config import ConfigurationError, load_config
 
-
 VALID = """
 schema_version = 1
 project = "robust-execution"
@@ -45,13 +44,10 @@ def test_load_valid_config(tmp_path: Path) -> None:
         ('output_directory = ""', "bootstrap.output_directory"),
     ],
 )
-def test_invalid_scalar_fields_are_rejected(
-    tmp_path: Path, replacement: str, message: str
-) -> None:
+def test_invalid_scalar_fields_are_rejected(tmp_path: Path, replacement: str, message: str) -> None:
     original_key = replacement.split(" =", maxsplit=1)[0]
     lines = [
-        replacement if line.startswith(f"{original_key} =") else line
-        for line in VALID.splitlines()
+        replacement if line.startswith(f"{original_key} =") else line for line in VALID.splitlines()
     ]
     with pytest.raises(ConfigurationError, match=message):
         load_config(_write(tmp_path, "\n".join(lines)))
@@ -68,10 +64,8 @@ def test_unknown_nested_key_is_rejected(tmp_path: Path) -> None:
 
 
 def test_missing_table_is_rejected(tmp_path: Path) -> None:
-    with pytest.raises(ConfigurationError, match="logging.*TOML table"):
-        without_logging = VALID.replace(
-            "[logging]\nlevel = \"INFO\"\njson = true\n", ""
-        )
+    with pytest.raises(ConfigurationError, match=r"logging.*TOML table"):
+        without_logging = VALID.replace('[logging]\nlevel = "INFO"\njson = true\n', "")
         load_config(_write(tmp_path, without_logging))
 
 

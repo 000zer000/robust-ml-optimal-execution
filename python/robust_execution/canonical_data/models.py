@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import hashlib
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -35,8 +35,10 @@ class TableArtifact:
         }
 
 
-def rows_to_columns(rows: list[dict[str, Any]], column_order: tuple[str, ...]) -> dict[str, list[Any]]:
-    columns = {name: [] for name in column_order}
+def rows_to_columns(
+    rows: list[dict[str, Any]], column_order: tuple[str, ...]
+) -> dict[str, list[Any]]:
+    columns: dict[str, list[Any]] = {name: [] for name in column_order}
     for row in rows:
         if set(row) != set(column_order):
             missing = sorted(set(column_order) - set(row))

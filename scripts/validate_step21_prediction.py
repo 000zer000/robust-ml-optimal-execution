@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import tempfile
+from pathlib import Path
 
 from robust_execution.historical_replay.tables import read_table
 from robust_execution.prediction import (

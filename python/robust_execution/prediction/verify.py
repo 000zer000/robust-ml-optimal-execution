@@ -45,9 +45,7 @@ def verify_prediction_dataset(manifest_path: Path) -> dict[str, object]:
     ):
         raise PredictionDataError("feature dictionary contract changed")
     tables = {
-        item["table_name"]: item
-        for item in manifest.get("tables", [])
-        if isinstance(item, dict)
+        item["table_name"]: item for item in manifest.get("tables", []) if isinstance(item, dict)
     }
     if set(tables) != {"prediction_features", "prediction_labels"}:
         raise PredictionDataError(

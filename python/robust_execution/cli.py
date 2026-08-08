@@ -10,7 +10,6 @@ import sys
 from pathlib import Path
 
 from robust_execution import __version__
-from robust_execution.config import ConfigurationError, load_config
 from robust_execution.canonical_data.builder import CanonicalDataError, build_canonical_dataset
 from robust_execution.canonical_data.config import (
     CanonicalDataConfigurationError,
@@ -20,7 +19,12 @@ from robust_execution.canonical_data.verify import (
     CanonicalDataVerificationError,
     verify_canonical_dataset,
 )
-from robust_execution.data_capture.collector import BinanceRawCollector, CaptureError, resolve_hostnames
+from robust_execution.config import ConfigurationError, load_config
+from robust_execution.data_capture.collector import (
+    BinanceRawCollector,
+    CaptureError,
+    resolve_hostnames,
+)
 from robust_execution.data_capture.config import CaptureConfigurationError, load_capture_config
 from robust_execution.data_capture.verify import CaptureVerificationError, verify_capture_manifest
 from robust_execution.data_validation.config import (

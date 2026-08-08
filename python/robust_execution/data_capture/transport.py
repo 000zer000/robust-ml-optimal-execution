@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import AsyncIterator
 import json
-from typing import Any, Protocol
+from typing import Protocol
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -52,7 +51,7 @@ class BinanceRestTransport:
             f"{self.base_url}{path}",
             headers={"User-Agent": "robust-execution-step12/0.9", "X-MBX-TIME-UNIT": "MICROSECOND"},
         )
-        with urlopen(request, timeout=self.timeout_seconds) as response:  # noqa: S310
+        with urlopen(request, timeout=self.timeout_seconds) as response:
             return response.read()
 
 

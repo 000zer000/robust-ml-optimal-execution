@@ -102,9 +102,13 @@ def main() -> int:
         "docs.cdp.coinbase.com",
     }
     actual_domains = {
-        url.split("/", 3)[2] for url in decision["source_urls"].values() if url.startswith("https://")
+        url.split("/", 3)[2]
+        for url in decision["source_urls"].values()
+        if url.startswith("https://")
     }
-    _require(required_domains.issubset(actual_domains), "required primary-source domains are missing")
+    _require(
+        required_domains.issubset(actual_domains), "required primary-source domains are missing"
+    )
 
     paid = copy.deepcopy(decision)
     paid["paid_purchase_made"] = True

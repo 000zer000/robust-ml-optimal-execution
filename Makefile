@@ -2,7 +2,7 @@ SHELL := /usr/bin/env bash
 PYTHON ?= python3
 PYTHONPATH := python
 
-.PHONY: help spec-check repository-check event-model-check policy-contract-check synthetic-market-check simulator-validation-check data-source-check raw-capture-check data-validation-check canonical-data-check historical-replay-check queue-model-check metrics-check baselines-check almgren-chriss-check adaptive-baselines-check prediction-data-check simple-models-check temporal-model-check ml-mpc-check matching-check matching-demo-check kernel-demo-check policy-demo-check configure build test-cpp test-python test sample event-model-sample sanitize clang-test lint typecheck format-check wheel clean ci-local
+.PHONY: help spec-check repository-check event-model-check policy-contract-check synthetic-market-check simulator-validation-check data-source-check raw-capture-check data-validation-check canonical-data-check historical-replay-check queue-model-check metrics-check baselines-check almgren-chriss-check adaptive-baselines-check prediction-data-check simple-models-check temporal-model-check ml-mpc-check prediction-decision-value-check imitation-learning-check rl-check robustness-check statistics-check performance-check matching-check matching-demo-check kernel-demo-check policy-demo-check configure build test-cpp test-python test sample event-model-sample sanitize clang-test lint typecheck format-check wheel clean ci-local
 
 help:
 	@printf '%s\n' \
@@ -34,15 +34,19 @@ help:
 	  'prediction-data-check validate Step 21 causal features, targets and leakage tests' \
 	  'simple-models-check validate Step 22 simple models, calibration and artifacts' \
 	  'temporal-model-check validate Step 23 causal Conv1D-LSTM and artifacts' \
-  'ml-mpc-check validate Step 24 ML-assisted MPC and ablations' \
+	  'ml-mpc-check validate Step 24 ML-assisted MPC and ablations' \
+	  'prediction-decision-value-check validate Step 25 decision-value analysis' \
 	  'imitation-learning-check validate Step 26 behavior cloning, DAgger and fallback' \
 	  'rl-check validate Step 27 PPO engineering, reward audit and OOD transfer' \
+	  'robustness-check validate Step 28 robustness matrix' \
+	  'statistics-check validate Step 29 statistical inference' \
+	  'performance-check validate Step 30 performance evidence' \
 	  'sanitize         run GCC ASan+UBSan build/tests' \
 	  'clang-test       run independent Clang build/tests' \
 	  'lint             run pinned Ruff' \
 	  'typecheck        run pinned mypy' \
 	  'wheel            build Python wheel with C++ binding' \
-	  'ci-local         execute all locally available Step 23 checks'
+	  'ci-local         execute the complete local engineering validation suite'
 
 spec-check:
 	$(PYTHON) scripts/verify_specification_lock.py

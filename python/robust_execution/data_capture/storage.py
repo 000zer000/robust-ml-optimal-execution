@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
 import gzip
 import hashlib
 import json
 import os
+from dataclasses import asdict
 from pathlib import Path
 from typing import BinaryIO
 
-from robust_execution.data_capture.models import ArtifactRecord, RawMessageRecord, canonical_json_bytes
+from robust_execution.data_capture.models import (
+    ArtifactRecord,
+    RawMessageRecord,
+    canonical_json_bytes,
+)
 
 
 class StorageError(RuntimeError):

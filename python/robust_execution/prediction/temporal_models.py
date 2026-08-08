@@ -7,14 +7,15 @@ horizon, final model family, or opening the locked historical test.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, replace
 import hashlib
 import json
 import math
-from pathlib import Path
 import statistics
 import time
-from typing import Any, Iterable, Literal
+from collections.abc import Iterable
+from dataclasses import asdict, dataclass, replace
+from pathlib import Path
+from typing import Any, Literal
 
 import numpy as np
 from sklearn.linear_model import LogisticRegression
@@ -196,8 +197,8 @@ class CausalConvLSTM(nn.Module):
 def _strict_keys(raw: dict[str, Any], expected: set[str], context: str) -> None:
     if set(raw) != expected:
         raise TemporalModelError(
-            f"{context} keys differ; missing={sorted(expected-set(raw))}, "
-            f"extra={sorted(set(raw)-expected)}"
+            f"{context} keys differ; missing={sorted(expected - set(raw))}, "
+            f"extra={sorted(set(raw) - expected)}"
         )
 
 
@@ -493,9 +494,9 @@ def build_sequences(
 
 def validate_sequences(sequences: Iterable[TemporalSequence], config: TemporalModelConfig) -> None:
     items = list(sequences)
-    per_group = 1 + (
-        config.rows_per_symbol_side_day - config.sequence_length
-    ) // config.sequence_stride
+    per_group = (
+        1 + (config.rows_per_symbol_side_day - config.sequence_length) // config.sequence_stride
+    )
     expected = config.total_days * len(config.symbols) * 2 * per_group
     if len(items) != expected:
         raise TemporalModelError(f"sequence count changed: expected {expected}, got {len(items)}")
@@ -529,9 +530,7 @@ def validate_sequences(sequences: Iterable[TemporalSequence], config: TemporalMo
         previous = key
     for split_name in ("train", "validation", "calibration", "engineering_holdout"):
         subset = [
-            item
-            for item in items
-            if split_for_day(item.day_index, config.split_days) == split_name
+            item for item in items if split_for_day(item.day_index, config.split_days) == split_name
         ]
         if not subset:
             raise TemporalModelError(f"{split_name} sequence split is empty")
@@ -596,8 +595,7 @@ def _set_deterministic(seed: int) -> None:
 
 def _candidate_seed(config: TemporalModelConfig, horizon: str, candidate: object) -> int:
     material = (
-        f"{config.random_seed}|{horizon}|"
-        f"{json.dumps(candidate, sort_keys=True, default=str)}"
+        f"{config.random_seed}|{horizon}|{json.dumps(candidate, sort_keys=True, default=str)}"
     )
     return int.from_bytes(hashlib.sha256(material.encode()).digest()[:4], "big")
 
@@ -731,7 +729,7 @@ def select_temporal_hyperparameters(
 
 
 def _fit_platt(probabilities: np.ndarray, y: np.ndarray) -> PlattCalibrator:
-    classes = set(int(value) for value in y)
+    classes = {int(value) for value in y}
     if classes != {0, 1}:
         raise TemporalModelError("calibration segment must contain both classes")
     p = np.clip(np.asarray(probabilities, dtype=np.float64), 1e-9, 1.0 - 1e-9)
@@ -890,9 +888,9 @@ def _stressed_feature(feature: dict[str, int], config: TemporalModelConfig) -> d
     changed = dict(feature)
     changed["spread_ticks"] = max(1, feature["spread_ticks"] + stress.spread_add_ticks)
     for name in ("same_top1_lots", "same_top5_lots"):
-        changed[name] = max(1, int(round(feature[name] * stress.same_depth_scale)))
+        changed[name] = max(1, round(feature[name] * stress.same_depth_scale))
     for name in ("opposite_top1_lots", "opposite_top5_lots"):
-        changed[name] = max(1, int(round(feature[name] * stress.opposite_depth_scale)))
+        changed[name] = max(1, round(feature[name] * stress.opposite_depth_scale))
     same1 = changed["same_top1_lots"]
     opposite1 = changed["opposite_top1_lots"]
     same5 = changed["same_top5_lots"]
@@ -903,9 +901,9 @@ def _stressed_feature(feature: dict[str, int], config: TemporalModelConfig) -> d
     changed["side_imbalance_top5_bps"] = math.trunc(
         10000 * (same5 - opposite5) / (same5 + opposite5)
     )
-    changed["quote_age_ns"] = int(round(feature["quote_age_ns"] * stress.quote_age_scale))
-    changed["time_since_last_trade_ns"] = int(
-        round(feature["time_since_last_trade_ns"] * stress.trade_age_scale)
+    changed["quote_age_ns"] = round(feature["quote_age_ns"] * stress.quote_age_scale)
+    changed["time_since_last_trade_ns"] = round(
+        feature["time_since_last_trade_ns"] * stress.trade_age_scale
     )
     return changed
 
@@ -916,8 +914,7 @@ def stress_sequences(
     output: list[TemporalSequence] = []
     for sequence in sequences:
         rows = tuple(
-            replace(row, feature=_stressed_feature(row.feature, config))
-            for row in sequence.rows
+            replace(row, feature=_stressed_feature(row.feature, config)) for row in sequence.rows
         )
         output.append(replace(sequence, rows=rows))
     return output
@@ -1125,6 +1122,4 @@ def sequence_reliability(
     config: TemporalModelConfig,
 ) -> list[dict[str, object]]:
     x, y = sequence_matrix(sequences, config, model.horizon)
-    return reliability_bins(
-        y.astype(np.int64), model.predict_calibrated(x), config.ece_bins
-    )
+    return reliability_bins(y.astype(np.int64), model.predict_calibrated(x), config.ece_bins)

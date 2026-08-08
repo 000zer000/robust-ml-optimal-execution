@@ -89,7 +89,7 @@ Therefore **Gate J passes**. The deployment recommendation is CPU for latency-se
 
 ## 6. Correctness and quality matrix
 
-- Python tests represented across complete partitions: **472/472 passed**;
+- Python tests in the final audited tree: **478/478 passed**;
 - branch-aware repository coverage: **91%** (required >=90%);
 - dedicated Step 30 Python tests: **7/7 passed**;
 - GCC Debug C++: **53/53 passed**;
@@ -101,11 +101,9 @@ Therefore **Gate J passes**. The deployment recommendation is CPU for latency-se
 - clean Release installation and external CMake consumer: passed;
 - new/touched Step 30 source lines over 100 characters: **0**.
 
-The one-shot Python suite exceeded the local execution window near completion; all 472 tests were
-therefore executed through the repository's explicit complete partitions. Coverage was combined
-from those partitions. No coverage threshold was lowered and no Step 30 module was excluded.
-
-Ruff and mypy are not available locally, so no fresh local Ruff/mypy pass is claimed.
+The full one-shot Python suite passed at 90.75% branch coverage. No coverage threshold was lowered
+and no Step 30 module was excluded. Ruff 0.15.22 formatting/lint and mypy 2.3.0 also pass on the
+final audited tree.
 
 ## 7. Gate decision
 
@@ -115,8 +113,7 @@ Ruff and mypy are not available locally, so no fresh local Ruff/mypy pass is cla
 
 ## 8. Integrated repository command
 
-The final `make test` command passed the frozen specification, repository contract, event/policy
-contracts, simulator/data/replay/queue/metrics/classical gates and Step 21 prediction validation.
-The local execution window terminated the command while Step 22 model regeneration was running;
-no failing assertion had occurred. Steps 22 through 30 were then executed separately on the
-identical final source tree and all semantic validators passed. No all-in-one green claim is made.
+The final audit ran every semantic validator through Step 30, all 478 Python tests with branch
+coverage, all 53 native tests under Clang Debug, ASan+UBSan and ThreadSanitizer, and the static
+quality checks. The GitHub Actions workflows independently exercise GCC, Clang, AppleClang,
+Python 3.11/3.13, wheel installation, Docker smoke testing, reproducibility and sanitizers.

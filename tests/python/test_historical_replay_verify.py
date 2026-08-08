@@ -3,8 +3,8 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 import pytest
 
@@ -12,7 +12,6 @@ from robust_execution.historical_replay.verify import (
     HistoricalReplayVerificationError,
     verify_historical_replay,
 )
-
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "data/sample/historical_replay/step15-historical-fixture"
@@ -47,9 +46,7 @@ def test_committed_replay_verifies() -> None:
         ("queue_position_semantics", "exact_fifo"),
     ],
 )
-def test_weakened_claim_boundaries_are_rejected(
-    tmp_path: Path, field: str, value: object
-) -> None:
+def test_weakened_claim_boundaries_are_rejected(tmp_path: Path, field: str, value: object) -> None:
     manifest = _copy(tmp_path)
     _rewrite_manifest(manifest, lambda data: data.__setitem__(field, value))
     with pytest.raises(HistoricalReplayVerificationError):
@@ -87,7 +84,8 @@ def test_causal_observation_tamper_is_rejected(tmp_path: Path) -> None:
     table["data_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
     manifest.write_text(json.dumps(data, sort_keys=True, separators=(",", ":")) + "\n")
     manifest.with_name("replay-manifest.sha256.json").write_text(
-        json.dumps({"sha256": hashlib.sha256(manifest.read_bytes()).hexdigest()}, sort_keys=True) + "\n"
+        json.dumps({"sha256": hashlib.sha256(manifest.read_bytes()).hexdigest()}, sort_keys=True)
+        + "\n"
     )
     with pytest.raises(HistoricalReplayVerificationError, match="unavailable"):
         verify_historical_replay(manifest)
@@ -123,7 +121,8 @@ def test_count_and_crossed_book_tampering_are_rejected(tmp_path: Path) -> None:
     table["data_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
     manifest.write_text(json.dumps(data, sort_keys=True, separators=(",", ":")) + "\n")
     manifest.with_name("replay-manifest.sha256.json").write_text(
-        json.dumps({"sha256": hashlib.sha256(manifest.read_bytes()).hexdigest()}, sort_keys=True) + "\n"
+        json.dumps({"sha256": hashlib.sha256(manifest.read_bytes()).hexdigest()}, sort_keys=True)
+        + "\n"
     )
     with pytest.raises(HistoricalReplayVerificationError, match="crossed"):
         verify_historical_replay(manifest)

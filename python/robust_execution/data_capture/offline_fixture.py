@@ -9,6 +9,11 @@ from typing import Any
 
 from robust_execution.data_capture.collector import BinanceRawCollector
 from robust_execution.data_capture.config import CaptureConfig
+from robust_execution.data_capture.transport import (
+    WebSocketConnector,
+    WebSocketContext,
+    WebSocketLike,
+)
 
 
 class DeterministicClock:
@@ -64,7 +69,7 @@ class FixtureRestTransport:
         ).encode()
 
 
-class FixtureSocket:
+class FixtureSocket(WebSocketLike):
     remote_address = ("192.0.2.10", 443)
 
     def __init__(self, messages: list[str], fail_at_end: bool) -> None:
@@ -84,7 +89,7 @@ class FixtureSocket:
         return None
 
 
-class FixtureContext:
+class FixtureContext(WebSocketContext):
     def __init__(self, socket: FixtureSocket) -> None:
         self.socket = socket
 
@@ -95,7 +100,7 @@ class FixtureContext:
         return False
 
 
-class FixtureConnector:
+class FixtureConnector(WebSocketConnector):
     def __init__(self) -> None:
         self.scripts = [
             ([depth("BTCUSDT", 100, 101), trade("BTCUSDT", 1)], True),

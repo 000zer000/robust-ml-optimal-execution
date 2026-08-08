@@ -3,15 +3,15 @@
 from __future__ import annotations
 
 import asyncio
-from dataclasses import asdict
-from datetime import datetime, timezone
 import hashlib
 import json
-from pathlib import Path
 import platform
 import socket
 import sys
 import time
+from dataclasses import asdict
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
@@ -24,10 +24,13 @@ from robust_execution.data_capture.models import (
     canonical_json_bytes,
     sha256_hex,
 )
-from robust_execution.data_capture.sequence import DepthSynchronizer, SequenceError, parse_depth_update
+from robust_execution.data_capture.sequence import (
+    DepthSynchronizer,
+    SequenceError,
+    parse_depth_update,
+)
 from robust_execution.data_capture.storage import (
     GzipJsonlSegmentWriter,
-    StorageError,
     artifact_as_dict,
     verify_segment,
     write_immutable_gzip_blob,
@@ -50,7 +53,7 @@ def utc_now_ns() -> int:
 
 
 def _run_id() -> str:
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S.%fZ")
     return f"binance-spot-{stamp}-{uuid4().hex[:12]}"
 
 
@@ -202,9 +205,11 @@ class BinanceRawCollector:
                             received_utc = self.clock_utc_ns()
                             received_monotonic = self.clock_monotonic_ns()
                             stream, symbol, event_type, payload = self._decode_message(raw_text)
-                            day = datetime.fromtimestamp(
-                                received_utc / 1_000_000_000, tz=timezone.utc
-                            ).date().isoformat()
+                            day = (
+                                datetime.fromtimestamp(received_utc / 1_000_000_000, tz=UTC)
+                                .date()
+                                .isoformat()
+                            )
                             if writer is None or writer_day != day:
                                 if writer is not None:
                                     sealed = writer.seal()
@@ -233,10 +238,14 @@ class BinanceRawCollector:
                             total_raw_bytes += len(raw_bytes)
                             if event_type == "depthUpdate" and symbol in synchronizers:
                                 try:
-                                    result = synchronizers[symbol].ingest(parse_depth_update(payload))
+                                    result = synchronizers[symbol].ingest(
+                                        parse_depth_update(payload)
+                                    )
                                     if result == "gap":
                                         snapshot_tasks[symbol] = asyncio.create_task(
-                                            self._fetch_snapshot(root, connection_id, symbol, artifacts)
+                                            self._fetch_snapshot(
+                                                root, connection_id, symbol, artifacts
+                                            )
                                         )
                                 except SequenceError as exc:
                                     synchronizers[symbol].diagnostics.malformed_events += 1
@@ -303,7 +312,11 @@ class BinanceRawCollector:
                         await asyncio.sleep(self.config.pilot.reconnect_backoff_seconds)
                 finally:
                     connection.ended_utc_ns = self.clock_utc_ns()
-            status = "complete" if requested >= planned and self.clock_monotonic_ns() >= deadline else "pilot_incomplete"
+            status = (
+                "complete"
+                if requested >= planned and self.clock_monotonic_ns() >= deadline
+                else "pilot_incomplete"
+            )
         except asyncio.CancelledError:
             status = "aborted"
             raise
@@ -365,8 +378,7 @@ class BinanceRawCollector:
                     connections=[asdict(item) for item in connections],
                     artifacts=artifacts,
                     symbol_diagnostics=[
-                        asdict(synchronizers[symbol].diagnostics)
-                        for symbol in self.config.symbols
+                        asdict(synchronizers[symbol].diagnostics) for symbol in self.config.symbols
                     ],
                     errors=errors,
                     publication={
@@ -475,8 +487,8 @@ class BinanceRawCollector:
         }
 
 
-def resolve_hostnames(config: CaptureConfig) -> dict[str, object]:
-    results: dict[str, object] = {}
+def resolve_hostnames(config: CaptureConfig) -> dict[str, dict[str, object]]:
+    results: dict[str, dict[str, object]] = {}
     for name, host in (
         ("rest", config.rest_base.split("//", 1)[1]),
         ("websocket", config.websocket_base.split("//", 1)[1]),

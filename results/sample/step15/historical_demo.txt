@@ -1,0 +1,14 @@
+step=15
+connections=1
+snapshots=1
+depth_batches=1
+depth_updates=1
+trades=1
+delivered_events=3
+observations=2
+suppressed_checkpoints=1
+exact_fifo_reconstructed=false
+endogenous_impact_modelled=false
+kernel_replay_hash=b4ad8f06564ac63140b5ecf09fca19d00fb6e551276bf968dd3fb7ce317fa968
+kernel_state_hash=b7377bf29b68484512ced9f8c81cb420807e5fe2fab3e66d2813b56982c22dcb
+final_observation_hash=b4d87c9babc18ffa1581f455a361858d6433ca22168963eef1316c7ad5fab257

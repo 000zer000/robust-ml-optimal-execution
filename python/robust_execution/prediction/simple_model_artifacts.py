@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
 import hashlib
 import json
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
@@ -17,7 +17,6 @@ from robust_execution.data_capture.storage import write_immutable_json
 from robust_execution.historical_replay.tables import read_table
 from robust_execution.prediction.simple_models import (
     HORIZON_TARGETS,
-    FittedSimpleModel,
     SimpleModelConfig,
     SimpleModelError,
     TrainingRow,
@@ -46,8 +45,7 @@ def _schema(name: str, columns: tuple[str, ...]) -> dict[str, object]:
         "schema_version": 1,
         "table_name": name,
         "columns": [
-            {"name": column, "logical_type": "json_scalar", "nullable": False}
-            for column in columns
+            {"name": column, "logical_type": "json_scalar", "nullable": False} for column in columns
         ],
     }
 
@@ -85,20 +83,14 @@ def _table_entries(
     manifest_root: Path, table_root: Path, artifact: TableArtifact
 ) -> list[dict[str, object]]:
     return [
-        _artifact_entry(
-            manifest_root, table_root / artifact.schema_relative_path, "table_schema"
-        ),
-        _artifact_entry(
-            manifest_root, table_root / artifact.data_relative_path, "table_data"
-        ),
+        _artifact_entry(manifest_root, table_root / artifact.schema_relative_path, "table_schema"),
+        _artifact_entry(manifest_root, table_root / artifact.data_relative_path, "table_data"),
     ]
 
 
 def write_simple_model_fixture(config: SimpleModelConfig, output_root: Path) -> Path:
     if config.mode != "engineering_fixture":
-        raise SimpleModelError(
-            "Step 22 committed fixture must remain engineering_fixture mode"
-        )
+        raise SimpleModelError("Step 22 committed fixture must remain engineering_fixture mode")
     target = output_root / config.dataset_id
     if target.exists():
         raise FileExistsError(f"Step 22 model dataset already exists: {target}")

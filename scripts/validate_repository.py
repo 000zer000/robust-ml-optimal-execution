@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
@@ -10,6 +11,7 @@ REQUIRED = [
     "CMakePresets.json",
     "pyproject.toml",
     "uv.lock",
+    "requirements/test.lock",
     "Dockerfile",
     "Makefile",
     "governance/SPECIFICATION_LOCK.json",
@@ -33,6 +35,7 @@ REQUIRED = [
     "docs/MATCHING_ENGINE.md",
     "docs/proposals/STEP5_CANCEL_REJECT_STATE_AMENDMENT.md",
     "scripts/check_matching_demo.py",
+    "scripts/native_executable.py",
     "data/sample/matching_engine/expected_state.txt",
     "cpp/include/robust_execution/simulation/kernel.hpp",
     "cpp/include/robust_execution/simulation/latency.hpp",
@@ -574,7 +577,35 @@ if missing:
     print("\n".join(f"- {item}" for item in missing))
     raise SystemExit(1)
 
-EXCLUDED_TOP_LEVEL = {"build", "dist", ".git", ".pytest_cache", ".mypy_cache", ".ruff_cache"}
+manifest_errors: list[str] = []
+for step in range(25, 31):
+    manifest_path = ROOT / f"STEP{step}_MANIFEST.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for relative, expected in manifest.get("files", {}).items():
+        path = ROOT / relative
+        if not path.is_file():
+            manifest_errors.append(f"STEP{step}: missing {relative}")
+            continue
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != expected:
+            manifest_errors.append(f"STEP{step}: stale hash for {relative}")
+if manifest_errors:
+    print("active release manifest errors:")
+    print("\n".join(f"- {item}" for item in manifest_errors))
+    raise SystemExit(1)
+
+EXCLUDED_TOP_LEVEL = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "build",
+    "dist",
+    "htmlcov",
+    "venv",
+}
 for path in ROOT.rglob("*"):
     relative = path.relative_to(ROOT)
     if relative.parts and relative.parts[0] in EXCLUDED_TOP_LEVEL:
@@ -582,4 +613,7 @@ for path in ROOT.rglob("*"):
     if path.is_file() and path.stat().st_size > 10 * 1024 * 1024:
         print(f"unexpected source or artifact file larger than 10 MiB: {relative}")
         raise SystemExit(1)
-print(f"repository structure: PASS ({len(REQUIRED)} required files)")
+print(
+    f"repository structure: PASS ({len(REQUIRED)} required files; "
+    "STEP25-STEP30 release hashes verified)"
+)

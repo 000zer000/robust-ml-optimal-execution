@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
 from typing import Any
 
@@ -14,7 +13,6 @@ from robust_execution.data_capture.storage import write_immutable_json
 from robust_execution.prediction.builder import build_feature_label_rows
 from robust_execution.prediction.config import PredictionFeatureConfig
 from robust_execution.prediction.models import DecisionPoint, PredictionMarketEvent
-
 
 FEATURE_NAMES = (
     "spread_ticks",
@@ -48,12 +46,10 @@ def feature_dictionary() -> dict[str, object]:
         "same_top5_lots": "sum of passive-side displayed lots across configured top levels",
         "opposite_top5_lots": "sum of opposite-side displayed lots across configured top levels",
         "side_imbalance_top1_bps": (
-            "10000*(same_top1-opposite_top1)/(same_top1+opposite_top1), "
-            "truncated toward zero"
+            "10000*(same_top1-opposite_top1)/(same_top1+opposite_top1), truncated toward zero"
         ),
         "side_imbalance_top5_bps": (
-            "10000*(same_top5-opposite_top5)/(same_top5+opposite_top5), "
-            "truncated toward zero"
+            "10000*(same_top5-opposite_top5)/(same_top5+opposite_top5), truncated toward zero"
         ),
         "toward_quote_trade_flow_250ms_lots": (
             "side-normalized signed aggressor flow over (cutoff-250ms, cutoff]"

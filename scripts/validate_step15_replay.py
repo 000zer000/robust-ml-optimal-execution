@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
 
 import jsonschema
 
@@ -56,7 +56,9 @@ def main() -> int:
             "tables/replay_observations/columns.json.gz",
             "tables/connection_integrity/columns.json.gz",
         ):
-            if (committed_root / relative).read_bytes() != (regenerated_root / relative).read_bytes():
+            if (committed_root / relative).read_bytes() != (
+                regenerated_root / relative
+            ).read_bytes():
                 raise SystemExit(f"Step 15 artifact is not deterministic: {relative}")
         if result != regenerated_result:
             raise SystemExit("Step 15 verification result changed on regeneration")

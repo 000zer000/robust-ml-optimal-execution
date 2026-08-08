@@ -1,19 +1,19 @@
 from __future__ import annotations
 
-from dataclasses import replace
 import json
-from pathlib import Path
 import shutil
+from dataclasses import replace
+from pathlib import Path
 
 import pytest
 
+from robust_execution.canonical_data.verify import CanonicalDataVerificationError
 from robust_execution.historical_replay import (
     HistoricalReplayError,
     build_historical_replay,
     load_historical_replay_config,
     verify_historical_replay,
 )
-
 
 ROOT = Path(__file__).resolve().parents[2]
 CANONICAL = ROOT / "data/sample/canonical/step14-canonical-fixture/dataset-manifest.json"
@@ -70,7 +70,7 @@ def test_tampered_canonical_input_is_rejected(tmp_path: Path) -> None:
     snapshot = next(item for item in manifest["tables"] if item["table_name"] == "book_snapshots")
     path = copied / snapshot["data_relative_path"]
     path.write_bytes(path.read_bytes() + b"tamper")
-    with pytest.raises(Exception):
+    with pytest.raises(CanonicalDataVerificationError, match="digest mismatch"):
         build_historical_replay(copied / "dataset-manifest.json", _config(), tmp_path / "out")
 
 

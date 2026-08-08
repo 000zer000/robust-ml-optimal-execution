@@ -75,9 +75,9 @@ Measured p95 batch-one compute latency is converted into occupancy of 25/50/100/
 decision intervals. This identifies when a model would consume or miss complete decision grids.
 It is not presented as historical price-path impact because Gate C remains closed.
 
-## Remaining Step 30 blockers
+## Initial validation-machine limitations and supplemental closure
 
-Two required measurements cannot be honestly completed on this machine:
+Two required measurements could not be completed on the original validation machine:
 
 1. **CPU/GPU numeric comparison.** PyTorch is a CPU-only build, CUDA availability is false, and no
    NVIDIA device or `nvidia-smi` is visible.
@@ -85,5 +85,9 @@ Two required measurements cannot be honestly completed on this machine:
    local package registry cannot supply it. A subprocess benchmark is deliberately not substituted
    because process-launch overhead would answer a different question.
 
-Therefore the available-hardware Step 30 engineering work is complete, but Gate J remains pending
-those numeric comparisons on a capable environment.
+Both measurements were subsequently completed without altering the registered workloads. The
+Tesla T4 comparison in `evidence/performance/STEP30_CUDA_GATE.json` verifies CPU/GPU numeric
+equivalence and shows transfer-inclusive GPU latency is worse at batch one. The existing binding
+measurement in `evidence/performance/STEP30_PYBIND_BOUNDARY_SUPPLEMENT.json` verifies exact
+`diagnostic_sequence` semantics and records the Python/C++ call boundary. These supplements close
+Gate J; the original CPU-only report remains an immutable record of its machine's limitations.

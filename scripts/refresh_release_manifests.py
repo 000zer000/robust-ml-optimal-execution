@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+"""Check or refresh the active Step 25-30 release-manifest hashes."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+ACTIVE_RELEASE_STEPS = range(25, 31)
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="rewrite stale hashes; the default is a read-only check",
+    )
+    args = parser.parse_args()
+
+    stale: list[str] = []
+    for step in ACTIVE_RELEASE_STEPS:
+        path = ROOT / f"STEP{step}_MANIFEST.json"
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        files = payload.get("files")
+        if not isinstance(files, dict):
+            raise SystemExit(f"{path.name}: files must be an object")
+        for relative, expected in files.items():
+            source = ROOT / relative
+            if not source.is_file():
+                raise SystemExit(f"{path.name}: missing tracked artifact {relative}")
+            actual = sha256(source)
+            if actual != expected:
+                stale.append(f"{path.name}: {relative}")
+                if args.write:
+                    files[relative] = actual
+        if args.write:
+            path.write_text(
+                json.dumps(payload, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+    if stale and not args.write:
+        print("stale active release-manifest hashes:")
+        print("\n".join(f"- {entry}" for entry in stale))
+        return 1
+    action = "refreshed" if args.write else "verified"
+    print(f"active release manifests: {action} ({len(stale)} stale hashes found)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

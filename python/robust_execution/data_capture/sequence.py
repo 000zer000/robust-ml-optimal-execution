@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-from enum import Enum
-from typing import Any
+from enum import StrEnum
 
 from robust_execution.data_capture.models import SymbolDiagnostics
 
@@ -14,7 +13,7 @@ class SequenceError(ValueError):
     """Raised for malformed depth data or invalid snapshot content."""
 
 
-class SyncState(str, Enum):
+class SyncState(StrEnum):
     BUFFERING = "buffering"
     SYNCHRONIZED = "synchronized"
     INVALID = "invalid"
@@ -103,6 +102,9 @@ def parse_depth_update(payload: object) -> DepthUpdate:
     for name, value in (("U", first), ("u", final), ("E", event_time)):
         if not isinstance(value, int) or isinstance(value, bool) or value < 0:
             raise SequenceError(f"depth update {name} must be a non-negative integer")
+    assert isinstance(first, int) and not isinstance(first, bool)
+    assert isinstance(final, int) and not isinstance(final, bool)
+    assert isinstance(event_time, int) and not isinstance(event_time, bool)
     if first > final:
         raise SequenceError("depth update U exceeds u")
     bids = payload.get("b")
@@ -171,7 +173,10 @@ class DepthSynchronizer:
     def invalidate(self, *, crossed: bool = False) -> None:
         if self.state is SyncState.SYNCHRONIZED and self._interval_start is not None:
             self.diagnostics.synchronized_intervals.append(
-                {"first_update_id": self._interval_start, "last_update_id": self.local_update_id or 0}
+                {
+                    "first_update_id": self._interval_start,
+                    "last_update_id": self.local_update_id or 0,
+                }
             )
         self.state = SyncState.INVALID
         self.diagnostics.synchronized = False
@@ -185,7 +190,10 @@ class DepthSynchronizer:
     def begin_resynchronization(self) -> None:
         if self.state is SyncState.SYNCHRONIZED and self._interval_start is not None:
             self.diagnostics.synchronized_intervals.append(
-                {"first_update_id": self._interval_start, "last_update_id": self.local_update_id or 0}
+                {
+                    "first_update_id": self._interval_start,
+                    "last_update_id": self.local_update_id or 0,
+                }
             )
         self.state = SyncState.BUFFERING
         self.diagnostics.synchronized = False
@@ -225,6 +233,9 @@ class DepthSynchronizer:
     def finalize(self) -> None:
         if self.state is SyncState.SYNCHRONIZED and self._interval_start is not None:
             self.diagnostics.synchronized_intervals.append(
-                {"first_update_id": self._interval_start, "last_update_id": self.local_update_id or 0}
+                {
+                    "first_update_id": self._interval_start,
+                    "last_update_id": self.local_update_id or 0,
+                }
             )
             self._interval_start = None

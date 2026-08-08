@@ -5,8 +5,8 @@ import argparse
 import csv
 import hashlib
 import json
-from pathlib import Path
 import subprocess
+from pathlib import Path
 from typing import Any
 
 
@@ -104,9 +104,7 @@ def main() -> int:
         [
             {
                 "episode_id": row["episode_id"],
-                "implementation_shortfall_bps": format(
-                    row["implementation_shortfall_bps"], ".17g"
-                ),
+                "implementation_shortfall_bps": format(row["implementation_shortfall_bps"], ".17g"),
                 "terminal_fraction": format(row["terminal_fraction"], ".17g"),
             }
             for row in report["tail_episodes"]

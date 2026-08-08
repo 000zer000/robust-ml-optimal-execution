@@ -7,7 +7,6 @@ import jsonschema
 
 from robust_execution.data_capture.verify import verify_capture_manifest
 
-
 ROOT = Path(__file__).resolve().parents[2]
 
 
