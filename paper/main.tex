@@ -24,7 +24,9 @@
   citecolor=black,
   urlcolor=black,
   pdfauthor={Othmane Hassani},
-  pdftitle={Robust ML-Assisted Optimal Execution in Limit Order Books}
+  pdftitle={Robust ML-Assisted Optimal Execution in Limit Order Books},
+  pdfsubject={Controlled and reproducible study of prediction, control, robustness, and systems trade-offs in optimal execution},
+  pdfkeywords={optimal execution, limit order book, causal prediction, model predictive control, reinforcement learning, robustness, reproducibility}
 }
 
 \sisetup{detect-all,round-mode=places,round-precision=3}
@@ -41,21 +43,19 @@
 Causal Microstructure Forecasting, Model Predictive Control, and Low-Latency Systems Evaluation}
 
 \author{Othmane~Hassani% <-this % stops a space
-\thanks{O. Hassani is with ESILV Graduate School of Engineering, De Vinci Higher Education, Paris-La D\'efense, France.}}
+\thanks{O. Hassani is with ESILV Graduate School of Engineering, De Vinci Higher Education, Paris-La D\'efense, France. Source and artifacts: \url{https://github.com/000zer000/robust-ml-optimal-execution}.}}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Optimal execution is a sequential decision problem in which predictive signal, market microstructure, queue uncertainty, transaction costs, latency, and computational constraints interact. This paper develops an end-to-end research system for studying machine-learning-assisted execution in a limit-order-book environment. The system combines an exact integer-arithmetic C++ matching and replay engine, explicit aggregate-L2 queue models, classical execution baselines, a finite-horizon receding model-predictive controller (MPC), causal microstructure prediction, a compact Conv1D--LSTM temporal model, calibrated ML-assisted MPC, imitation learning with dataset aggregation, categorical proximal policy optimization (PPO), dependence-aware robustness statistics, and profile-driven CPU/GPU performance engineering.
+Optimal execution couples predictive signal, market mechanics, queue uncertainty, transaction costs, latency, and computation. We present a reproducible C++/Python research system that asks whether an improved causal limit-order-book forecast survives the downstream optimization map and improves execution. The design combines exact integer-arithmetic matching and accounting, explicit aggregate-L2 queue scenarios, strong classical baselines, matched non-ML and ML-assisted model-predictive controllers (MPC), a compact Conv1D--LSTM, imitation learning with dataset aggregation, categorical proximal policy optimization (PPO), registered stress tests, paired block-bootstrap inference, and end-to-end CPU/GPU measurement. All strategy findings are registered controlled-simulator evidence, not historical-market backtests; systems findings are direct measurements on identified hardware.
 
-The central experimental question is not whether a forecasting model can achieve a better standalone probability score, but whether forecast improvements survive the downstream optimization map and improve execution decisions. Controlled experiments expose several non-monotonic effects. Calibration can improve log loss while producing a weaker controller response; an oracle for an intermediate quote-depletion event can induce worse implementation shortfall; a compact imitation policy reproduces an MPC teacher in-distribution but exhibits a pronounced out-of-distribution fidelity loss; and PPO does not dominate strong deterministic execution heuristics. Across 43 registered stress conditions, the identity of the lowest-cost strategy changes in 16 of 42 non-central regimes. A paired moving-block bootstrap with 4,096 replications per contrast further shows that 85 of 129 confidence intervals cross zero and that 22 of 43 point-estimate stress winners have less than 80\% bootstrap probability of remaining best.
-
-The systems study reaches an equally workload-dependent conclusion. A profile-guided C++ capacity optimization raises four-thread matching throughput to approximately 17.3 million operations/s on the measured CPU workload. For neural inference on a Tesla T4, transfer-inclusive GPU execution is slower than CPU for all registered batch-one decision workloads; the temporal model becomes GPU-favorable only at batch 256, where the measured transfer-inclusive speedup is approximately 1.70$\times$. These results support a broader methodological conclusion: in low-latency execution, predictive quality, decision quality, policy complexity, robustness, and hardware acceleration must be evaluated jointly rather than optimized as independent proxies.
+The experiments reveal non-monotone proxy relationships. Calibration can improve log loss yet weaken controller response, and a perfect intermediate-event oracle can worsen implementation shortfall. An imitation student achieves exact controlled-holdout agreement but loses fidelity under distribution shift; PPO does not dominate strong deterministic heuristics. Across 43 stress conditions, the lowest-cost strategy changes in 16 of 42 non-central regimes. Of 129 paired contrasts, 85 confidence intervals cross zero, and 22 of 43 point winners have less than 80\% bootstrap probability of remaining best. A profile-guided C++ optimization reaches 17.316 million operations/s in the measured four-thread workload. On a Tesla T4, transfer-inclusive GPU inference is slower for every registered batch-one workload; the temporal model becomes GPU-favorable at batch 256 with a 1.704$\times$ speedup. The evidence supports a methodological conclusion: predictive accuracy, decision value, policy complexity, robustness, and hardware acceleration should be evaluated through one causal execution-and-accounting pipeline rather than optimized as independent proxies.
 \end{abstract}
 
 \begin{IEEEkeywords}
-optimal execution, limit order book, market microstructure, model predictive control, machine learning, deep learning, imitation learning, reinforcement learning, PPO, high-performance computing, CUDA, latency, robustness, block bootstrap.
+optimal execution, limit order book, market microstructure, model predictive control, causal machine learning, imitation learning, reinforcement learning, robustness, reproducibility.
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -82,15 +82,10 @@ The study is organized around the following questions.
 \subsection{Contributions}
 The primary contributions are:
 \begin{itemize}[leftmargin=*]
-    \item an exact, deterministic C++ event, matching, replay, and execution-accounting core using integer ticks/lots and auditable event ordering;
-    \item three explicit aggregate-L2 queue assumptions that expose queue-position uncertainty instead of silently treating displayed depth as exact FIFO state;
-    \item a matched non-ML/ML MPC construction in which the optimizer, action space, queue model, latency model, and terminal accounting remain fixed while only a prediction-derived passive-risk term changes;
-    \item a causal 20-feature microstructure contract, simple calibrated model ladder, and compact Conv1D--LSTM temporal model evaluated at 250~ms, 1~s, and 5~s horizons;
-    \item a prediction-versus-decision ablation framework covering neutral, shuffled, stale, uncalibrated, oracle, and zero-weight controls;
-    \item an imitation-learning pipeline with an exact C++ teacher oracle, a validation-triggered DAgger correction round, explicit OOD diagnostics, and conservative fallback;
-    \item a multi-seed categorical PPO environment with independently reconstructable rewards and anti-reward-hacking tests;
-    \item a 43-cell robustness matrix and dependence-aware paired block-bootstrap analysis with Holm multiplicity correction and ranking-stability probabilities;
-    \item a profile-first systems study spanning C++ throughput, multithread scaling, Python/C++ boundary cost, compiled neural inference, and transfer-inclusive Tesla T4 CUDA timing.
+    \item an exact, deterministic C++ market, queue-scenario, and execution-accounting core that gives classical schedules, MPC, imitation, and RL policies one mechanical comparison path;
+    \item a matched forecast-to-control experiment combining a causal 20-feature model ladder with neutral, shuffled, stale, uncalibrated, perfect-event-oracle, and zero-weight ablations, isolating when predictive improvement does or does not create decision value;
+    \item an integrated sequential-policy evaluation spanning exact-teacher imitation, validation-triggered DAgger, conservative OOD fallback, multi-seed categorical PPO, 43 registered stress conditions, and dependence-aware ranking inference;
+    \item a reproducible systems study that measures correctness-preserving C++ optimization, multithread scaling, the Python/C++ boundary, compiled inference, and transfer-inclusive Tesla T4 timing on the complete registered workloads.
 \end{itemize}
 
 \section{Related Work}
@@ -106,7 +101,7 @@ LOB state evolves through order arrivals, cancellations, modifications, and trad
 Aggregate L2 data creates a specific identification problem: a reduction in displayed size at a price cannot generally be decomposed uniquely into cancellations ahead of a child order, cancellations behind it, or hidden execution. The system therefore treats queue position as a scenario variable. The three queue models in \cref{sec:queue} deliberately bracket this uncertainty rather than turning aggregate depth into an unjustified exact fill probability.
 
 \subsection{Machine Learning for LOB Forecasting}
-DeepLOB combines convolutional and recurrent processing for LOB forecasting \cite{ZhangZohrenRoberts2019}; Sirignano and Cont study common price-formation structure across instruments \cite{SirignanoCont2019}; and deep order-flow imbalance work demonstrates cross-horizon predictive content \cite{KolmTurielWestray2023}. Recent surveys emphasize that target definition, normalization, leakage control, and horizon selection can be as important as architecture \cite{BriolaBartolucciAste2025}. Calibration is also critical when predicted probabilities are consumed by downstream optimizers \cite{GuoPleissSunWeinberger2017}.
+DeepLOB combines convolutional and recurrent processing for LOB forecasting \cite{ZhangZohrenRoberts2019}; Sirignano and Cont study common price-formation structure across instruments \cite{SirignanoCont2019}; and deep order-flow imbalance work demonstrates cross-horizon predictive content \cite{KolmTurielWestray2023}. Recent surveys emphasize that target definition, normalization, leakage control, and horizon selection can be as important as architecture \cite{BriolaBartolucciAste2025}. Calibration is also critical when predicted probabilities are consumed by downstream optimizers \cite{GuoPleissSunWeinberger2017}. The gap addressed here is therefore not another forecasting leaderboard: it is an end-to-end, matched test of the path from forecast score to controller action, realized execution cost, stress robustness, and compute latency.
 
 This work uses a deliberately compact temporal model and a strong simple-model ladder. The objective is not architecture novelty. Instead, forecasting is treated as an intermediate input whose value is tested by the execution controller.
 
@@ -242,6 +237,26 @@ The queue state is therefore a controlled uncertainty model rather than an exact
 \section{Experimental Design and Evaluation Protocol}
 \label{sec:design}
 The experimental design separates forecasting quality, controller behavior, sequential policy performance, robustness, statistics, and systems timing. This separation is intentional: a change in an upstream metric is not interpreted as economically valuable unless the downstream layer is evaluated directly.
+
+\subsection{Evidence Tiers and Claim Boundary}
+The evidence is divided before analysis into three tiers. Strategy conclusions use registered deterministic simulator populations so mechanisms can be isolated under identical random seeds. Systems conclusions use direct measurements on the CPU and Tesla T4 environments recorded with the artifacts. Historical-feed ingestion, sequence admission, and replay interfaces are implemented, but the locked historical strategy test remains unopened because no qualifying dataset has been admitted. Consequently, the paper makes no historical profitability or deployment-performance claim.
+
+\begin{table}[t]
+\centering
+\caption{Evidence Tiers and Permitted Interpretation}
+\label{tab:evidence-tiers}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{1.4cm}p{2.0cm}p{3.45cm}}
+\toprule
+Tier & Evidence & Permitted claim \\
+\midrule
+Controlled & registered simulator episodes & comparison within generator, controller, and stress assumptions \\
+Systems & identified CPU/T4 measurements & workload- and hardware-specific performance \\
+Historical & contracts only; test unopened & engineering readiness, not strategy performance \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Controlled Populations and Split Discipline}
 The microstructure-prediction experiment uses 100 chronological controlled day identifiers spanning BTCUSDT and ETHUSDT and both passive sides. The temporal sequence corpus contains 2,000 eight-step examples partitioned into 1,000 training, 400 validation, 200 calibration, and 400 untouched holdout sequences. Each candidate horizon uses the same split roles. Training fits weights and normalizers; validation chooses hyperparameters and stopping epoch; calibration estimates probability calibration; the holdout is evaluation-only.
@@ -690,21 +705,29 @@ The 43-cell robustness table is informative but insufficient on its own. More th
 \subsection{Latency as Part of the Decision Problem}
 The systems results reject the assumption that a GPU is automatically the correct inference platform for ML-assisted execution. For batch-one policies, the networks are so small that launch, synchronization, and host-device transfer dominate arithmetic. The T4 only becomes favorable for the temporal model at batch 256. The appropriate deployment architecture is therefore workload-dependent: CPU for latency-sensitive individual decisions; GPU for large batched temporal scoring or offline research workloads. Similar reasoning applies to compiler choices and language boundaries: an optimization is useful only after measuring the complete path that actually participates in the control loop.
 
-\subsection{Experimental Scope and External Validity}
-The controlled experiments are designed to isolate causal mechanisms and model-risk channels under reproducible state transitions. External market deployment introduces additional variation in hidden liquidity, exchange-specific matching behavior, network jitter, venue outages, impact endogeneity, and participant adaptation. The architecture addresses these factors through explicit latency, queue-model, impact, information-degradation, and simulator-mismatch stresses, but any new venue or historical regime should be treated as a new external-validity test rather than assumed to share the controlled distribution. This is a standard distinction between internal experimental identification and external market generalization.
+\subsection{Threats to Validity and Research Boundary}
+\textit{Construct validity:} The quote-depletion target is an intermediate microstructure event, not execution utility. The oracle counterexample demonstrates this mismatch directly. Implementation shortfall and terminal completion are therefore computed from realized fills under common accounting, but they remain conditional on the registered benchmark and cost model.
+
+\textit{Internal validity:} Matched controllers, paired seeds, causal cutoffs, independent split roles, exact accounting, and zero-weight equivalence reduce confounding. Aggregate-L2 queue allocation, impact, and synthetic order flow are nevertheless scenario assumptions rather than estimated true-market parameters; the robustness matrix varies them but cannot eliminate misspecification.
+
+\textit{Statistical validity:} Each stress cell contains 24 paired episodes, PPO uses five registered seeds, and the moving-block bootstrap operates on synthetic episode seeds as pseudo-days. Confidence intervals and ranking probabilities quantify sampling uncertainty in this design, but they do not establish universal policy ordering or substitute for a larger historical panel.
+
+\textit{External validity:} Controlled state transitions isolate mechanisms but do not reproduce all hidden liquidity, exchange-specific priority rules, network jitter, outages, endogenous impact, or participant adaptation. Only one compact temporal architecture and one predeclared PPO family are evaluated; no architecture novelty or universal superiority is claimed. Any venue or historical regime is a new external-validity test.
+
+\textit{Systems validity:} CPU and CUDA results are hardware- and workload-specific process measurements, not exchange round-trip latency or high-frequency deployment guarantees. The transfer-inclusive boundary is measured, but production networking, colocated exchange gateways, and operational failover lie outside scope. These boundaries leave a clear confirmatory next step: admit a qualifying multi-day historical dataset under the frozen Gate-C protocol and repeat the matched comparison without revising the hypothesis after observing outcomes.
 
 \section{Reproducibility and Software Verification}
 \label{sec:repro}
 The research system is built as staged, schema-validated software rather than a single notebook. Deterministic artifacts carry hashes and provenance identifiers; model weights use canonical serialization where practical; experiment configurations are versioned; and validators regenerate committed outputs byte-for-byte when scientific determinism is meaningful.
 
-The final native matrix contains 53 tests and is exercised under GCC Debug, Clang Debug, optimized GCC Release, and ASan/UBSan. The final Python inventory contains 478 tests: 477 are represented in the branch-coverage partitions and one additional full artifact-regeneration test is executed separately; combined branch-aware repository coverage is 91\%. Independent semantic validators check data contracts, feature causality, model artifacts, controller equivalence, imitation/RL reports, robustness statistics, and performance evidence. Expensive regeneration suites are run in partitions rather than hidden behind a monolithic command timeout.
+The native inventory contains 53 tests and reports 53/53 passes in each registered compiler or sanitizer matrix: GCC, Clang, AppleClang, optimized Release, ASan/UBSan, and ThreadSanitizer. Compiler warnings are errors. The Python inventory contains 480 tests with 91\% combined branch-aware repository coverage. Independent semantic validators check data contracts, feature causality, model artifacts, controller equivalence, imitation/RL reports, robustness statistics, performance evidence, and the manuscript's headline claims. Expensive regeneration suites are partitioned rather than hidden behind a monolithic command timeout.
 
-The final source tree additionally provides CMake packaging, an external consumer check, Docker/reproduction entry points, JSON Schemas for stage outputs, checksum manifests, and a citation file. This structure follows the general reproducibility principle that a computational result should be accompanied by sufficiently precise code, configuration, seeds, and compute information to make regeneration auditable \cite{PineauVincentLamarreSinhaLariviere2021}.
+The final source tree additionally provides CMake packaging, an external consumer check, Docker/reproduction entry points, JSON Schemas for stage outputs, checksum manifests, a citation file, and a claim-to-artifact traceability table. The 566/566-file repository contract and release validator are automated in CI. Source, configurations, paper, figures, and evidence are publicly available at \url{https://github.com/000zer000/robust-ml-optimal-execution}; the paper can be rebuilt with one documented Tectonic target. This structure follows the general reproducibility principle that a computational result should be accompanied by sufficiently precise code, configuration, seeds, and compute information to make regeneration auditable \cite{PineauVincentLamarreSinhaLariviere2021}.
 
 \section{Conclusion}
 This paper presented an integrated framework for studying robust machine-learning-assisted optimal execution at the intersection of quantitative finance, market microstructure, machine learning, sequential control, and high-performance systems. The system begins with exact C++ event and matching semantics, models aggregate-L2 queue uncertainty explicitly, computes implementation shortfall from realized fills, and uses matched receding-horizon controllers to isolate the incremental effect of microstructure forecasts. It then extends the decision stack through calibrated temporal prediction, prediction-versus-decision ablations, imitation learning with DAgger, multi-seed PPO, a broad robustness matrix, paired block-bootstrap inference, and workload-specific CPU/GPU benchmarking.
 
-The experiments show that the most important relationships are conditional rather than monotone. Better probability scores do not guarantee different or better execution actions; sophisticated learned policies do not uniformly dominate strong heuristics; strategy rankings change across stress regimes; point winners can be statistically fragile; and GPU acceleration becomes useful only when the workload is large enough to amortize transfer and launch overhead. These findings favor an execution-research methodology in which predictive models, controllers, robustness, statistics, and systems performance are evaluated through a common economic objective and a common causal accounting pipeline.
+Within the registered controlled-simulator evidence, the most important relationships are conditional rather than monotone. Better probability scores do not guarantee different or better execution actions; sophisticated learned policies do not uniformly dominate strong heuristics; strategy rankings change across stress regimes; point winners can be statistically fragile; and GPU acceleration becomes useful only when the workload is large enough to amortize transfer and launch overhead. These findings favor an execution-research methodology in which predictive models, controllers, robustness, statistics, and systems performance are evaluated through a common economic objective and a common causal accounting pipeline. Historical confirmation remains a future test, not an inference silently drawn from the controlled study.
 
 \appendices
 \section{Frozen Causal Feature Contract}
@@ -830,11 +853,11 @@ The procedure is designed to distinguish a point-estimate winner from a ranking 
 \toprule
 Layer & Verification mechanism & Final registered result \\
 \midrule
-C++ native & GCC Debug / Clang Debug / GCC Release / ASan+UBSan & 53/53 each \\
-Python & partitioned unit/integration suites & 478 total; 477 coverage + 1 full regeneration \\
+C++ native & GCC / Clang / AppleClang / Release / ASan+UBSan / TSan & 53/53 each \\
+Python & partitioned unit/integration suites & 480 tests \\
 Coverage & branch-aware combined repository measurement & 91\% \\
 Specification & frozen-file hash lock & 7/7 \\
-Repository contract & required-file/schema contract & 561/561 \\
+Repository contract & required-file/schema contract & 566/566 \\
 Prediction & leakage/mutation/provenance validators & pass \\
 ML-MPC & shared-solver and zero-weight equivalence & pass \\
 Temporal model & deterministic model/prediction artifacts & pass \\

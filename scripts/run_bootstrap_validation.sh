@@ -30,6 +30,7 @@ PYTHONPATH=python python3 scripts/validate_step27_rl.py
 PYTHONPATH=python python3 scripts/validate_step28_robustness.py
 PYTHONPATH=python python3 scripts/validate_step29_statistics.py
 PYTHONPATH=python python3 scripts/validate_step30_performance.py
+python3 scripts/validate_paper_claims.py
 python3 scripts/validate_release.py
 python3 -m compileall -q python/robust_execution scripts tests
 python3 -m ruff check python tests/python scripts paper

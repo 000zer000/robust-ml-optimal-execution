@@ -16,7 +16,7 @@ A reproducible C++/Python research system for **optimal execution in limit-order
 
 **Robust ML-Assisted Optimal Execution in Limit Order Books: Causal Microstructure Forecasting, Model Predictive Control, and Low-Latency Systems Evaluation**
 
-**[Read the full 16-page IEEE-style paper](paper/Robust_ML_Optimal_Execution_Research_Paper.pdf)** · [LaTeX](paper/main.tex) · [BibTeX](paper/references.bib)
+**[Read the full IEEE-style paper](paper/Robust_ML_Optimal_Execution_Research_Paper.pdf)** · [Professor review guide](docs/research/PROFESSOR_REVIEW_GUIDE.md) · [Claim traceability](paper/CLAIM_TRACEABILITY.md) · [LaTeX](paper/main.tex) · [BibTeX](paper/references.bib)
 
 The paper formulates execution as a sequential decision problem in which forecast quality, queue uncertainty, transaction costs, market impact, latency, inventory risk, and compute overhead interact. The central question is whether better short-horizon microstructure forecasts improve the **downstream execution decision**, rather than merely improving a standalone prediction metric.
 
@@ -144,8 +144,13 @@ PYTHONPATH=python python -m pytest --cov=robust_execution --cov-branch tests/pyt
 ```bash
 python scripts/verify_specification_lock.py
 python scripts/validate_repository.py
+python scripts/validate_paper_claims.py
 python scripts/validate_release.py
 ```
+
+Compile the manuscript with `make paper-build` after installing
+[Tectonic](https://tectonic-typesetting.github.io/). The build validates the paper's headline
+numbers before producing the PDF.
 
 ### Docker
 

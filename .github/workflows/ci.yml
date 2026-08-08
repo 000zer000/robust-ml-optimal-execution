@@ -105,6 +105,7 @@ jobs:
           PYTHONPATH=python python scripts/validate_step28_robustness.py
           PYTHONPATH=python python scripts/validate_step29_statistics.py
           PYTHONPATH=python python scripts/validate_step30_performance.py
+          python scripts/validate_paper_claims.py
           python scripts/validate_release.py
       - name: Tests
         env:
@@ -125,6 +126,8 @@ jobs:
       - run: ruff check python tests/python scripts paper
       - run: ruff format --check python tests/python scripts paper
       - run: mypy python/robust_execution
+      - name: Validate paper claims against committed evidence
+        run: python scripts/validate_paper_claims.py
       - name: Regenerate paper figures from committed reports
         run: python paper/make_figures.py --output-dir "${RUNNER_TEMP}/paper-figures"
 

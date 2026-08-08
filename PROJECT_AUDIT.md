@@ -1,5 +1,10 @@
 # Project Audit — Robust Execution Flagship
 
+> **Current-status note (2026-08-08):** This is a frozen pre-implementation audit retained as
+> research provenance. It is not the current release status. See [`README.md`](README.md) and the
+> [`professor review guide`](docs/research/PROFESSOR_REVIEW_GUIDE.md) for the implemented system and
+> current evidence boundary.
+
 **Audit status:** Complete for Step 1, with material findings and one execution-environment limitation  
 **Audit date:** 2026-08-06  
 **Auditor:** ChatGPT acting as technical lead and research-methodology reviewer  

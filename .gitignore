@@ -1,6 +1,8 @@
 # Build and packaging
 /build/
 /dist/
+/output/
+/tmp/
 *.egg-info/
 *.so
 *.dylib

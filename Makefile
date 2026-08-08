@@ -1,8 +1,9 @@
 SHELL := /usr/bin/env bash
 PYTHON ?= python3
 PYTHONPATH := python
+PAPER_SOURCE_DATE_EPOCH ?= 1786147200
 
-.PHONY: help spec-check repository-check event-model-check policy-contract-check synthetic-market-check simulator-validation-check data-source-check raw-capture-check data-validation-check canonical-data-check historical-replay-check queue-model-check metrics-check baselines-check almgren-chriss-check adaptive-baselines-check prediction-data-check simple-models-check temporal-model-check ml-mpc-check prediction-decision-value-check imitation-learning-check rl-check robustness-check statistics-check performance-check matching-check matching-demo-check kernel-demo-check policy-demo-check configure build test-cpp test-python test sample event-model-sample sanitize clang-test lint typecheck format-check wheel clean ci-local
+.PHONY: help spec-check repository-check event-model-check policy-contract-check synthetic-market-check simulator-validation-check data-source-check raw-capture-check data-validation-check canonical-data-check historical-replay-check queue-model-check metrics-check baselines-check almgren-chriss-check adaptive-baselines-check prediction-data-check simple-models-check temporal-model-check ml-mpc-check prediction-decision-value-check imitation-learning-check rl-check robustness-check statistics-check performance-check paper-check paper-build matching-check matching-demo-check kernel-demo-check policy-demo-check configure build test-cpp test-python test sample event-model-sample sanitize clang-test lint typecheck format-check wheel clean ci-local
 
 help:
 	@printf '%s\n' \
@@ -41,6 +42,8 @@ help:
 	  'robustness-check validate Step 28 robustness matrix' \
 	  'statistics-check validate Step 29 statistical inference' \
 	  'performance-check validate Step 30 performance evidence' \
+	  'paper-check     validate manuscript claims against committed evidence' \
+	  'paper-build     validate and compile the canonical research paper' \
 	  'sanitize         run GCC ASan+UBSan build/tests' \
 	  'clang-test       run independent Clang build/tests' \
 	  'lint             run pinned Ruff' \
@@ -128,6 +131,14 @@ statistics-check:
 
 performance-check:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) scripts/validate_step30_performance.py
+
+paper-check:
+	$(PYTHON) scripts/validate_paper_claims.py
+
+paper-build: paper-check
+	mkdir -p tmp/paper-build output/pdf
+	cd paper && SOURCE_DATE_EPOCH=$(PAPER_SOURCE_DATE_EPOCH) tectonic -X compile main.tex --outdir ../tmp/paper-build
+	cp tmp/paper-build/main.pdf output/pdf/Robust_ML_Optimal_Execution_Research_Paper.pdf
 
 configure:
 	cmake --preset gcc-debug

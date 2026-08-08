@@ -5,10 +5,10 @@
   "engineering_block_length": 5,
   "engineering_contrast_count": 129,
   "files": {
-    "Makefile": "9769fcd8059558c3ac3d0314ab6d6fadbb7139b68773bed0f9f59c96cfe25355",
-    "README.md": "d190db76f16a57c7796e0d06d862c603efb600419304d854167554c64ed1613b",
-    "ROADMAP.md": "b23050e818a734ccbe4533909c2aacf5200bc730fa345a5778a2020e9dbb2e68",
-    "STEP28_MANIFEST.json": "9d1316ff174ebea395ebae4241b9c369b96596354b407b4272817cd34847e517",
+    "Makefile": "613e8b980825b78223e5475cc7ce6d70809df63982b6df91f72a688dd703cb24",
+    "README.md": "6bdfd7b513522b9bff3feebee5ffe965661c3e205a3522becbb46f144ac61d5e",
+    "ROADMAP.md": "7d3f45681a7f258d826237e5f2231754dc02e2d8ea099afebfade667e5345e78",
+    "STEP28_MANIFEST.json": "180086810fc3f05e5c6570cea5cd39e25ff26487d77e2845c6c626ea449577a2",
     "STEP29_CHANGELOG.md": "f46c77338c1502c44682a7b14c1735967b79c693a4d59551a9c40830814c12d1",
     "STEP29_VALIDATION.md": "6004a71837e888ec0a900b333ef1abf51ca66645da982d6d7a52a9df6ced9672",
     "configs/statistics/step29_statistics_engineering.json": "e9796183607f6e16d13d7b3e8b72fd9d72cefd17dbbdc1b2274c603c398155f8",
@@ -26,7 +26,7 @@
     "schemas/statistics/statistics-engineering-manifest-v1.schema.json": "f0da4c63238837a76e4ce8ab45a724a899470b62364a445291b5aea29b2cd716",
     "schemas/statistics/statistics-engineering-report-v1.schema.json": "a72906ec9cdf4009d5b50dcd04f2dd9ef177aee79e006776297358ca4c3ee861",
     "scripts/generate_step29_statistics.py": "ff580a355f5cdb7eb5aca5458357fe97cad148709500de6e7f96fc23a9479d81",
-    "scripts/validate_repository.py": "06188c0b6213a8e5a0fdf3c392a88ed763014cf411c41674c25670e7bd5cfddc",
+    "scripts/validate_repository.py": "b56e7da31bd02c547ca512a1125e123d3f29066ba5fef0ccaef6e78c9972b4f1",
     "scripts/validate_step29_statistics.py": "e545f24c7b031761d11600c4f314f7b4e43c8ed458ae081351f135141b865bed",
     "tests/python/test_statistics_step29.py": "39d57c9c3337f68157a7ceb6f68a4ff8071aa551700cb135aed78d890f3480f9"
   },

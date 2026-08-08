@@ -7,8 +7,19 @@ ROOT = Path(__file__).resolve().parents[2]
 def test_canonical_research_paper_and_sources_exist():
     pdf = ROOT / "paper/Robust_ML_Optimal_Execution_Research_Paper.pdf"
     assert pdf.is_file() and pdf.stat().st_size > 100_000
-    for rel in ["paper/main.tex", "paper/references.bib", "paper/make_figures.py"]:
+    for rel in [
+        "paper/main.tex",
+        "paper/references.bib",
+        "paper/make_figures.py",
+        "paper/CLAIM_TRACEABILITY.md",
+        "docs/research/PROFESSOR_REVIEW_GUIDE.md",
+        "scripts/validate_paper_claims.py",
+    ]:
         assert (ROOT / rel).is_file()
+    latex = (ROOT / "paper/main.tex").read_text()
+    assert "478 tests" not in latex
+    assert "561/561" not in latex
+    assert "registered controlled-simulator evidence" in latex
     figure_script = (ROOT / "paper/make_figures.py").read_text()
     assert "/mnt/data" not in figure_script
     for rel in [

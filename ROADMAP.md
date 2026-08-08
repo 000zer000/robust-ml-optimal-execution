@@ -1,5 +1,11 @@
 # Full Project Roadmap
 
+> **Current-status note (2026-08-08):** This document preserves the original gated plan; the
+> "current position" below is a historical checkpoint, not the release status. See
+> [`README.md`](README.md) and the
+> [`professor review guide`](docs/research/PROFESSOR_REVIEW_GUIDE.md) for the completed controlled
+> research system and remaining historical-evidence boundary.
+
 ## Document control
 
 - **Version:** 0.5.0

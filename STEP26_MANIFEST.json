@@ -10,9 +10,9 @@
   "engineering_teacher": "step24_shared_ml_mpc_engineering_teacher",
   "files": {
     "CMakeLists.txt": "69cb18f4766975291337f54653fd76da359a29de68d54ed67a19bf3bb58999dc",
-    "Makefile": "9769fcd8059558c3ac3d0314ab6d6fadbb7139b68773bed0f9f59c96cfe25355",
-    "README.md": "d190db76f16a57c7796e0d06d862c603efb600419304d854167554c64ed1613b",
-    "ROADMAP.md": "b23050e818a734ccbe4533909c2aacf5200bc730fa345a5778a2020e9dbb2e68",
+    "Makefile": "613e8b980825b78223e5475cc7ce6d70809df63982b6df91f72a688dd703cb24",
+    "README.md": "6bdfd7b513522b9bff3feebee5ffe965661c3e205a3522becbb46f144ac61d5e",
+    "ROADMAP.md": "7d3f45681a7f258d826237e5f2231754dc02e2d8ea099afebfade667e5345e78",
     "STEP26_CHANGELOG.md": "bbf417948a89e7aa117d59d7bc983d1b5a9b12b34bc89ddeb0fdf2a0bec32720",
     "STEP26_VALIDATION.md": "55889ed2f5bd00add47a770da03420c73e8f19982100f8b175071a8239b15a27",
     "configs/imitation/step26_imitation_engineering.json": "0f9b09808aa6cd5cbb7f8c0b02626af0372b15ec33fcfc00cb17d44039437dbb",
@@ -39,7 +39,7 @@
     "schemas/imitation/imitation-teacher-dataset-manifest-v1.schema.json": "eff76b6696e641c77f9080c4203af950d572688657e1e6ac5e4d95fde64477ff",
     "scripts/benchmark_step26_imitation.py": "483fac5b5ad5bc24dfe3a35e98ae8b7e33f5d65ea7c689a4f1e75f1b477cf2a5",
     "scripts/generate_step26_imitation.py": "ca348d8607e4d1b60edfe7dd23094f484ef1703e616b2e841db4e6d28f05341d",
-    "scripts/validate_repository.py": "06188c0b6213a8e5a0fdf3c392a88ed763014cf411c41674c25670e7bd5cfddc",
+    "scripts/validate_repository.py": "b56e7da31bd02c547ca512a1125e123d3f29066ba5fef0ccaef6e78c9972b4f1",
     "scripts/validate_step26_imitation.py": "2ab358310bb56fba2ad61a7ad702f26d07d2707533283873d5f629f5e64c34e7",
     "tests/python/test_imitation_learning.py": "cc3613977423605456b851707f68d3e17e8052ce94ea8e2d09fadf4a524137d9"
   },
