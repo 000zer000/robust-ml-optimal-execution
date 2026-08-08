@@ -1,0 +1,128 @@
+{
+  "$id": "https://robust-execution.local/schemas/event-model/instrument-definition-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "base_asset": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "instrument": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "lot_size": {
+      "additionalProperties": false,
+      "properties": {
+        "denominator": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "numerator": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "numerator",
+        "denominator"
+      ],
+      "type": "object"
+    },
+    "maximum_order_quantity_lots": {
+      "oneOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "metadata_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "minimum_order_quantity_lots": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "quote_asset": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "quote_atom_size": {
+      "additionalProperties": false,
+      "properties": {
+        "denominator": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "numerator": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "numerator",
+        "denominator"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "tick_size": {
+      "additionalProperties": false,
+      "properties": {
+        "denominator": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "numerator": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "numerator",
+        "denominator"
+      ],
+      "type": "object"
+    },
+    "venue": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "venue",
+    "instrument",
+    "base_asset",
+    "quote_asset",
+    "tick_size",
+    "lot_size",
+    "quote_atom_size",
+    "minimum_order_quantity_lots",
+    "maximum_order_quantity_lots",
+    "metadata_version"
+  ],
+  "title": "Robust Execution Instrument Definition v1",
+  "type": "object"
+}

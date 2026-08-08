@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "venue_id": "binance_spot",
+  "symbols": ["BTCUSDT", "ETHUSDT"],
+  "output_tier": "processed",
+  "input_policy": {
+    "require_verified_capture": true,
+    "require_structurally_valid_day": true,
+    "reject_quarantined_days": true,
+    "require_research_admission_for_processed": true,
+    "allow_structurally_valid_fixture_sample": false,
+    "repair_or_interpolate_missing_events": false
+  },
+  "format_policy": {
+    "base_format": "re_columnar_v1",
+    "compression": "gzip",
+    "exact_decimal_conversion": true,
+    "parquet_required_for_processed": true,
+    "parquet_optional_for_sample": true
+  },
+  "instruments": [
+    {
+      "symbol": "BTCUSDT",
+      "price_increment": "REPLACE_FROM_CAPTURED_EXCHANGE_INFO",
+      "quantity_increment": "REPLACE_FROM_CAPTURED_EXCHANGE_INFO",
+      "source": "captured_binance_exchange_info_filters"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "price_increment": "REPLACE_FROM_CAPTURED_EXCHANGE_INFO",
+      "quantity_increment": "REPLACE_FROM_CAPTURED_EXCHANGE_INFO",
+      "source": "captured_binance_exchange_info_filters"
+    }
+  ],
+  "research_specification_changed": false
+}

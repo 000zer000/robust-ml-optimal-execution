@@ -1,0 +1,78 @@
+{
+  "schema_version": "temporal-deep-training-config-v1",
+  "dataset_id": "step23-temporal-deep-validation",
+  "symbols": ["BTCUSDT", "ETHUSDT"],
+  "feature_names": [
+    "spread_ticks",
+    "same_top1_lots",
+    "opposite_top1_lots",
+    "same_top5_lots",
+    "opposite_top5_lots",
+    "side_imbalance_top1_bps",
+    "side_imbalance_top5_bps",
+    "toward_quote_trade_flow_250ms_lots",
+    "toward_quote_trade_flow_1s_lots",
+    "toward_quote_trade_flow_5s_lots",
+    "trade_count_1s",
+    "trade_count_5s",
+    "side_mid_move_250ms_half_ticks",
+    "side_mid_move_1s_half_ticks",
+    "side_mid_move_5s_half_ticks",
+    "realized_abs_mid_move_1s_half_ticks",
+    "realized_abs_mid_move_5s_half_ticks",
+    "spread_change_1s_ticks",
+    "quote_age_ns",
+    "time_since_last_trade_ns"
+  ],
+  "candidate_horizons": ["250ms", "1s", "5s"],
+  "selected_horizon": "PRE_DATA_FIELD_BEFORE_CALIBRATION",
+  "mode": "engineering_fixture",
+  "split_days": {
+    "train": 50,
+    "validation": 20,
+    "calibration": 10,
+    "engineering_holdout": 20
+  },
+  "rows_per_symbol_side_day": 12,
+  "sequence_length": 8,
+  "sequence_stride": 1,
+  "random_seed": 23026,
+  "calibration_method": "platt_logit",
+  "ece_bins": 10,
+  "precision_recall_thresholds": [0.25, 0.5, 0.75],
+  "architecture": "causal_conv1d_lstm",
+  "conv_kernel_size": 3,
+  "hyperparameters": [
+    {
+      "conv_channels": 8,
+      "lstm_hidden_units": 8,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "max_epochs": 14,
+      "patience": 3
+    },
+    {
+      "conv_channels": 12,
+      "lstm_hidden_units": 12,
+      "learning_rate": 0.005,
+      "weight_decay": 0.0001,
+      "max_epochs": 14,
+      "patience": 3
+    }
+  ],
+  "batch_size": 64,
+  "decision_proxy": {
+    "aggressive_cost": 0.35,
+    "passive_depletion_cost": 1.0
+  },
+  "ood_feature_stress": {
+    "spread_add_ticks": 2,
+    "same_depth_scale": 0.65,
+    "opposite_depth_scale": 1.15,
+    "quote_age_scale": 1.8,
+    "trade_age_scale": 1.6
+  },
+  "final_model_selection_allowed": false,
+  "use_engineering_holdout_for_selection": false,
+  "use_decision_proxy_for_selection": false
+}

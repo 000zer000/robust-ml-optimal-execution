@@ -1,0 +1,15 @@
+.git
+.github
+build
+dist
+.venv
+__pycache__
+.pytest_cache
+.mypy_cache
+.ruff_cache
+data/raw
+data/interim
+data/processed
+experiments/runs
+results/raw
+results/processed

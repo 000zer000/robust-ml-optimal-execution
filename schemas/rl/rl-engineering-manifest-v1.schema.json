@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rl-engineering-manifest-v1",
+  "type": "object",
+  "required": ["schema_version", "step", "research_status", "files", "config_sha256"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "rl-engineering-manifest-v1"},
+    "step": {"const": 27},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "files": {"type": "object", "minProperties": 6, "additionalProperties": {"type": "string"}},
+    "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

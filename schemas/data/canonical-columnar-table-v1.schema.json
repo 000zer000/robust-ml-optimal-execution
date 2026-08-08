@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/data/canonical-columnar-table-v1.schema.json",
+  "title": "Canonical columnar table v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "physical_format", "table_name", "row_count", "column_order", "columns"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "physical_format": {"const": "re_columnar_v1"},
+    "table_name": {"type": "string", "minLength": 1},
+    "row_count": {"type": "integer", "minimum": 0},
+    "column_order": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "columns": {"type": "object"}
+  }
+}

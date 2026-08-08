@@ -1,0 +1,75 @@
+name: Reproducibility contract
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sample-rerun:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python scripts/verify_specification_lock.py
+      - run: python -m pip install -r requirements/test.lock
+      - run: python scripts/validate_policy_contracts.py
+      - name: Generate twice
+        env:
+          PYTHONPATH: python
+        run: |
+          python -m robust_execution bootstrap-sample configs/bootstrap/sample.toml --output /tmp/first.json
+          python -m robust_execution bootstrap-sample configs/bootstrap/sample.toml --output /tmp/second.json
+          cmp /tmp/first.json /tmp/second.json
+      - name: Build and verify policy and synthetic demos
+        run: |
+          cmake --preset gcc-debug
+          cmake --build --preset gcc-debug
+          python scripts/check_policy_demo.py
+          python scripts/validate_synthetic_market.py
+          PYTHONPATH=python python scripts/validate_queue_models.py
+          python scripts/check_queue_demo.py
+          PYTHONPATH=python python scripts/validate_execution_metrics.py
+          python scripts/check_metrics_demo.py
+          python scripts/validate_baselines.py
+          python scripts/validate_almgren_chriss.py
+          python scripts/validate_adaptive_control.py
+          PYTHONPATH=python python scripts/validate_causal_prediction.py
+          PYTHONPATH=python python scripts/validate_simple_models.py
+          PYTHONPATH=python python scripts/validate_temporal_model.py
+          PYTHONPATH=python python scripts/validate_ml_mpc.py
+          PYTHONPATH=python python scripts/validate_prediction_decision_value.py
+          PYTHONPATH=python python scripts/validate_imitation_learning.py
+          PYTHONPATH=python python scripts/validate_reinforcement_learning.py
+          PYTHONPATH=python python scripts/validate_robustness.py
+          PYTHONPATH=python python scripts/validate_statistical_inference.py
+          PYTHONPATH=python python scripts/validate_performance.py
+          python scripts/validate_release.py
+      - name: Reproduce offline capture fixture
+        env:
+          PYTHONPATH: python
+        run: python scripts/validate_market_capture.py
+      - name: Reproduce raw validation and canonical dataset
+        env:
+          PYTHONPATH: python
+        run: |
+          python scripts/validate_raw_data.py
+          python scripts/validate_canonical_data.py
+      - name: Store sample artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: deterministic-bootstrap-sample
+          path: |
+            /tmp/first.json
+            data/sample/synthetic/manifest.json
+            data/sample/synthetic/tape.txt
+            data/sample/capture/offline-fixture/manifest.json
+            data/sample/canonical/canonical-fixture/dataset-manifest.json
+            data/sample/queue_models/queue-model-validation/manifest.json
+            data/sample/queue_models/queue-model-validation/report.json
+            data/sample/metrics/metrics-validation/manifest.json
+            data/sample/metrics/metrics-validation/report.json

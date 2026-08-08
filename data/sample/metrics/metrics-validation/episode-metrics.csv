@@ -1,0 +1,2 @@
+episode_id,side,parent_quantity_lots,filled_quantity_lots,completion_rate,implementation_shortfall_quote_atoms,implementation_shortfall_bps,terminal_quantity_lots,terminal_completion_cost_quote_atoms,passive_fraction,aggressive_fraction,explicit_fees_quote_atoms,net_cash_flow_quote_atoms
+detailed-buy,buy,100,100,1,83,83,10,52,0.40000000000000002,0.59999999999999998,3,-10083

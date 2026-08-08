@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/controller/ml-mpc-controller-report-v1.schema.json",
+  "title": "Step 24 ML-assisted MPC engineering report",
+  "type": "object",
+  "required": ["payload", "sha256"],
+  "additionalProperties": false,
+  "properties": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "payload": {
+      "type": "object",
+      "required": [
+        "evidence_status",
+        "gate_c_historical_activation",
+        "final_horizon_selected",
+        "final_model_family_selected",
+        "locked_research_test_opened",
+        "shared_solver",
+        "same_action_space_constraints_terminal_rules",
+        "prediction_term",
+        "prediction_weight_bps",
+        "prediction_weight_status",
+        "source_endpoint_row_ids",
+        "non_ml_mpc",
+        "horizons"
+      ],
+      "properties": {
+        "evidence_status": {"const": "synthetic_validation_only_non_research"},
+        "gate_c_historical_activation": {"const": false},
+        "final_horizon_selected": {"const": false},
+        "final_model_family_selected": {"const": false},
+        "locked_research_test_opened": {"const": false},
+        "shared_solver": {"const": true},
+        "same_action_space_constraints_terminal_rules": {"const": true},
+        "prediction_term": {"type": "string"},
+        "prediction_weight_bps": {"type": "number", "minimum": 0},
+        "prediction_weight_status": {"type": "string"},
+        "source_endpoint_row_ids": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {"type": "string"}
+        },
+        "non_ml_mpc": {"$ref": "#/$defs/episode"},
+        "horizons": {
+          "type": "object",
+          "required": ["250ms", "1s", "5s"],
+          "additionalProperties": false,
+          "properties": {
+            "250ms": {"$ref": "#/$defs/horizon"},
+            "1s": {"$ref": "#/$defs/horizon"},
+            "5s": {"$ref": "#/$defs/horizon"}
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "episode": {
+      "type": "object",
+      "required": ["actions", "diagnostics", "implementation_shortfall_bps", "complete"],
+      "additionalProperties": false,
+      "properties": {
+        "actions": {"type": "array", "items": {"type": "string"}},
+        "diagnostics": {"type": "array", "items": {"type": "string"}},
+        "implementation_shortfall_bps": {"type": "integer"},
+        "complete": {"const": true}
+      }
+    },
+    "horizon": {
+      "type": "object",
+      "required": [
+        "prediction_table_sha256",
+        "training_base_rate",
+        "calibrated",
+        "training_base_rate_ablation",
+        "shuffled_within_day_instrument_ablation",
+        "stale_ablation",
+        "uncalibrated_ablation",
+        "perfect_event_oracle_ablation",
+        "prediction_weight_zero_ablation"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "prediction_table_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "training_base_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "calibrated": {"$ref": "#/$defs/episode"},
+        "training_base_rate_ablation": {"$ref": "#/$defs/episode"},
+        "shuffled_within_day_instrument_ablation": {"$ref": "#/$defs/episode"},
+        "stale_ablation": {"$ref": "#/$defs/episode"},
+        "uncalibrated_ablation": {"$ref": "#/$defs/episode"},
+        "perfect_event_oracle_ablation": {"$ref": "#/$defs/episode"},
+        "prediction_weight_zero_ablation": {"$ref": "#/$defs/episode"}
+      }
+    }
+  }
+}

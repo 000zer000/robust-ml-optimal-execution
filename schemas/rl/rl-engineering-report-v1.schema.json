@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rl-engineering-report-v1",
+  "type": "object",
+  "required": [
+    "schema_version", "step", "research_status", "gate_c_status", "algorithm",
+    "algorithm_status", "final_rl_algorithm_selected", "final_rl_seed_count_selected",
+    "training_seed_count", "training_seeds", "no_best_seed_reporting",
+    "environment_contract", "ppo_config", "seed_results", "aggregate", "baselines",
+    "reward_audit", "historical_zero_shot", "policy_sha256", "training_histories",
+    "scientific_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "rl-engineering-report-v1"},
+    "step": {"const": 27},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "gate_c_status": {"const": "blocked_no_admitted_historical_research_dataset"},
+    "algorithm": {"const": "categorical_ppo"},
+    "algorithm_status": {"const": "engineering_candidate_not_frozen_research_field"},
+    "final_rl_algorithm_selected": {"const": false},
+    "final_rl_seed_count_selected": {"const": false},
+    "training_seed_count": {"type": "integer", "minimum": 5},
+    "training_seeds": {"type": "array", "minItems": 5, "items": {"type": "integer"}},
+    "no_best_seed_reporting": {"const": true},
+    "environment_contract": {"type": "object"},
+    "ppo_config": {"type": "object"},
+    "seed_results": {"type": "array", "minItems": 5, "items": {"type": "object"}},
+    "aggregate": {"type": "object"},
+    "baselines": {"type": "object"},
+    "reward_audit": {"type": "object"},
+    "historical_zero_shot": {"type": "object"},
+    "policy_sha256": {"type": "object"},
+    "training_histories": {"type": "object"},
+    "scientific_boundary": {"type": "array", "items": {"type": "string"}}
+  }
+}

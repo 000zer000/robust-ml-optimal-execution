@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/prediction/simple-model-card-v1.schema.json",
+  "title": "Step 22 Simple Model Card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "step", "family", "horizon", "feature_names",
+    "hyperparameters", "hyperparameter_selection_segment", "validation_candidates",
+    "final_fit_segment", "calibration_segment", "calibration_method", "calibration",
+    "scaler_fitted_on", "estimator_class", "training_prevalence", "research_status",
+    "selected_as_final_model", "selected_as_primary_horizon", "locked_test_used_for_selection"
+  ],
+  "properties": {
+    "schema_version": {"const": "simple-model-card-v1"},
+    "step": {"const": 22},
+    "family": {"enum": ["base_rate", "logistic", "gradient_boosted_trees", "simple_mlp"]},
+    "horizon": {"enum": ["250ms", "1s", "5s"]},
+    "feature_names": {"type": "array", "minItems": 20, "maxItems": 20, "uniqueItems": true, "items": {"type": "string"}},
+    "hyperparameters": {"type": "object"},
+    "hyperparameter_selection_segment": {"const": "validation"},
+    "validation_candidates": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "final_fit_segment": {"const": "train_plus_validation"},
+    "calibration_segment": {"enum": ["calibration", "none_base_rate"]},
+    "calibration_method": {"enum": ["platt_logit", "none"]},
+    "calibration": {"type": ["object", "null"]},
+    "scaler_fitted_on": {"enum": ["train_only", "not_applicable"]},
+    "estimator_class": {"type": ["string", "null"]},
+    "training_prevalence": {"type": "number", "minimum": 0, "maximum": 1},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "selected_as_final_model": {"const": false},
+    "selected_as_primary_horizon": {"const": false},
+    "locked_test_used_for_selection": {"const": false}
+  }
+}

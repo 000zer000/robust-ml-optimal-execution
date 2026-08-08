@@ -1,0 +1,6 @@
+scenario_id,exact_fifo_fill_lots,optimistic_fill_lots,central_fill_lots,pessimistic_fill_lots,exact_within_model_bounds,model_ordering_valid
+no_cancellation,10,10,10,10,True,True
+cancellation_ahead,20,20,0,0,True,True
+cancellation_behind,0,20,0,0,True,True
+mixed_cancellation,10,20,10,0,True,True
+addition_only,0,0,0,0,True,True

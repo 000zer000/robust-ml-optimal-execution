@@ -1,0 +1,15 @@
+step=9
+scenario_id=step9-demo-adversarial
+scenario_class=adversarial_stress
+calibration_status=not_calibrated_step9
+total_steps=200
+actions=336
+trades=132
+executed_lots=256
+shocks_applied=1
+rejected_commands=0
+final_reference_ticks=9987
+final_best_bid_ticks=9985
+final_best_ask_ticks=0
+tape_sha256=568987023c495fcd3f4f4ea938da0457a0f72830441e73a62b8c32ec9d30dba2
+manifest_sha256=8bc5397238ca1db20428e5ccb70f438d91976ddae62222dd10ca158b8ad22c92

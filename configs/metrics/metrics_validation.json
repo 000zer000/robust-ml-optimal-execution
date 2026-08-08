@@ -1,0 +1,42 @@
+{
+  "schema_version": "metrics-contract-v1",
+  "step": 17,
+  "accounting": {
+    "fee_sign_convention": "positive_cost_negative_rebate",
+    "implementation_shortfall_formula": "side_sign*(execution_notional-benchmark_notional)+explicit_fees",
+    "buy_side_sign": 1,
+    "sell_side_sign": -1,
+    "basis_point_scale": 10000,
+    "require_complete_parent_for_final_shortfall": true,
+    "terminal_completion_included": true,
+    "quote_notional_must_be_exact": true
+  },
+  "benchmarks": {
+    "required": ["arrival_price"],
+    "external_benchmarks_allowed": true
+  },
+  "adverse_selection": {
+    "formula": "side_sign*(fill_price-markout_mid_price)*quantity",
+    "required_coverage_reporting": true,
+    "validation_horizons_ns": [100, 500]
+  },
+  "tail_risk": {
+    "var_method": "empirical_nearest_rank",
+    "cvar_method": "fractional_worst_tail_mean",
+    "levels": [0.95, 0.99],
+    "sample_variance_denominator": "n_minus_1",
+    "require_independent_episode_audit": true,
+    "reject_incomplete_episodes": true
+  },
+  "latency": {
+    "percentiles": [0.5, 0.95, 0.99],
+    "method": "empirical_nearest_rank",
+    "units": "nanoseconds"
+  },
+  "performance": {
+    "throughput_formula": "events_processed*1e9/wall_time_ns",
+    "memory_measure": "peak_rss_bytes",
+    "benchmark_claims_allowed": false
+  },
+  "research_status": "synthetic_validation_only_non_research"
+}

@@ -1,0 +1,12 @@
+{
+  "author": "Othmane Hassani",
+  "date": "2026-08-07",
+  "license": "MIT",
+  "release": "v0.14.0",
+  "repository_name": "robust-ml-optimal-execution",
+  "status": "research_release_ready",
+  "title": "Robust ML-Assisted Optimal Execution in Limit Order Books",
+  "paper": "paper/Robust_ML_Optimal_Execution_Research_Paper.pdf",
+  "cuda_decision": "CPU selected for registered batch-one decision workloads; temporal T4 GPU favorable at batch 256 (~1.704x transfer-inclusive).",
+  "experimental_scope": "controlled execution/synthetic evaluation plus measured systems benchmarks"
+}

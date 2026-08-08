@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/validation/simulator-validation-report-v1.schema.json",
+  "title": "Simulator validation Gate B report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "gate_id",
+    "decision",
+    "generated_seed_count",
+    "generated_step_count",
+    "differential_seed_count",
+    "differential_command_count",
+    "mutation_case_count",
+    "checks",
+    "sensitivities",
+    "limitations"
+  ],
+  "properties": {
+    "schema_id": {"const": "simulator-validation-report-v1"},
+    "gate_id": {"const": "gate-b"},
+    "decision": {"enum": ["pass", "conditional_pass", "fail"]},
+    "generated_seed_count": {"type": "integer", "minimum": 1},
+    "generated_step_count": {"type": "integer", "minimum": 1},
+    "differential_seed_count": {"type": "integer", "minimum": 1},
+    "differential_command_count": {"type": "integer", "minimum": 1},
+    "mutation_case_count": {"type": "integer", "minimum": 1},
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "category", "description", "passed", "evidence", "limitation"],
+        "properties": {
+          "check_id": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "passed": {"type": "boolean"},
+          "evidence": {"type": "string", "minLength": 1},
+          "limitation": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "sensitivities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sensitivity_id",
+          "description",
+          "control_mean",
+          "treatment_mean",
+          "expected_relation",
+          "passed"
+        ],
+        "properties": {
+          "sensitivity_id": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "control_mean": {"type": "number"},
+          "treatment_mean": {"type": "number"},
+          "expected_relation": {"type": "string", "minLength": 1},
+          "passed": {"type": "boolean"}
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

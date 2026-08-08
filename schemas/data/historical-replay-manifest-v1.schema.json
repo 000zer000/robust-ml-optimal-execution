@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/robust-execution/historical-replay-manifest-v1.schema.json",
+  "title": "Historical Replay Manifest v1",
+  "type": "object",
+  "required": [
+    "schema_version", "step", "replay_id", "software_version", "venue_id", "symbols",
+    "source_dataset_id", "source_dataset_classification", "queue_position_semantics",
+    "exact_fifo_reconstructed", "market_impact_semantics", "endogenous_impact_modelled",
+    "ghost_small_agent_assumption", "snapshot_timestamp_semantics", "research_admissible",
+    "research_blockers", "research_specification_changed", "event_count", "observation_count",
+    "connection_count", "tables"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "step": {"const": 15},
+    "replay_id": {"type": "string", "minLength": 1},
+    "software_version": {"type": "string", "minLength": 1},
+    "venue_id": {"type": "string", "minLength": 1},
+    "symbols": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "source_dataset_id": {"type": "string"},
+    "source_dataset_classification": {"enum": ["sample_only_non_research", "research_processed"]},
+    "queue_position_semantics": {"const": "not_reconstructed_until_step16"},
+    "exact_fifo_reconstructed": {"const": false},
+    "market_impact_semantics": {"const": "ghost_small_agent_no_endogenous_impact"},
+    "endogenous_impact_modelled": {"const": false},
+    "ghost_small_agent_assumption": {"const": true},
+    "snapshot_timestamp_semantics": {"type": "string"},
+    "research_admissible": {"type": "boolean"},
+    "research_blockers": {"type": "array", "items": {"type": "string"}},
+    "research_specification_changed": {"const": false},
+    "event_count": {"type": "integer", "minimum": 1},
+    "observation_count": {"type": "integer", "minimum": 1},
+    "connection_count": {"type": "integer", "minimum": 1},
+    "tables": {"type": "array", "minItems": 3, "maxItems": 3}
+  },
+  "additionalProperties": true
+}

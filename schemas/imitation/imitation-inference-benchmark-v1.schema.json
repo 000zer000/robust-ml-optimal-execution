@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "step", "status", "rows", "teacher_cpp_shared_mpc", "student_numpy_batch_one"],
+  "properties": {
+    "schema_version": {"const": "imitation-inference-benchmark-v1"},
+    "step": {"const": 26},
+    "status": {"const": "engineering_machine_specific_not_step30_performance_claim"},
+    "rows": {"type": "integer", "minimum": 1}
+  }
+}

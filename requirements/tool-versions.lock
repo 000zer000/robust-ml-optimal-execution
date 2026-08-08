@@ -1,0 +1,16 @@
+# Exact direct tool versions verified for the Step 4 bootstrap on 2026-08-06.
+# Build isolation
+scikit-build-core==1.0.3
+pybind11==3.0.4
+
+# Development and CI
+pytest==9.1.1
+pytest-cov==7.1.0
+coverage==7.15.2
+ruff==0.15.22
+mypy==2.3.0
+
+# Local environment observed during validation
+uv==0.10.0
+cmake==3.31.6
+ninja==1.12.1

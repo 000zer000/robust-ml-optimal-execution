@@ -1,0 +1,18 @@
+{
+  "arrival_price_ticks": 101,
+  "end_time": {
+    "domain": "simulation",
+    "ns": 1000
+  },
+  "instrument": "POLICY-DEMO-USD",
+  "parent_order_id": 1,
+  "schema_version": "1.0",
+  "side": "buy",
+  "start_time": {
+    "domain": "simulation",
+    "ns": 0
+  },
+  "terminal_rule_id": "hard-completion-v1",
+  "total_quantity_lots": 10,
+  "venue": "synthetic"
+}

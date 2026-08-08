@@ -1,0 +1,13 @@
+# Exact direct dependencies used by CI and the fresh-clone reproduction guide.
+coverage==7.15.2
+jsonschema==4.26.0
+mypy==2.3.0
+numpy==2.3.5
+psutil==7.2.2
+pytest==9.1.1
+pytest-cov==7.1.0
+ruff==0.15.22
+scikit-learn==1.8.0
+threadpoolctl==3.6.0
+torch==2.10.0
+websockets==16.0

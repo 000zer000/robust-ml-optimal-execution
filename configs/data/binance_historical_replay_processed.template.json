@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "replay_id": "REPLACE_WITH_PROCESSED_REPLAY_ID",
+  "symbols": ["BTCUSDT", "ETHUSDT"],
+  "observation_processing_delay_ns": 0,
+  "top_levels": 20,
+  "maximum_recent_trades": 128,
+  "checkpoint_policy": "after_each_delivered_event_validation_only",
+  "require_research_admissible_input": true,
+  "allow_connection_start_proxy_for_sample": false,
+  "require_exact_snapshot_fetch_time_for_research": true,
+  "queue_position_semantics": "not_reconstructed_until_step16",
+  "market_impact_semantics": "ghost_small_agent_no_endogenous_impact"
+}

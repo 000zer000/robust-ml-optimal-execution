@@ -1,0 +1,14 @@
+{
+  "schema_version": "prediction-feature-config-v1",
+  "dataset_id": "step21-prediction-validation",
+  "symbols": ["BTCUSDT", "ETHUSDT"],
+  "observation_latency_ns": 100000000,
+  "candidate_horizons_ns": [250000000, 1000000000, 5000000000],
+  "feature_windows_ns": [250000000, 1000000000, 5000000000],
+  "top_levels": 5,
+  "selected_horizon": "PRE_DATA_FIELD_BEFORE_CALIBRATION",
+  "primary_target": "best_quote_depletion_or_trade_through",
+  "secondary_target": "side_signed_post_event_adverse_selection",
+  "research_admissible_input_required": false,
+  "exact_historical_queue_allowed": false
+}

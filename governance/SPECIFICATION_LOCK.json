@@ -1,0 +1,12 @@
+{
+  "files": {
+    "governance/RESEARCH_PROTOCOL.md": "82bd73b403f79e56b1b966c4d845d3086fc9a1c14ab6efff657f86e53360f24c",
+    "governance/RESEARCH_QUESTIONS.md": "b0d9367d2131f6cab93cc8b13ebefb651d860cc5a711b08d92921371a59c3c6d",
+    "governance/SCOPE.md": "a032ac58c831c96d2c5a84191a78455978838b0b1db818da26ae8e93f2f696af",
+    "governance/SPECIFICATION.yaml": "7487a09ded2b30a67b2fde91a9eb5063f6594c9060abdf27d2d55c5cb845df79"
+  },
+  "generated_from": "public research release preregistration",
+  "purpose": "Detect any undocumented modification to the authoritative research specification.",
+  "regeneration_policy": "Regenerate only after a specification amendment is formally documented.",
+  "schema_version": 1
+}

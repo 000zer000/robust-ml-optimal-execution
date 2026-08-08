@@ -1,0 +1,1 @@
+{"rest": {"error": "[Errno -3] Temporary failure in name resolution", "host": "data-api.binance.vision", "status": "failed"}, "websocket": {"error": "[Errno -3] Temporary failure in name resolution", "host": "data-stream.binance.vision", "status": "failed"}}

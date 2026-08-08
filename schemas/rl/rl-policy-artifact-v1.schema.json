@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rl-policy-artifact-v1",
+  "type": "object",
+  "required": [
+    "schema_version", "step", "research_status", "algorithm", "seed",
+    "state_features", "action_labels", "hidden_units", "state_dict"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "rl-policy-artifact-v1"},
+    "step": {"const": 27},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "algorithm": {"const": "categorical_ppo"},
+    "seed": {"type": "integer"},
+    "state_features": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "action_labels": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+    "hidden_units": {"type": "integer", "minimum": 4},
+    "state_dict": {"type": "object", "minProperties": 1}
+  }
+}

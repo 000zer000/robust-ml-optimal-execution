@@ -1,0 +1,524 @@
+{
+  "$id": "https://robust-execution.local/schemas/policy/policy-observation-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "active_orders": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "cancel_pending": {
+            "type": "boolean"
+          },
+          "client_order_id": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "cumulative_filled_lots": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "decision_id": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "exchange_order_id": {
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "leaves_quantity_lots": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "limit_price_ticks": {
+            "minimum": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "order_type": {
+            "enum": [
+              "limit",
+              "market"
+            ]
+          },
+          "parent_order_id": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "post_only": {
+            "type": "boolean"
+          },
+          "replace_pending": {
+            "type": "boolean"
+          },
+          "requested_quantity_lots": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "side": {
+            "enum": [
+              "buy",
+              "sell"
+            ]
+          },
+          "state": {
+            "enum": [
+              "pending_new",
+              "live",
+              "partially_filled",
+              "pending_cancel",
+              "cancelled",
+              "filled",
+              "rejected",
+              "expired",
+              "replaced"
+            ]
+          },
+          "time_in_force": {
+            "enum": [
+              "gtc",
+              "ioc",
+              "fok"
+            ]
+          }
+        },
+        "required": [
+          "parent_order_id",
+          "client_order_id",
+          "exchange_order_id",
+          "decision_id",
+          "side",
+          "order_type",
+          "time_in_force",
+          "requested_quantity_lots",
+          "cumulative_filled_lots",
+          "leaves_quantity_lots",
+          "limit_price_ticks",
+          "post_only",
+          "state",
+          "cancel_pending",
+          "replace_pending"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "asks": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "order_count": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "price_ticks": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "quantity_lots": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "price_ticks",
+          "quantity_lots",
+          "order_count"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "bids": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "order_count": {
+            "minimum": 0,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "price_ticks": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "quantity_lots": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "price_ticks",
+          "quantity_lots",
+          "order_count"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "decision_id": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "decision_time": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "unix_utc",
+            "simulation"
+          ]
+        },
+        "ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain",
+        "ns"
+      ],
+      "type": "object"
+    },
+    "fee_schedule_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "latency_model_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "lineage": {
+      "additionalProperties": false,
+      "properties": {
+        "delivered_event_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "last_event_id": {
+          "minimum": 1,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "maximum_available_time": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "domain": {
+                  "enum": [
+                    "unix_utc",
+                    "simulation"
+                  ]
+                },
+                "ns": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "domain",
+                "ns"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "maximum_event_time": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "domain": {
+                  "enum": [
+                    "unix_utc",
+                    "simulation"
+                  ]
+                },
+                "ns": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "domain",
+                "ns"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "rolling_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "delivered_event_count",
+        "last_event_id",
+        "maximum_event_time",
+        "maximum_available_time",
+        "rolling_sha256"
+      ],
+      "type": "object"
+    },
+    "observation_cutoff": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "unix_utc",
+            "simulation"
+          ]
+        },
+        "ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain",
+        "ns"
+      ],
+      "type": "object"
+    },
+    "parent": {
+      "additionalProperties": false,
+      "properties": {
+        "arrival_price_ticks": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "cumulative_filled_lots": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "end_time": {
+          "additionalProperties": false,
+          "properties": {
+            "domain": {
+              "enum": [
+                "unix_utc",
+                "simulation"
+              ]
+            },
+            "ns": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "domain",
+            "ns"
+          ],
+          "type": "object"
+        },
+        "explicit_fees_quote_atoms": {
+          "type": "integer"
+        },
+        "fill_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "gross_cash_flow_quote_atoms": {
+          "type": "integer"
+        },
+        "net_cash_flow_quote_atoms": {
+          "type": "integer"
+        },
+        "parent_order_id": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "remaining_quantity_lots": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "side": {
+          "enum": [
+            "buy",
+            "sell"
+          ]
+        },
+        "start_time": {
+          "additionalProperties": false,
+          "properties": {
+            "domain": {
+              "enum": [
+                "unix_utc",
+                "simulation"
+              ]
+            },
+            "ns": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "domain",
+            "ns"
+          ],
+          "type": "object"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "active",
+            "terminal_completion_pending",
+            "completed"
+          ]
+        },
+        "terminal_completion_applied": {
+          "type": "boolean"
+        },
+        "terminal_rule_id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "total_quantity_lots": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "parent_order_id",
+        "side",
+        "start_time",
+        "end_time",
+        "arrival_price_ticks",
+        "terminal_rule_id",
+        "total_quantity_lots",
+        "cumulative_filled_lots",
+        "remaining_quantity_lots",
+        "gross_cash_flow_quote_atoms",
+        "explicit_fees_quote_atoms",
+        "net_cash_flow_quote_atoms",
+        "fill_count",
+        "status",
+        "terminal_completion_applied"
+      ],
+      "type": "object"
+    },
+    "pending_command_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "recent_trades": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "aggressor_side": {
+            "enum": [
+              "unknown",
+              "buy",
+              "sell"
+            ]
+          },
+          "available_time": {
+            "additionalProperties": false,
+            "properties": {
+              "domain": {
+                "enum": [
+                  "unix_utc",
+                  "simulation"
+                ]
+              },
+              "ns": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "domain",
+              "ns"
+            ],
+            "type": "object"
+          },
+          "event_time": {
+            "additionalProperties": false,
+            "properties": {
+              "domain": {
+                "enum": [
+                  "unix_utc",
+                  "simulation"
+                ]
+              },
+              "ns": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "domain",
+              "ns"
+            ],
+            "type": "object"
+          },
+          "external_trade_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "price_ticks": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "quantity_lots": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "trade_id": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "trade_id",
+          "external_trade_id",
+          "price_ticks",
+          "quantity_lots",
+          "aggressor_side",
+          "event_time",
+          "available_time"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "strategy_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "decision_id",
+    "decision_time",
+    "observation_cutoff",
+    "strategy_id",
+    "fee_schedule_id",
+    "latency_model_id",
+    "parent",
+    "bids",
+    "asks",
+    "recent_trades",
+    "active_orders",
+    "pending_command_count",
+    "lineage"
+  ],
+  "type": "object"
+}

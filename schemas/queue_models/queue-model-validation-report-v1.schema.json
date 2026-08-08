@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/queue-models/queue-model-validation-report-v1.schema.json",
+  "title": "Step 16 queue-model validation report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "step",
+    "historical_exact_fifo_reconstructed",
+    "ghost_small_agent_assumption",
+    "trade_through_rule_passed",
+    "no_fill_from_cancellation_only_passed",
+    "deterministic",
+    "scenarios",
+    "sensitivity"
+  ],
+  "properties": {
+    "schema_version": {"const": "queue-model-validation-v1"},
+    "step": {"const": 16},
+    "historical_exact_fifo_reconstructed": {"const": false},
+    "ghost_small_agent_assumption": {"const": true},
+    "trade_through_rule_passed": {"const": true},
+    "no_fill_from_cancellation_only_passed": {"const": true},
+    "deterministic": {"const": true},
+    "scenarios": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scenario_id",
+          "exact_fifo_fill_lots",
+          "optimistic_fill_lots",
+          "central_fill_lots",
+          "pessimistic_fill_lots",
+          "exact_within_model_bounds",
+          "model_ordering_valid"
+        ],
+        "properties": {
+          "scenario_id": {"type": "string", "minLength": 1},
+          "exact_fifo_fill_lots": {"type": "integer", "minimum": 0},
+          "optimistic_fill_lots": {"type": "integer", "minimum": 0},
+          "central_fill_lots": {"type": "integer", "minimum": 0},
+          "pessimistic_fill_lots": {"type": "integer", "minimum": 0},
+          "exact_within_model_bounds": {"const": true},
+          "model_ordering_valid": {"const": true}
+        }
+      }
+    },
+    "sensitivity": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scenario_id",
+          "assumption",
+          "additional_initial_ahead_bps",
+          "estimated_fill_lots",
+          "estimated_ahead_after_events_lots"
+        ],
+        "properties": {
+          "scenario_id": {"const": "mixed_cancellation"},
+          "assumption": {"enum": ["optimistic", "central", "pessimistic"]},
+          "additional_initial_ahead_bps": {"enum": [0, 2500, 5000]},
+          "estimated_fill_lots": {"type": "integer", "minimum": 0},
+          "estimated_ahead_after_events_lots": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}

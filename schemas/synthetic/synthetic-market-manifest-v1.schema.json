@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/synthetic/synthetic-market-manifest-v1.schema.json",
+  "title": "Synthetic market manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id", "scenario_id", "scenario_class", "calibration_status", "run_id",
+    "seed", "config_sha256", "instrument", "grid_step_ns", "fee_schedule_id",
+    "regime_count", "regime_ids", "shock_count", "shock_ids", "total_steps",
+    "actions", "trades", "executed_lots", "maker_fee_atoms", "taker_fee_atoms",
+    "rejected_commands", "tape_sha256", "limitations"
+  ],
+  "properties": {
+    "schema_id": {"const": "synthetic-market-manifest-v1"},
+    "scenario_id": {"type": "string", "minLength": 1},
+    "scenario_class": {"enum": ["designed_synthetic", "adversarial_stress"]},
+    "calibration_status": {"const": "not_calibrated_step9"},
+    "run_id": {"type": "string", "minLength": 1},
+    "seed": {"type": "integer", "minimum": 0},
+    "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "instrument": {"type": "string", "minLength": 1},
+    "grid_step_ns": {"type": "integer", "minimum": 1},
+    "fee_schedule_id": {"type": "string", "minLength": 1},
+    "regime_count": {"type": "integer", "minimum": 1},
+    "regime_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "shock_count": {"type": "integer", "minimum": 0},
+    "shock_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "total_steps": {"type": "integer", "minimum": 1},
+    "actions": {"type": "integer", "minimum": 1},
+    "trades": {"type": "integer", "minimum": 0},
+    "executed_lots": {"type": "integer", "minimum": 0},
+    "maker_fee_atoms": {"type": "integer"},
+    "taker_fee_atoms": {"type": "integer"},
+    "rejected_commands": {"type": "integer", "minimum": 0},
+    "tape_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "limitations": {"type": "array", "minItems": 4, "items": {"type": "string", "minLength": 1}}
+  }
+}

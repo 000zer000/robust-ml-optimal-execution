@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "statistics-engineering-report-v1.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version", "step", "research_status", "gate_c_status", "gate_i_status",
+    "locked_historical_test_opened", "tier1_confirmatory", "method",
+    "engineering_contrast_count", "comparator", "challenger_policies", "contrast_rows",
+    "ranking_stability", "ranking_summary", "negative_results",
+    "historical_method_readiness", "scientific_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "statistics-engineering-report-v1"},
+    "step": {"const": 29},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "locked_historical_test_opened": {"const": false},
+    "engineering_contrast_count": {"type": "integer", "minimum": 1},
+    "contrast_rows": {"type": "array", "minItems": 1},
+    "ranking_stability": {"type": "object", "minProperties": 1},
+    "ranking_summary": {"type": "object"},
+    "tier1_confirmatory": {"type": "object"},
+    "method": {"type": "object"},
+    "negative_results": {"type": "object"},
+    "historical_method_readiness": {"type": "object"},
+    "scientific_boundary": {"type": "array", "minItems": 1},
+    "gate_c_status": {"type": "string"},
+    "gate_i_status": {"type": "string"},
+    "comparator": {"type": "string"},
+    "challenger_policies": {"type": "array"}
+  },
+  "additionalProperties": true
+}

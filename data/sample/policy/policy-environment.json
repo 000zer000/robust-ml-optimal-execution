@@ -1,0 +1,32 @@
+{
+  "allow_market_orders": true,
+  "allow_marketable_limits": true,
+  "allow_post_only": true,
+  "allowed_quantity_fractions": [
+    {
+      "denominator": 2,
+      "numerator": 1
+    },
+    {
+      "denominator": 1,
+      "numerator": 1
+    }
+  ],
+  "allowed_tick_offsets": [
+    -1,
+    0,
+    1
+  ],
+  "decision_interval_ns": 100,
+  "fee_schedule_id": "zero-fee-v1",
+  "instrument": "POLICY-DEMO-USD",
+  "latency_model_id": "zero-latency-v1",
+  "lot_rounding": "floor",
+  "maximum_commands_per_decision": 1,
+  "maximum_live_children": 1,
+  "maximum_recent_trades": 16,
+  "schema_version": "1.0",
+  "strategy_id": "step8-demo-policy",
+  "top_levels": 5,
+  "venue": "synthetic"
+}

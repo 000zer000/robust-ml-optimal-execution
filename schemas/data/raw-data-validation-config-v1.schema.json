@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/robust-execution/raw-data-validation-config-v1.schema.json",
+  "title": "Raw data validation configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "venue_id", "symbols", "allowed_data_origins",
+    "primary_historical_study_repairs_missing_events",
+    "crossed_or_locked_books_allowed", "negative_or_nonfinite_values_allowed",
+    "research_specification_changed", "admission"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "venue_id": {"const": "binance_spot"},
+    "symbols": {"const": ["BTCUSDT", "ETHUSDT"]},
+    "allowed_data_origins": {"const": ["live_binance", "synthetic_transport_fixture"]},
+    "primary_historical_study_repairs_missing_events": {"const": false},
+    "crossed_or_locked_books_allowed": {"const": false},
+    "negative_or_nonfinite_values_allowed": {"const": false},
+    "research_specification_changed": {"const": false},
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "require_live_origin", "require_capture_complete", "require_72h_pilot",
+        "require_whole_utc_day", "boundary_tolerance_ns",
+        "minimum_depth_messages_per_symbol", "minimum_trade_messages_per_symbol",
+        "maximum_event_receive_delta_ns"
+      ],
+      "properties": {
+        "require_live_origin": {"const": true},
+        "require_capture_complete": {"const": true},
+        "require_72h_pilot": {"const": true},
+        "require_whole_utc_day": {"const": true},
+        "boundary_tolerance_ns": {"type": "integer", "minimum": 0},
+        "minimum_depth_messages_per_symbol": {"type": "integer", "minimum": 1},
+        "minimum_trade_messages_per_symbol": {"type": "integer", "minimum": 1},
+        "maximum_event_receive_delta_ns": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

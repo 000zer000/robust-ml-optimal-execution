@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/metrics/metrics-evidence-manifest-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "step", "report_id", "software_version", "research_status", "report_sha256", "artifacts"],
+  "properties": {
+    "schema_version": {"const": "metrics-evidence-manifest-v1"},
+    "step": {"const": 17},
+    "report_id": {"const": "step17-metrics-validation"},
+    "software_version": {"const": "0.14.0"},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "artifacts": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "bytes"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 1}
+        }
+      }
+    }
+  }
+}

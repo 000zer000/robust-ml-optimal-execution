@@ -1,0 +1,155 @@
+{
+  "$id": "https://robust-execution.local/schemas/event-model/episode-metadata-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "arrival_benchmark_ticks": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "arrival_time": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "unix_utc",
+            "simulation"
+          ]
+        },
+        "ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain",
+        "ns"
+      ],
+      "type": "object"
+    },
+    "code_commit": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "data_hashes": {
+      "additionalProperties": {
+        "pattern": "^[0-9a-f]{64}$",
+        "type": "string"
+      },
+      "minProperties": 1,
+      "type": "object"
+    },
+    "deadline_time": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "unix_utc",
+            "simulation"
+          ]
+        },
+        "ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain",
+        "ns"
+      ],
+      "type": "object"
+    },
+    "episode_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "fee_schedule_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "impact_mode": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "instrument": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "latency_model_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "parent_quantity_lots": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "queue_model_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "random_seed": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "run_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "side": {
+      "enum": [
+        "buy",
+        "sell"
+      ]
+    },
+    "strategy_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "strategy_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "venue": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "episode_id",
+    "run_id",
+    "venue",
+    "instrument",
+    "side",
+    "arrival_time",
+    "deadline_time",
+    "parent_quantity_lots",
+    "arrival_benchmark_ticks",
+    "strategy_id",
+    "strategy_version",
+    "queue_model_id",
+    "latency_model_id",
+    "fee_schedule_id",
+    "impact_mode",
+    "random_seed",
+    "code_commit",
+    "data_hashes"
+  ],
+  "title": "Robust Execution Episode Metadata v1",
+  "type": "object"
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/analysis/prediction-decision-value-report-v1.schema.json",
+  "title": "Step 25 prediction versus decision value report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "sha256"],
+  "properties": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "step", "research_status", "gate_c_historical_activation",
+        "primary_horizon_selected", "final_model_family_selected",
+        "locked_research_test_opened", "engineering_results_used_for_research_selection",
+        "prediction_family", "candidate_horizons", "prediction_analysis",
+        "decision_sensitivity", "prediction_decision_relationships", "engineering_summary",
+        "source_artifacts"
+      ],
+      "properties": {
+        "schema_version": {"const": "prediction-decision-value-report-v1"},
+        "step": {"const": 25},
+        "research_status": {"const": "synthetic_validation_only_non_research"},
+        "gate_c_historical_activation": {"const": false},
+        "primary_horizon_selected": {"const": false},
+        "final_model_family_selected": {"const": false},
+        "locked_research_test_opened": {"const": false},
+        "engineering_results_used_for_research_selection": {"const": false},
+        "prediction_family": {"type": "string", "minLength": 1},
+        "candidate_horizons": {
+          "type": "array", "prefixItems": [{"const": "250ms"}, {"const": "1s"}, {"const": "5s"}],
+          "minItems": 3, "maxItems": 3
+        },
+        "prediction_analysis": {"$ref": "#/$defs/horizonMap"},
+        "decision_sensitivity": {
+          "type": "object",
+          "required": ["baseline_non_ml", "weight_grid_bps", "horizons"],
+          "properties": {
+            "baseline_non_ml": {"$ref": "#/$defs/episode"},
+            "weight_grid_bps": {"type": "array", "minItems": 2, "items": {"type": "number", "minimum": 0}},
+            "horizons": {"$ref": "#/$defs/horizonMap"}
+          }
+        },
+        "prediction_decision_relationships": {"$ref": "#/$defs/horizonMap"},
+        "engineering_summary": {
+          "type": "object",
+          "required": [
+            "relationship_counts", "prediction_metric_improvement_without_decision_change_observed",
+            "prediction_metric_degradation_with_decision_change_observed",
+            "perfect_label_oracle_can_worsen_execution_fixture",
+            "any_changed_action_improved_implementation_shortfall_fixture",
+            "lower_implementation_shortfall_is_better", "horizons"
+          ]
+        },
+        "source_artifacts": {"type": "object"}
+      }
+    }
+  },
+  "$defs": {
+    "horizonMap": {
+      "type": "object",
+      "required": ["250ms", "1s", "5s"],
+      "properties": {
+        "250ms": {}, "1s": {}, "5s": {}
+      }
+    },
+    "episode": {
+      "type": "object",
+      "required": ["actions", "implementation_shortfall_bps"],
+      "properties": {
+        "actions": {"type": "array", "items": {"type": "string"}},
+        "implementation_shortfall_bps": {"type": "integer"}
+      }
+    }
+  }
+}

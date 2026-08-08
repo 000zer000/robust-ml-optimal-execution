@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/prediction/prediction-dataset-manifest-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "step", "dataset_id", "software_version", "symbols", "row_count",
+    "feature_count", "feature_dictionary_sha256", "input_events_sha256", "config_sha256",
+    "candidate_horizons_ns", "selected_horizon", "primary_target", "secondary_target",
+    "features_and_labels_physically_separated", "future_information_used_in_features",
+    "exact_historical_queue_used", "research_admissible", "research_status", "research_blockers", "tables"
+  ],
+  "properties": {
+    "schema_version": {"const": "prediction-dataset-manifest-v1"},
+    "step": {"const": 21},
+    "dataset_id": {"type": "string", "minLength": 1},
+    "software_version": {"type": "string", "minLength": 1},
+    "symbols": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string"}},
+    "row_count": {"type": "integer", "minimum": 1},
+    "feature_count": {"const": 20},
+    "feature_dictionary_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "input_events_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_horizons_ns": {"const": [250000000, 1000000000, 5000000000]},
+    "selected_horizon": {"const": "PRE_DATA_FIELD_BEFORE_CALIBRATION"},
+    "primary_target": {"const": "best_quote_depletion_or_trade_through"},
+    "secondary_target": {"const": "side_signed_post_event_adverse_selection"},
+    "features_and_labels_physically_separated": {"const": true},
+    "future_information_used_in_features": {"const": false},
+    "exact_historical_queue_used": {"const": false},
+    "research_admissible": {"const": false},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "research_blockers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "tables": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["table_name", "row_count", "schema_relative_path", "data_relative_path", "schema_sha256", "data_sha256", "compressed_bytes", "uncompressed_bytes"]
+      }
+    }
+  }
+}

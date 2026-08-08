@@ -1,0 +1,3 @@
+# Step 14 research-output dependency.
+# Pinned because Parquet byte layout and metadata can vary by implementation/version.
+pyarrow==25.0.0

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/robust-execution/temporal-model-dataset-manifest-v1.schema.json",
+  "title": "Step 23 temporal model dataset manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "step",
+    "dataset_id",
+    "software_version",
+    "config_sha256",
+    "step21_feature_contract_sha256",
+    "research_status",
+    "architecture",
+    "source_row_count",
+    "sequence_count",
+    "model_count",
+    "semantic_prediction_determinism_required",
+    "locked_research_test_opened",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {"const": "temporal-model-dataset-manifest-v1"},
+    "step": {"const": 23},
+    "dataset_id": {"const": "step23-temporal-deep-validation"},
+    "software_version": {"type": "string"},
+    "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "step21_feature_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "architecture": {"const": "causal_conv1d_lstm"},
+    "source_row_count": {"const": 4800},
+    "sequence_count": {"const": 2000},
+    "model_count": {"const": 3},
+    "semantic_prediction_determinism_required": {"const": true},
+    "locked_research_test_opened": {"const": false},
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["kind", "relative_path", "sha256", "bytes"],
+        "properties": {
+          "kind": {"type": "string"},
+          "relative_path": {"type": "string"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

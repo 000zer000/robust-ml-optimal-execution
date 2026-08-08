@@ -1,0 +1,40 @@
+{
+  "schema_version": "ml-mpc-engineering-config-v1",
+  "step": 24,
+  "research_status": "synthetic_validation_only_non_research",
+  "gate_c_required_for_historical_research": true,
+  "base_mpc_configuration_id": "step20-non-ml-mpc-v1",
+  "prediction_contract_id": "step24-precomputed-prediction-v1",
+  "controller_configuration_id": "step24-ml-mpc-v1",
+  "prediction_family": "causal_conv1d_lstm",
+  "candidate_horizons": ["250ms", "1s", "5s"],
+  "primary_horizon_selected": false,
+  "final_model_family_selected": false,
+  "prediction_risk_weight_bps": 1000.0,
+  "prediction_risk_weight_status": "synthetic_engineering_fixture_not_research_tuned",
+  "prediction_term": "passive_risk_bps=weight*(probability-training_base_rate)",
+  "fairness_contract": {
+    "same_solver": true,
+    "same_planning_horizon": true,
+    "same_action_space": true,
+    "same_constraints": true,
+    "same_objective_structure_except_prediction_term": true,
+    "same_queue_model": true,
+    "same_latency_model": true,
+    "same_terminal_handling": true
+  },
+  "required_ablations": [
+    "training_base_rate",
+    "shuffled_within_day_instrument",
+    "stale",
+    "uncalibrated",
+    "perfect_event_oracle",
+    "prediction_weight_zero"
+  ],
+  "source_endpoint_row_ids": [
+    "BTCUSDT:080:bid:07",
+    "BTCUSDT:080:bid:08",
+    "BTCUSDT:080:bid:09",
+    "BTCUSDT:080:bid:10"
+  ]
+}

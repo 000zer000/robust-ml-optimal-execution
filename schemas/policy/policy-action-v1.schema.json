@@ -1,0 +1,247 @@
+{
+  "$id": "https://robust-execution.local/schemas/policy/policy-action-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "properties": {
+        "kind": {
+          "const": "no_action"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "maxProperties": 0,
+          "type": "object"
+        }
+      }
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "submit"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "order_type": {
+              "enum": [
+                "limit",
+                "market"
+              ]
+            },
+            "placement": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "reference": {
+                      "enum": [
+                        "same_side_best",
+                        "opposite_side_best"
+                      ]
+                    },
+                    "tick_offset": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "reference",
+                    "tick_offset"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "post_only": {
+              "type": "boolean"
+            },
+            "quantity_fraction": {
+              "additionalProperties": false,
+              "properties": {
+                "denominator": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "numerator": {
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "numerator",
+                "denominator"
+              ],
+              "type": "object"
+            },
+            "time_in_force": {
+              "enum": [
+                "gtc",
+                "ioc",
+                "fok"
+              ]
+            }
+          },
+          "required": [
+            "client_order_id",
+            "quantity_fraction",
+            "order_type",
+            "time_in_force",
+            "placement",
+            "post_only"
+          ],
+          "type": "object"
+        }
+      }
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "cancel"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_ids": {
+              "items": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "client_order_ids"
+          ],
+          "type": "object"
+        }
+      }
+    },
+    {
+      "properties": {
+        "kind": {
+          "const": "replace"
+        },
+        "payload": {
+          "additionalProperties": false,
+          "properties": {
+            "client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "placement": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "reference": {
+                      "enum": [
+                        "same_side_best",
+                        "opposite_side_best"
+                      ]
+                    },
+                    "tick_offset": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "reference",
+                    "tick_offset"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "quantity_fraction": {
+              "additionalProperties": false,
+              "properties": {
+                "denominator": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "numerator": {
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "numerator",
+                "denominator"
+              ],
+              "type": "object"
+            },
+            "replacement_client_order_id": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "client_order_id",
+            "replacement_client_order_id",
+            "quantity_fraction",
+            "placement"
+          ],
+          "type": "object"
+        }
+      }
+    }
+  ],
+  "properties": {
+    "decision_id": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "decision_time": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "unix_utc",
+            "simulation"
+          ]
+        },
+        "ns": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "domain",
+        "ns"
+      ],
+      "type": "object"
+    },
+    "kind": {
+      "enum": [
+        "no_action",
+        "submit",
+        "cancel",
+        "replace"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "1.0"
+    }
+  },
+  "required": [
+    "schema_version",
+    "decision_id",
+    "decision_time",
+    "kind",
+    "payload"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,155 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  cpp:
+    name: C++ ${{ matrix.os }} / ${{ matrix.compiler }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: gcc
+            preset: gcc-debug
+          - os: ubuntu-latest
+            compiler: clang
+            preset: clang-debug
+          - os: macos-latest
+            compiler: appleclang
+            preset: clang-debug
+    steps:
+      - uses: actions/checkout@v7
+      - name: Configure
+        run: cmake --preset "${{ matrix.preset }}"
+      - name: Build
+        run: cmake --build --preset "${{ matrix.preset }}"
+      - name: Test
+        run: ctest --preset "${{ matrix.preset }}"
+      - name: Install Python validation dependency
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'gcc'
+        run: python -m pip install jsonschema==4.26.0 numpy==2.3.5 scikit-learn==1.8.0
+      - name: Deterministic kernel, policy and synthetic demos
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'gcc'
+        run: |
+          python scripts/check_kernel_demo.py
+          python scripts/check_policy_demo.py
+          python scripts/validate_synthetic_market.py
+          python scripts/validate_simulator_gate.py
+          python scripts/validate_source_decision.py
+          python scripts/validate_market_capture.py
+          PYTHONPATH=python python scripts/validate_raw_data.py
+          PYTHONPATH=python python scripts/validate_canonical_data.py
+          PYTHONPATH=python python scripts/validate_historical_replay.py
+          python scripts/check_historical_demo.py
+          PYTHONPATH=python python scripts/validate_queue_models.py
+          python scripts/check_queue_demo.py
+          PYTHONPATH=python python scripts/validate_execution_metrics.py
+          python scripts/check_metrics_demo.py
+          python scripts/validate_baselines.py
+          python scripts/validate_almgren_chriss.py
+          python scripts/validate_adaptive_control.py
+          PYTHONPATH=python python scripts/validate_causal_prediction.py
+          PYTHONPATH=python python scripts/validate_simple_models.py
+
+  python:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "${{ matrix.python }}"
+      - name: Install test tools
+        run: python -m pip install -r requirements/test.lock
+      - name: Build native validation executables
+        run: |
+          cmake --preset gcc-debug
+          cmake --build --preset gcc-debug
+      - name: Specification lock
+        run: python scripts/verify_specification_lock.py
+      - name: Repository contract
+        run: |
+          python scripts/validate_repository.py
+          python scripts/validate_policy_contracts.py
+          python scripts/validate_source_decision.py
+          python scripts/validate_market_capture.py
+          PYTHONPATH=python python scripts/validate_raw_data.py
+          PYTHONPATH=python python scripts/validate_canonical_data.py
+          PYTHONPATH=python python scripts/validate_historical_replay.py
+          python scripts/check_historical_demo.py
+          PYTHONPATH=python python scripts/validate_queue_models.py
+          python scripts/check_queue_demo.py
+          PYTHONPATH=python python scripts/validate_execution_metrics.py
+          python scripts/check_metrics_demo.py
+          python scripts/validate_baselines.py
+          python scripts/validate_almgren_chriss.py
+          python scripts/validate_adaptive_control.py
+          PYTHONPATH=python python scripts/validate_causal_prediction.py
+          PYTHONPATH=python python scripts/validate_simple_models.py
+          PYTHONPATH=python python scripts/validate_temporal_model.py
+          PYTHONPATH=python python scripts/validate_ml_mpc.py
+          PYTHONPATH=python python scripts/validate_prediction_decision_value.py
+          PYTHONPATH=python python scripts/validate_imitation_learning.py
+          PYTHONPATH=python python scripts/validate_reinforcement_learning.py
+          PYTHONPATH=python python scripts/validate_robustness.py
+          PYTHONPATH=python python scripts/validate_statistical_inference.py
+          PYTHONPATH=python python scripts/validate_performance.py
+          python scripts/validate_paper_claims.py
+          python scripts/validate_release.py
+      - name: Tests
+        env:
+          PYTHONPATH: python
+        run: python -m pytest --cov=robust_execution --cov-branch --cov-report=term-missing tests/python
+      - name: Deterministic sample
+        run: python scripts/check_deterministic_sample.py
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install quality tools
+        run: python -m pip install ruff==0.15.22 mypy==2.3.0 matplotlib==3.10.3 numpy==2.3.5 scikit-learn==1.8.0
+      - run: ruff check python tests/python scripts paper
+      - run: ruff format --check python tests/python scripts paper
+      - run: mypy python/robust_execution
+      - name: Validate paper claims against committed evidence
+        run: python scripts/validate_paper_claims.py
+      - name: Regenerate paper figures from committed reports
+        run: python paper/make_figures.py --output-dir "${RUNNER_TEMP}/paper-figures"
+
+  wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Build wheel with C++ binding
+        run: python -m pip wheel --no-deps --wheel-dir dist .
+      - name: Install wheel
+        run: python -m pip install dist/*.whl
+      - name: Import extension
+        run: python -c "import robust_execution; from robust_execution import _core; print(_core.build_info_json())"
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build image
+        run: docker build --tag robust-execution:bootstrap .
+      - name: Smoke test
+        run: docker run --rm robust-execution:bootstrap --version

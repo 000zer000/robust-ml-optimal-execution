@@ -1,0 +1,35 @@
+{
+  "schema_version": "step20-non-ml-adaptive-v1",
+  "research_status": "synthetic_validation_parameters_only",
+  "calibration": {
+    "cutoff_ns": 999,
+    "provenance_id": "step20-synthetic-calibration-v1",
+    "maker_fee_bps": 0.0,
+    "taker_fee_bps": 0.0,
+    "passive_fill_base": 0.5,
+    "passive_queue_weight": 0.45,
+    "passive_trade_weight": 0.35,
+    "passive_adverse_selection_bps": 1.0,
+    "insufficient_depth_penalty_bps": 25.0
+  },
+  "queue_aware_heuristic": {
+    "passive_fraction": "1/4",
+    "aggressive_fraction": "1/2",
+    "passive_tick_offset": 0,
+    "aggressive_lag_threshold": 0.15,
+    "minimum_passive_fill_probability": 0.45,
+    "terminal_aggressive_window_ns": 150,
+    "configuration_id": "step20-queue-aware-v1"
+  },
+  "non_ml_mpc": {
+    "planning_horizon_steps": 4,
+    "action_fractions": ["1/4", "1/2", "1/1"],
+    "maximum_passive_fraction": "1/2",
+    "passive_tick_offset": 0,
+    "inventory_risk_bps": 1.0,
+    "terminal_penalty_bps": 200.0,
+    "terminal_inventory_quadratic_bps": 10.0,
+    "configuration_id": "step20-non-ml-mpc-v1",
+    "forecast_assumption": "current observable book and non-ML fill model frozen across each local planning horizon; controller re-solves at every observation"
+  }
+}

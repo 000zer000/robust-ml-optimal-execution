@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "statistics-engineering-manifest-v1.schema.json",
+  "type": "object",
+  "required": ["schema_version", "step", "research_status", "config_sha256",
+    "step28_report_sha256", "files"],
+  "properties": {
+    "schema_version": {"const": "statistics-engineering-manifest-v1"},
+    "step": {"const": 29},
+    "research_status": {"const": "synthetic_validation_only_non_research"},
+    "config_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "step28_report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "files": {"type": "object", "minProperties": 3,
+      "additionalProperties": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,78 @@
+{
+  "checks": [
+    {
+      "documented_normalized_schema_exact": true,
+      "fields": [
+        "exchange",
+        "symbol",
+        "timestamp",
+        "local_timestamp",
+        "is_snapshot",
+        "side",
+        "price",
+        "amount"
+      ],
+      "native_binance_sequence_fields_present": false,
+      "symbol": "BTCUSDT",
+      "type": "incremental_book_L2"
+    },
+    {
+      "documented_normalized_schema_exact": true,
+      "fields": [
+        "exchange",
+        "symbol",
+        "timestamp",
+        "local_timestamp",
+        "is_snapshot",
+        "side",
+        "price",
+        "amount"
+      ],
+      "native_binance_sequence_fields_present": false,
+      "symbol": "ETHUSDT",
+      "type": "incremental_book_L2"
+    },
+    {
+      "documented_normalized_schema_exact": true,
+      "fields": [
+        "exchange",
+        "symbol",
+        "timestamp",
+        "local_timestamp",
+        "id",
+        "side",
+        "price",
+        "amount"
+      ],
+      "native_binance_sequence_fields_present": false,
+      "symbol": "BTCUSDT",
+      "type": "trades"
+    },
+    {
+      "documented_normalized_schema_exact": true,
+      "fields": [
+        "exchange",
+        "symbol",
+        "timestamp",
+        "local_timestamp",
+        "id",
+        "side",
+        "price",
+        "amount"
+      ],
+      "native_binance_sequence_fields_present": false,
+      "symbol": "ETHUSDT",
+      "type": "trades"
+    }
+  ],
+  "exchange": "binance",
+  "gate_c_decision": "await_tardis_native_sequence_metadata_or_exchange_native_delivery",
+  "gate_c_sequence_continuity_provable_from_normalized_csv_alone": false,
+  "normalized_csv_ingestion_compatible": true,
+  "sample_date": "2026-07-01",
+  "schema_version": "pre31-tardis-sample-compatibility-v1",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ]
+}

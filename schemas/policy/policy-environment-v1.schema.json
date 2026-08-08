@@ -1,0 +1,117 @@
+{
+  "$id": "https://robust-execution.local/schemas/policy/policy-environment-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allow_market_orders": {
+      "type": "boolean"
+    },
+    "allow_marketable_limits": {
+      "type": "boolean"
+    },
+    "allow_post_only": {
+      "type": "boolean"
+    },
+    "allowed_quantity_fractions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "denominator": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "numerator": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "numerator",
+          "denominator"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "allowed_tick_offsets": {
+      "items": {
+        "type": "integer"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "decision_interval_ns": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "fee_schedule_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "instrument": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "latency_model_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "lot_rounding": {
+      "enum": [
+        "floor",
+        "nearest",
+        "ceiling"
+      ]
+    },
+    "maximum_commands_per_decision": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "maximum_live_children": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "maximum_recent_trades": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "strategy_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "top_levels": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "venue": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "venue",
+    "instrument",
+    "strategy_id",
+    "fee_schedule_id",
+    "latency_model_id",
+    "decision_interval_ns",
+    "top_levels",
+    "maximum_recent_trades",
+    "maximum_live_children",
+    "maximum_commands_per_decision",
+    "allowed_quantity_fractions",
+    "allowed_tick_offsets",
+    "lot_rounding",
+    "allow_market_orders",
+    "allow_marketable_limits",
+    "allow_post_only"
+  ],
+  "type": "object"
+}

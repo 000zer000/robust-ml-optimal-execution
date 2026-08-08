@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robust-execution.local/schemas/data/canonical-dataset-manifest-v1.schema.json",
+  "title": "Canonical dataset manifest v1",
+  "type": "object",
+  "required": ["schema_version", "step", "dataset_id", "dataset_classification", "research_admissible", "venue_id", "symbols", "selected_days", "source_run_id", "source_manifest_sha256", "validation_id", "validation_report_sha256", "physical_format", "canonical_order", "fixed_point_conversion", "missing_events_repaired", "research_specification_changed", "tables", "parquet"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "step": {"const": 14},
+    "dataset_id": {"type": "string", "minLength": 1},
+    "dataset_classification": {"enum": ["sample_only_non_research", "research_processed"]},
+    "research_admissible": {"type": "boolean"},
+    "venue_id": {"const": "binance_spot"},
+    "symbols": {"const": ["BTCUSDT", "ETHUSDT"]},
+    "selected_days": {"type": "array", "minItems": 1, "items": {"type": "string", "format": "date"}},
+    "source_run_id": {"type": "string"},
+    "source_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "validation_id": {"type": "string"},
+    "validation_report_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "physical_format": {"const": "re_columnar_v1"},
+    "canonical_order": {"type": "string"},
+    "fixed_point_conversion": {"const": "exact_increment_multiple_only"},
+    "missing_events_repaired": {"const": false},
+    "research_specification_changed": {"const": false},
+    "tables": {"type": "array", "minItems": 6, "maxItems": 6},
+    "parquet": {"type": "object"}
+  }
+}

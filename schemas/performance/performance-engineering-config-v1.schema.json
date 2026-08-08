@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "performance-engineering-config-v1.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version", "step", "research_status", "warmup_repetitions",
+    "timing_repetitions", "iterations_per_repetition", "batch_sizes",
+    "cpu_threads", "cpp_pairs", "cpp_threads", "latency_injection_intervals_us"
+  ],
+  "properties": {
+    "schema_version": {"const": "performance-engineering-config-v1"},
+    "step": {"const": 30},
+    "research_status": {"const": "engineering_machine_specific_non_research"},
+    "warmup_repetitions": {"type": "integer", "minimum": 1},
+    "timing_repetitions": {"type": "integer", "minimum": 5},
+    "iterations_per_repetition": {"type": "integer", "minimum": 1},
+    "batch_sizes": {"type": "array", "minItems": 1},
+    "cpu_threads": {"type": "array", "minItems": 1},
+    "cpp_pairs": {"type": "integer", "minimum": 1},
+    "cpp_threads": {"type": "array", "minItems": 1},
+    "latency_injection_intervals_us": {"type": "array", "minItems": 1}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "step", "research_status", "teacher", "data", "model_selection", "covariate_shift", "fallback", "evaluation", "artifact", "research_selections", "payload_sha256"],
+  "properties": {
+    "schema_version": {"const": "imitation-engineering-report-v1"},
+    "step": {"const": 26},
+    "research_status": {"const": "synthetic_validation_only_non_research"}
+  }
+}

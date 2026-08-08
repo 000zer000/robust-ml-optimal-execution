@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "venue_id": "binance_spot",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "websocket_base": "wss://data-stream.binance.vision",
+  "rest_base": "https://data-api.binance.vision",
+  "streams": {
+    "depth": "@depth@100ms",
+    "trade": "@trade"
+  },
+  "timestamp_unit": "MICROSECOND",
+  "snapshot_limit": 5000,
+  "storage": {
+    "output_root": "data/raw/binance_spot",
+    "compression": "gzip",
+    "segment_max_messages": 250000,
+    "segment_max_uncompressed_bytes": 536870912,
+    "fsync_each_record": false,
+    "fsync_interval_messages": 10000
+  },
+  "pilot": {
+    "required_duration_seconds": 259200,
+    "rotate_before_seconds": 82800,
+    "reconnect_backoff_seconds": 2.0,
+    "receive_timeout_seconds": 30.0,
+    "max_reconnects": 1000
+  },
+  "research_specification_changed": false,
+  "paid_data_required": false
+}

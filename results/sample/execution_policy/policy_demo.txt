@@ -1,0 +1,14 @@
+step=8
+parent_status=completed
+total_quantity_lots=10
+filled_quantity_lots=10
+remaining_quantity_lots=0
+gross_cash_flow_quote_atoms=-1020
+net_cash_flow_quote_atoms=-1020
+fill_count=2
+active_child_orders=0
+delivered_events=10
+terminal_plan=submit_aggressive_residual
+observation_sha256=0e07fa3dd3576a71df698a113e9c019a2b0e9658d9cbdb1223346fbbaeb07845
+policy_state_sha256=5060f41f8627914adfca90331ace670990758aa420d51c7b38cb81e449bed522
+kernel_replay_sha256=e71d931358364b80d0449b22d7974ced8f450cec55cef8d7bf7a8505d5096bfe

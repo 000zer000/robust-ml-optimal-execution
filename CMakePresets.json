@@ -1,0 +1,76 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {"major": 3, "minor": 24, "patch": 0},
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "RE_BUILD_TESTING": "ON",
+        "RE_BUILD_PYTHON_BINDINGS": "OFF",
+        "RE_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "gcc-debug",
+      "inherits": "base",
+      "displayName": "GCC Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "clang-debug",
+      "inherits": "base",
+      "displayName": "Clang Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "gcc-release",
+      "inherits": "base",
+      "displayName": "GCC Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "g++",
+        "RE_ENABLE_IPO": "ON"
+      }
+    },
+    {
+      "name": "asan-ubsan",
+      "inherits": "gcc-debug",
+      "displayName": "GCC ASan + UBSan",
+      "cacheVariables": {
+        "RE_ENABLE_ASAN": "ON",
+        "RE_ENABLE_UBSAN": "ON"
+      }
+    },
+    {
+      "name": "tsan",
+      "inherits": "clang-debug",
+      "displayName": "Clang TSan",
+      "cacheVariables": {
+        "RE_ENABLE_TSAN": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {"name": "gcc-debug", "configurePreset": "gcc-debug"},
+    {"name": "clang-debug", "configurePreset": "clang-debug"},
+    {"name": "gcc-release", "configurePreset": "gcc-release"},
+    {"name": "asan-ubsan", "configurePreset": "asan-ubsan"},
+    {"name": "tsan", "configurePreset": "tsan"}
+  ],
+  "testPresets": [
+    {"name": "gcc-debug", "configurePreset": "gcc-debug", "output": {"outputOnFailure": true}},
+    {"name": "clang-debug", "configurePreset": "clang-debug", "output": {"outputOnFailure": true}},
+    {"name": "asan-ubsan", "configurePreset": "asan-ubsan", "output": {"outputOnFailure": true}},
+    {"name": "tsan", "configurePreset": "tsan", "output": {"outputOnFailure": true}}
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/robust-execution/raw-capture-config-v1.schema.json",
+  "title": "Raw Binance capture configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "venue_id",
+    "symbols",
+    "websocket_base",
+    "rest_base",
+    "streams",
+    "timestamp_unit",
+    "snapshot_limit",
+    "storage",
+    "pilot",
+    "research_specification_changed",
+    "paid_data_required"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "venue_id": {
+      "const": "binance_spot"
+    },
+    "symbols": {
+      "const": [
+        "BTCUSDT",
+        "ETHUSDT"
+      ]
+    },
+    "websocket_base": {
+      "const": "wss://data-stream.binance.vision"
+    },
+    "rest_base": {
+      "const": "https://data-api.binance.vision"
+    },
+    "streams": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "depth",
+        "trade"
+      ],
+      "properties": {
+        "depth": {
+          "const": "@depth@100ms"
+        },
+        "trade": {
+          "const": "@trade"
+        }
+      }
+    },
+    "timestamp_unit": {
+      "const": "MICROSECOND"
+    },
+    "snapshot_limit": {
+      "const": 5000
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "output_root",
+        "compression",
+        "segment_max_messages",
+        "segment_max_uncompressed_bytes",
+        "fsync_each_record",
+        "fsync_interval_messages"
+      ],
+      "properties": {
+        "output_root": {
+          "type": "string",
+          "minLength": 1
+        },
+        "compression": {
+          "const": "gzip"
+        },
+        "segment_max_messages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "segment_max_uncompressed_bytes": {
+          "type": "integer",
+          "minimum": 1024
+        },
+        "fsync_each_record": {
+          "type": "boolean"
+        },
+        "fsync_interval_messages": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "pilot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_duration_seconds",
+        "rotate_before_seconds",
+        "reconnect_backoff_seconds",
+        "receive_timeout_seconds",
+        "max_reconnects"
+      ],
+      "properties": {
+        "required_duration_seconds": {
+          "const": 259200
+        },
+        "rotate_before_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86399
+        },
+        "reconnect_backoff_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "receive_timeout_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_reconnects": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "research_specification_changed": {
+      "const": false
+    },
+    "paid_data_required": {
+      "const": false
+    }
+  }
+}

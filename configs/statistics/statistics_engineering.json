@@ -1,0 +1,15 @@
+{
+  "schema_version": "statistics-engineering-config-v1",
+  "step": 29,
+  "research_status": "synthetic_validation_only_non_research",
+  "bootstrap_repetitions": 4096,
+  "ranking_bootstrap_repetitions": 4096,
+  "seed": 2900,
+  "alpha": 0.05,
+  "min_block_length": 2,
+  "max_block_length": 7,
+  "acf_threshold": 0.1,
+  "comparator": "liquidity_aware",
+  "challenger_policies": ["ppo_aggregate", "twap_like", "immediate"],
+  "historical_confirmatory_analysis_blocked": true
+}
