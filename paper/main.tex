@@ -221,12 +221,12 @@ The queue state is therefore a controlled uncertainty model rather than an exact
 \draw[arr] (queue)--(features);
 \draw[arr] (features)--(pred);
 \draw[arr] (pred)--(mpc);
-\draw[arr] (queue)|-(mpc);
+\draw[arr] (queue.south)--(mpc.north);
 \draw[arr] (mpc)--(imit);
-\draw[arr] (queue)|-(rl);
+\draw[arr] (queue.south) -- ++(0,-0.60cm) -| (rl.north);
 \draw[arr] (mpc)--(metrics);
-\draw[arr] (imit)|-(metrics);
-\draw[arr] (rl)|-(metrics);
+\draw[arr] (imit.south east)--(metrics.north);
+\draw[arr] (rl.south) -- ++(0,-0.65cm) -| (metrics.north west);
 \draw[arr] (metrics)--(stats);
 \draw[arr] (metrics)--(perf);
 \end{tikzpicture}
@@ -261,7 +261,7 @@ Historical & contracts only; test unopened & engineering readiness, not strategy
 \subsection{Controlled Populations and Split Discipline}
 The microstructure-prediction experiment uses 100 chronological controlled day identifiers spanning BTCUSDT and ETHUSDT and both passive sides. The temporal sequence corpus contains 2,000 eight-step examples partitioned into 1,000 training, 400 validation, 200 calibration, and 400 untouched holdout sequences. Each candidate horizon uses the same split roles. Training fits weights and normalizers; validation chooses hyperparameters and stopping epoch; calibration estimates probability calibration; the holdout is evaluation-only.
 
-Sequential execution experiments use independent episode populations rather than reusing the forecasting holdout. Imitation learning uses 80 training episodes, 30 validation episodes, 30 correction-pool episodes, 30 controlled-holdout episodes, and 30 OOD episodes, with six decisions per episode before environment-dependent termination. The RL experiment trains across three controlled regime families and evaluates on distinct ID and OOD regime sets. The Step-28 robustness matrix then reuses a fixed set of 24 paired episode seeds inside each stress cell so every policy experiences the same stochastic environment realization.
+Sequential execution experiments use independent episode populations rather than reusing the forecasting holdout. Imitation learning uses 80 training episodes, 30 validation episodes, 30 correction-pool episodes, 30 controlled-holdout episodes, and 30 OOD episodes, with six decisions per episode before environment-dependent termination. The RL experiment trains across three controlled regime families and evaluates on distinct ID and OOD regime sets. The registered robustness matrix then reuses a fixed set of 24 paired episode seeds inside each stress cell so every policy experiences the same stochastic environment realization.
 
 \begin{table}[t]
 \centering
