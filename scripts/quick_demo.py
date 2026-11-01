@@ -108,10 +108,11 @@ def main() -> int:
             f"<td>{' / '.join(str(q) for q in p['slice_lots'])}</td><td>100 / 100</td></tr>"
             for p in scenario["policies"]
         )
+        ask_path = " → ".join(str(x) for x in scenario["ask_ticks"])
         cards.append(
             f"<section><h2>{html.escape(scenario['scenario'])}</h2>"
             + plot
-            + f"<p>Available ask path: {' → '.join(str(x) for x in scenario['ask_ticks'])} ticks.</p>"
+            + f"<p>Available ask path: {ask_path} ticks.</p>"
             "<table><thead><tr><th>Policy</th><th>Cost (bps)</th>"
             "<th>Slice lots</th><th>Filled lots</th></tr></thead>"
             f"<tbody>{rows}</tbody></table></section>"

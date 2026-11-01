@@ -60,7 +60,7 @@
     "paper/make_figures.py": "29965d1be7f25cb47b9c69f3c09fdba328149486f1f73f97abac6a28df4f7a8f",
     "paper/references.bib": "15989a044deda7bfec0daee006c257f01f37677bdfcf15b894b946067d94ad7e",
     "pyproject.toml": "389ced1e7eb2076cdb7f50ee0a52a863ae7d93529499a59bd506ddc8579aa330",
-    "scripts/quick_demo.py": "4ebe4add9b64d427eda383b743738b9d7ca22532a07bbc1aa76e44441cb297a2",
+    "scripts/quick_demo.py": "d565f68230040e4195ac1bb9c722f40b5ff5042f32f41d01214972ef8b96f144",
     "scripts/validate_paper_claims.py": "949b3d48d385e7ddec1a04338f23a97f04a7cb7b0a8787a05d7afd947efd0f4a",
     "scripts/validate_release.py": "c7525882b9bb19ff4999aa68d5979f18b6b828e80a212bddc0c181d64c2e5424",
     "tests/python/test_release.py": "9ef8d3f4cedd352f6367a20fd35bc401e2fddf4fb448a79306778e71c49b9dee",
