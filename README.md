@@ -12,13 +12,27 @@
 
 A reproducible C++/Python research system for **optimal execution in limit-order-book markets**, combining exact market mechanics, causal microstructure forecasting, model predictive control, imitation learning, reinforcement learning, dependence-aware robustness analysis, and low-latency CPU/GPU performance engineering.
 
+## Five-minute tour
+
+Run `python3 scripts/quick_demo.py` with Python, CMake and a C++20 compiler installed,
+then open `output/quick-demo/index.html`. No Python packages, training, model downloads
+or server are needed. The tour runs the native matching-engine example and compares
+three existing scheduling policies on two **hand-authored synthetic ask paths**, with
+independently audited costs and full completion. The report makes its simplified
+immediate-fill assumptions explicit. [Tour and interview guide](docs/QUICK_TOUR.md).
+
+Historical Gate C remains **closed**. Strategy findings below are controlled simulator
+results; replay/ingestion support does not establish an admitted historical backtest.
+
 ## Research paper
 
 **Robust ML-Assisted Optimal Execution in Limit Order Books: Causal Microstructure Forecasting, Model Predictive Control, and Low-Latency Systems Evaluation**
 
-**[Read the full IEEE-style paper](paper/Robust_ML_Optimal_Execution_Research_Paper.pdf)** · [Research overview](docs/research/RESEARCH_OVERVIEW.md) · [Claim traceability](paper/CLAIM_TRACEABILITY.md) · [LaTeX](paper/main.tex) · [BibTeX](paper/references.bib)
+**[Read the personal research report in IEEE-style format](paper/Robust_ML_Optimal_Execution_Research_Paper.pdf)** · [Research overview](docs/research/RESEARCH_OVERVIEW.md) · [Claim traceability](paper/CLAIM_TRACEABILITY.md) · [LaTeX](paper/main.tex) · [BibTeX](paper/references.bib)
 
-The paper formulates execution as a sequential decision problem in which forecast quality, queue uncertainty, transaction costs, market impact, latency, inventory risk, and compute overhead interact. The central question is whether better short-horizon microstructure forecasts improve the **downstream execution decision**, rather than merely improving a standalone prediction metric.
+This is a personal technical report, with no peer-reviewed publication claimed.
+
+The report formulates execution as a sequential decision problem in which forecast quality, queue uncertainty, transaction costs, market impact, latency, inventory risk, and compute overhead interact. The central question is whether better short-horizon microstructure forecasts improve the **downstream execution decision**, rather than merely improving a standalone prediction metric.
 
 ## Contributions
 
@@ -68,7 +82,7 @@ On the engineering holdout, calibration and controller response are non-monotoni
 
 ### Imitation learning exposes covariate shift
 
-A compact one-hidden-layer policy reaches **100% action agreement on the controlled holdout**, but raw OOD agreement falls to **69.30%**. A validation-selected fallback raises OOD agreement to **94.78%**, while making the fallback rate itself an explicit latency/robustness trade-off.
+A compact one-hidden-layer policy reaches **100% action agreement on the controlled holdout**, but raw OOD agreement falls to **69.30%**. A validation-selected fallback raises OOD agreement to **94.78%**, with **82.61% of OOD decisions routed to the teacher** (only 17.39% handled without fallback). The 94.78% figure measures the combined system, not autonomous student accuracy or trading profitability. See the [exact evidence](paper/CLAIM_TRACEABILITY.md).
 
 ![Imitation OOD behavior](paper/figures/imitation_ood.png)
 
@@ -92,7 +106,7 @@ The statistical analysis uses a paired moving-block bootstrap with **4,096 repli
 
 ### CPU/GPU conclusions are workload-specific
 
-A profile-guided matching-engine capacity optimization reaches approximately **17.3 million operations/s** in the measured four-thread workload. On a Tesla T4, transfer-inclusive GPU inference is slower than CPU for every registered **batch-one** workload; the temporal model becomes GPU-favorable at batch 256 at approximately **1.70x** transfer-inclusive speedup.
+A profile-guided matching-engine capacity optimization reaches approximately **17.3 million operations/s** in the measured four-thread matching-engine workload; this throughput is not exchange order round-trip latency. Hardware, operation mix and protocol are recorded in the [performance evidence](docs/performance/PERFORMANCE_ENGINEERING.md). On a Tesla T4, transfer-inclusive GPU inference is slower than CPU for every registered **batch-one** workload; the temporal model becomes GPU-favorable at batch 256 at approximately **1.70x** transfer-inclusive speedup.
 
 ![CUDA performance](paper/figures/cuda_performance.png)
 

@@ -1,0 +1,21 @@
+name: Quick tour
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  tour:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python scripts/quick_demo.py
+      - run: ctest --test-dir build/quick-tour --output-on-failure
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quick-tour-${{ matrix.os }}
+          path: output/quick-demo
