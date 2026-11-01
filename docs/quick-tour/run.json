@@ -1,0 +1,13 @@
+{
+  "scope": "Build and two native demonstration processes, no training or market data",
+  "platform": "Darwin-25.0.0-arm64-arm-64bit-Mach-O",
+  "python": "3.14.7",
+  "wall_seconds": 0.0423,
+  "native_demo_seconds": 0.0202,
+  "peak_child_rss_mib": 4.234375,
+  "memory_scope": "Peak child RSS; includes compiler when built, not aggregate RAM",
+  "source_commit": "bf34a25fcac470c6a6a28a5bf0ef7f29a8b44cea",
+  "source_dirty": false,
+  "results_sha256": "0ad0eedc3ecb9e0231cf5ed42cea052c3752c9fc7342757ec5ee368571717422",
+  "matching_state_sha256": "039de64f6645ffdbc731aa1c9379c516997634883bc9b37048b8bd08cfeac19a"
+}
