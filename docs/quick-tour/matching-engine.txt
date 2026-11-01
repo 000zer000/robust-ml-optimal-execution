@@ -1,0 +1,18 @@
+matching-engine-state-v1
+next_exchange=7
+next_execution=7
+next_match=4
+next_priority=7
+bids
+100|1|1
+  5|5|1|5
+asks
+103|2|1
+  4|4|2|4
+orders
+1|1|sell|101|2|2|0|filled|1
+2|2|sell|102|3|2|0|replaced|2
+3|3|buy|102|4|4|0|filled|3
+4|4|sell|103|2|0|2|live|4
+5|5|buy|100|2|1|1|partially_filled|5
+6|6|sell|0|1|1|0|filled|6

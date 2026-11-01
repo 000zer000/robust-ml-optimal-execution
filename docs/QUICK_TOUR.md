@@ -62,3 +62,25 @@ licensed sample can first test ingestion and admission, but cannot waive the
 frozen minimum. Budget/licensing approval and a distinct exploratory protocol are
 needed before any new data acquisition or scientific claim. No historical gate
 or locked protocol is changed by this tour.
+
+
+## Verification on 1 November 2026
+
+The native original core suite passed 53 tests; the added teaching contract passed
+separately (one test). An earlier integrated 54-test build also passed before the
+tour was isolated to preserve the research CMake/evidence hashes. Specification,
+repository, release and twelve paper-claim validators passed. No model retraining
+or CPU/CUDA rebenchmark was performed. Desktop 1280px and mobile 390px reports were
+checked for readable rows and absence of horizontal overflow and visually inspected.
+
+A clean dedicated tour build took 12.07 seconds on this Mac with AppleClang 15,
+peaking at 175.20 MiB child-process RSS including compilation. A later clean-source,
+no-build receipt is published in quick-tour/run.json: these are distinct runs.
+No-build timing does not include compilation. Original matching/policy code and
+scientific outputs are unchanged; the prior release manifest is archived.
+
+For a concrete fallback cost comparison, the recorded step-26 engineering
+manifest reports student NumPy p50 of 12.43 microseconds and C++ teacher p50 of
+199.41 microseconds. This is a particular engineering workload, separate from the
+later compiled-inference timings and not exchange latency. It explains why an
+82.61% teacher-fallback rate must accompany the 94.78% combined agreement claim.

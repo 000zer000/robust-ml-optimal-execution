@@ -24,6 +24,10 @@ immediate-fill assumptions explicit. [Tour and interview guide](docs/QUICK_TOUR.
 Historical Gate C remains **closed**. Strategy findings below are controlled simulator
 results; replay/ingestion support does not establish an admitted historical backtest.
 
+![Offline execution tour](docs/quick-tour/desktop.png)
+
+[Inspect the recorded native results](docs/quick-tour/results.json) · [Measured run](docs/quick-tour/run.json)
+
 ## Research paper
 
 **Robust ML-Assisted Optimal Execution in Limit Order Books: Causal Microstructure Forecasting, Model Predictive Control, and Low-Latency Systems Evaluation**

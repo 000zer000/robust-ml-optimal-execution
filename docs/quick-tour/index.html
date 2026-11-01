@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Execution lab — five-minute tour</title>
+<style>body{font:16px system-ui;color:#172f3b;background:#f1f5f7;margin:0}
+main{max-width:980px;margin:auto;padding:32px 18px}h1{font-size:clamp(30px,6vw,48px)}
+section{background:white;border:1px solid #ccd8df;border-radius:12px;padding:22px;margin:18px 0}
+.badge{background:#ddece8;padding:8px 12px;border-radius:6px;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:clamp(12px,2vw,16px)}
+td,th{padding:12px 4px;text-align:left;border-bottom:1px solid #dce3e8}p{line-height:1.6}
+a{color:#175a75}small{color:#415d6b}pre{overflow:auto;font-size:12px}</style>
+<main><span class="badge">Controlled synthetic teaching example</span>
+<h1>The best execution schedule depends on the path.</h1>
+<p>One 100-lot buy order, three existing C++ scheduling policies, two hand-authored ask paths.
+The past-volume profile is fixed before the episode. Future asks are used only to settle fills.
+The native accounting engine independently audits every result.</p>
+<section><h2>Reverting asks</h2><svg viewBox="0 0 300 85" role="img" aria-label="Hand-authored ask path in ticks" style="max-width:420px;width:100%;font-size:12px"><polyline points="20,15.00 105,35.00 190,55.00 275,35.00" fill="none" stroke="#237d71" stroke-width="3"/><text x="20" y="78" text-anchor="middle">101</text><text x="105" y="78" text-anchor="middle">100</text><text x="190" y="78" text-anchor="middle">99</text><text x="275" y="78" text-anchor="middle">100</text></svg><p>Available ask path: 101 → 100 → 99 → 100 ticks.</p><table><thead><tr><th>Policy</th><th>Cost (bps)</th><th>Slice lots</th><th>Filled lots</th></tr></thead><tbody><tr><th>Immediate</th><td>100</td><td>100</td><td>100 / 100</td></tr><tr><th>TWAP</th><td>0</td><td>25 / 25 / 25 / 25</td><td>100 / 100</td></tr><tr><th>Past-volume</th><td>-20</td><td>10 / 20 / 30 / 40</td><td>100 / 100</td></tr></tbody></table></section><section><h2>Rising-ask stress</h2><svg viewBox="0 0 300 85" role="img" aria-label="Hand-authored ask path in ticks" style="max-width:420px;width:100%;font-size:12px"><polyline points="20,55.00 105,41.67 190,32.78 275,15.00" fill="none" stroke="#237d71" stroke-width="3"/><text x="20" y="78" text-anchor="middle">101</text><text x="105" y="78" text-anchor="middle">104</text><text x="190" y="78" text-anchor="middle">106</text><text x="275" y="78" text-anchor="middle">110</text></svg><p>Available ask path: 101 → 104 → 106 → 110 ticks.</p><table><thead><tr><th>Policy</th><th>Cost (bps)</th><th>Slice lots</th><th>Filled lots</th></tr></thead><tbody><tr><th>Immediate</th><td>100</td><td>100</td><td>100 / 100</td></tr><tr><th>TWAP</th><td>525</td><td>25 / 25 / 25 / 25</td><td>100 / 100</td></tr><tr><th>Past-volume</th><td>670</td><td>10 / 20 / 30 / 40</td><td>100 / 100</td></tr></tbody></table></section>
+<section><h2>Read the result correctly</h2><p>Lower cost is better; zero is the 100-tick
+arrival reference. Cost = (paid quote atoms - 100 * 100) / (100 * 100) * 10,000.
+For the first past-volume path, 10*101 + 20*100 + 30*99 + 40*100 = 9,980, hence -20 bps.</p>
+<p>This teaching settlement assumes sufficient available quantity and immediate fills at
+each specified ask, zero fees and zero latency. It omits queue uncertainty and impact.
+It is not a full matching-engine strategy replay. The matching-engine demonstration runs
+separately and checks price-time priority, replacements, cancellation and invariants.</p>
+<p>Historical Gate C remains closed. No historical profitability, learned strategy advantage,
+live execution or GPU performance is established by these examples.</p></section>
+<section><h2>Inspect the evidence</h2><p><a href="results.json">Native results</a> ·
+<a href="matching-engine.txt">Matching-engine state</a> · <a href="run.json">Measured run</a></p>
+<p>The larger controlled study, fallback dependence and workload-specific CPU/GPU measurements
+remain separate from this short demonstration.</p></section>
+<small>No server, model download, payment or network call is required.</small>
+</main></html>
